@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -17,8 +18,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import xyz.tcreopargh.amttd.data.login.LoginDataSource
-import xyz.tcreopargh.amttd.data.login.LoginRepository
 import xyz.tcreopargh.amttd.data.login.LoginResult
 import xyz.tcreopargh.amttd.ui.login.LoginActivity
 import xyz.tcreopargh.amttd.user.LocalUser
@@ -31,13 +30,15 @@ import java.util.*
  */
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var loginRepo: LoginRepository
+    private lateinit var viewModel: MainViewModel
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         ActivityManager.addActivity(this)
 
@@ -54,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        loginRepo = LoginRepository(LoginDataSource())
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -66,10 +66,10 @@ class MainActivity : AppCompatActivity() {
 
         // Restore instance state
         if (savedInstanceState?.containsKey("User") == true) {
-            loginRepo.loggedInUser = savedInstanceState.getParcelable("User") as? LocalUser
+            viewModel.setUser(savedInstanceState.getParcelable("User") as? LocalUser)
         }
         attemptLoginWithLocalCache()
-        if (loginRepo.loggedInUser == null) {
+        if (viewModel.getUser() == null) {
             val loginIntent = Intent(this, LoginActivity::class.java)
             startActivityForResult(loginIntent, CODE_LOGIN)
         }
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
-        outState.putParcelable("User", loginRepo.loggedInUser)
+        outState.putParcelable("User", viewModel.getUser())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -91,8 +91,9 @@ class MainActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 CODE_LOGIN -> {
-                    loginRepo.loggedInUser =
+                    viewModel.setUser(
                         data?.getParcelableExtra(PACKAGE_NAME_DOT + "User") as? LocalUser
+                    )
                     cacheUserLoginInfo()
                     updateSidebarHeader()
                 }
@@ -103,9 +104,9 @@ class MainActivity : AppCompatActivity() {
     private fun cacheUserLoginInfo() {
         val prefs: SharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE)
         prefs.edit().apply {
-            putString("authToken", loginRepo.loggedInUser?.authToken)
-            putString("userUUID", loginRepo.loggedInUser?.uuid?.toString())
-            putString("userName", loginRepo.loggedInUser?.userName)
+            putString("authToken", viewModel.getUser()?.authToken)
+            putString("userUUID", viewModel.getUser()?.uuid?.toString())
+            putString("userName", viewModel.getUser()?.userName)
             apply()
         }
     }
@@ -131,9 +132,9 @@ class MainActivity : AppCompatActivity() {
             null
         }
         if (token != null && uuid != null) {
-            val result = loginRepo.loginWithAuthToken(uuid, token)
+            val result = viewModel.loginRepo.value?.loginWithAuthToken(uuid, token)
             if (result is LoginResult.Success) {
-                this.loginRepo.loggedInUser = result.data
+                viewModel.setUser(result.data)
                 updateSidebarHeader()
             }
         }
@@ -141,7 +142,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateSidebarHeader() {
         val headerView = findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
-        val user = loginRepo.loggedInUser
+        val user = viewModel.getUser()
         if (user != null) {
             headerView.findViewById<TextView>(R.id.headerUsername).apply {
                 text = user.userName
