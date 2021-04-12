@@ -6,5 +6,6 @@ package xyz.tcreopargh.amttd.ui.login
  */
 data class AuthResult(
     val success: LoggedInUserView? = null,
-    val error: Int? = null
+    val error: Int? = null,
+    val errorString: String? = null
 )

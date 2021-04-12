@@ -2,10 +2,18 @@ package xyz.tcreopargh.amttd_web.util
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import xyz.tcreopargh.amttd_web.MainApplication
 import java.io.PrintWriter
+import java.io.Reader
 import kotlin.random.Random
 
 val random: Random = Random.Default
+
+val logger: Logger by lazy {
+    return@lazy LoggerFactory.getLogger(MainApplication::class.java)
+}
 
 fun Random.nextString(
     length: Int,
@@ -47,5 +55,11 @@ fun PrintWriter.printlnAndClose(str: String) {
     println(str)
     flush()
     close()
+}
+
+fun Reader.readAndClose(): String {
+    val str = this.readText()
+    this.close()
+    return str
 }
 

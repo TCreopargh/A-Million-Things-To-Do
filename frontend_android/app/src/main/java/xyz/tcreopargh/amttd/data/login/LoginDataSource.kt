@@ -44,8 +44,10 @@ class LoginDataSource {
     private fun sendRequest(request: Request): LoginResult<LocalUser> {
         try {
             val response = AMTTD.okHttpClient.newCall(request).execute()
+            val body = response.body?.string()
+            Log.i(AMTTD.logTag, "Received response body from login: $body")
             val jsonObject: JsonObject =
-                JsonParser.parseString(response.body?.string()) as? JsonObject
+                JsonParser.parseString(body) as? JsonObject
                     ?: throw IOException("Invalid JSON!")
             if (jsonObject.get("success")?.asBoolean == true) {
                 val username = jsonObject.get("username")?.asString

@@ -18,10 +18,14 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="login_failed_unknown_error">"Unknown Error"</string>
     <string name="prompt_username">Username</string>
     <string name="action_login">Log In</string>
     <string name="action_register">Sign Up</string>
     <string name="log_in">Log In</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="dismiss">Dismiss</string>
     <string name="not_logged_in">Not Logged In</string>
     <string name="action_task_uncompleted">marked task as uncompleted: </string>
     <string name="action_task_completed">completed task: </string>
