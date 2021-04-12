@@ -22,6 +22,7 @@ import xyz.tcreopargh.amttd.ui.login.LoginActivity
 import xyz.tcreopargh.amttd.user.LocalUser
 import xyz.tcreopargh.amttd.util.CODE_LOGIN
 import xyz.tcreopargh.amttd.util.PACKAGE_NAME_DOT
+import xyz.tcreopargh.amttd.util.doRestart
 import java.util.*
 
 /**
@@ -71,6 +72,13 @@ class MainActivity : BaseActivity() {
             startActivityForResult(loginIntent, CODE_LOGIN)
         }
 
+    }
+
+    fun logoutAndRestart() {
+        val prefs: SharedPreferences =
+            getSharedPreferences("user_data", MODE_PRIVATE)
+        prefs.edit().clear().apply()
+        doRestart(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
