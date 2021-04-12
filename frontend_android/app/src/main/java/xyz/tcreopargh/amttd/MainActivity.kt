@@ -77,7 +77,7 @@ class MainActivity : BaseActivity() {
     fun logoutAndRestart() {
         val prefs: SharedPreferences =
             getSharedPreferences("user_data", MODE_PRIVATE)
-        prefs.edit().clear().apply()
+        prefs.edit().clear().commit()
         doRestart(this)
     }
 
