@@ -10,16 +10,19 @@ import java.util.*
  * The base class of all users
  */
 sealed class AbstractUser : Parcelable, Serializable {
-    abstract var userName: String
+    abstract var username: String
     abstract val uuid: UUID
     abstract fun isLocalUser(): Boolean
+    override fun toString(): String {
+        return "{username=$username, uuid=$uuid}"
+    }
 }
 
 /**
  * The user representing the current logged in user
  */
 class LocalUser(
-    override var userName: String,
+    override var username: String,
     override val uuid: UUID,
     val authToken: String?
 ) : AbstractUser(), Parcelable, Serializable {
@@ -30,9 +33,13 @@ class LocalUser(
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(userName)
+        parcel.writeString(username)
         parcel.writeString(uuid.toString())
         parcel.writeString(authToken)
+    }
+
+    override fun toString(): String {
+        return "{username=$username, uuid=$uuid, authToken=$authToken}"
     }
 
     override fun isLocalUser(): Boolean {
@@ -58,7 +65,7 @@ class LocalUser(
  * Any user that is not the currently logged in user
  */
 class RemoteUser(
-    override var userName: String,
+    override var username: String,
     override val uuid: UUID
 ) : AbstractUser(), Parcelable, Serializable {
     constructor(parcel: Parcel) : this(
@@ -67,7 +74,7 @@ class RemoteUser(
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(userName)
+        parcel.writeString(username)
         parcel.writeString(uuid.toString())
     }
 

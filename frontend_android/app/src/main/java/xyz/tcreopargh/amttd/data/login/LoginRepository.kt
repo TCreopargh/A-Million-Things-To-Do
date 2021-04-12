@@ -1,5 +1,7 @@
 package xyz.tcreopargh.amttd.data.login
 
+import android.util.Log
+import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.user.LocalUser
 import java.util.*
 
@@ -36,6 +38,7 @@ class LoginRepository(val dataSource: LoginDataSource, var loggedInUser: LocalUs
         if (result is LoginResult.Success) {
             this.loggedInUser = result.data
         }
+        Log.i(AMTTD.logTag, "Login status: $result")
         return result
     }
 

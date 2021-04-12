@@ -7,7 +7,15 @@ import android.text.*
 import android.text.style.ForegroundColorSpan
 import android.widget.EditText
 import androidx.annotation.ColorInt
-import xyz.tcreopargh.amttd.Application
+import androidx.annotation.StringRes
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
+import xyz.tcreopargh.amttd.AMTTD
+import java.net.URL
 
 const val PACKAGE_NAME = "xyz.tcreopargh.amttd"
 const val PACKAGE_NAME_DOT = "$PACKAGE_NAME."
@@ -40,4 +48,32 @@ fun SpannableString.setColor(@ColorInt color: Int): SpannableString = apply {
     )
 }
 
-fun i18n(resId: Int) = Application.context.getString(resId)
+fun JsonObject.map(vararg args: Pair<String, Any>) {
+    for (pair in args) {
+        when (pair.second) {
+            is Boolean -> addProperty(pair.first, pair.second as Boolean)
+            is String -> addProperty(pair.first, pair.second as String)
+            is Number -> addProperty(pair.first, pair.second as Number)
+            is Char -> addProperty(pair.first, pair.second as Char)
+            is JsonElement -> add(pair.first, pair.second as JsonElement)
+            else           -> addProperty(pair.first, pair.second.toString())
+        }
+    }
+}
+
+fun jsonObjectOf(vararg args: Pair<String, Any>): JsonObject {
+    return JsonObject().apply {
+        map(*args)
+    }
+}
+
+fun JsonObject.toResponseBody(): ResponseBody = this.toString().toResponseBody(JSON)
+fun JsonObject.toRequestBody(): RequestBody = this.toString().toRequestBody(JSON)
+
+fun i18n(@StringRes resId: Int) = AMTTD.i18n(resId)
+fun i18n(@StringRes resId: Int, vararg objects: Any?) = AMTTD.i18n(resId, *objects)
+
+fun URL.withPath(path: String): URL {
+    val normalizedPath = if (path.startsWith("/")) path else "/$path"
+    return URL(this.toString() + normalizedPath)
+}

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.Menu
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -28,7 +27,7 @@ import java.util.*
 /**
  * @author TCreopargh
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var viewModel: MainViewModel
 
@@ -39,8 +38,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-
-        ActivityManager.addActivity(this)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -76,11 +73,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        ActivityManager.removeActivity(this)
-    }
-
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
         outState.putParcelable("User", viewModel.getUser())
@@ -106,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         prefs.edit().apply {
             putString("authToken", viewModel.getUser()?.authToken)
             putString("userUUID", viewModel.getUser()?.uuid?.toString())
-            putString("userName", viewModel.getUser()?.userName)
+            putString("userName", viewModel.getUser()?.username)
             apply()
         }
     }
@@ -145,7 +137,7 @@ class MainActivity : AppCompatActivity() {
         val user = viewModel.getUser()
         if (user != null) {
             headerView.findViewById<TextView>(R.id.headerUsername).apply {
-                text = user.userName
+                text = user.username
             }
             headerView.findViewById<TextView>(R.id.headerSubtitle).apply {
                 text = user.uuid.toString()

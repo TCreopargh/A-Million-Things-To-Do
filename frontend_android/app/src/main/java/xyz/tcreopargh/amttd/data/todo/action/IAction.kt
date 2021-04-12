@@ -18,7 +18,7 @@ interface IAction: Comparable<IAction> {
     val user: AbstractUser
     val timeCreated: Calendar
     fun getUserNameText(): Spannable {
-        return SpannableString(user.userName).setColor(Color.parseColor("#2196f3"))
+        return SpannableString(user.username).setColor(Color.parseColor("#2196f3"))
     }
 
     fun getDisplayText(): Spannable {

@@ -1,13 +1,12 @@
 package xyz.tcreopargh.amttd.ui.login
 
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Patterns
+import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.login.LoginRepository
 import xyz.tcreopargh.amttd.data.login.LoginResult
-
-import xyz.tcreopargh.amttd.R
 
 /**
  * @author TCreopargh
@@ -21,16 +20,24 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
     val loginResult: LiveData<AuthResult> = _loginResult
 
     fun login(username: String, password: String) {
+        Thread {
+            // can be launched in a separate asynchronous job
+            val result = loginRepository.login(username, password)
 
-        // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
-
-        if (result is LoginResult.Success) {
-            _loginResult.value =
-                AuthResult(success = LoggedInUserView(displayName = result.data.userName))
-        } else {
-            _loginResult.value = AuthResult(error = R.string.login_failed)
-        }
+            when (result) {
+                is LoginResult.Success ->
+                    _loginResult.postValue(
+                        AuthResult(success = LoggedInUserView(displayName = result.data.username))
+                    )
+                is LoginResult.Error ->
+                    _loginResult.postValue(
+                        AuthResult(
+                            error = R.string.login_failed,
+                            errorString = (result as? LoginResult.Error)?.exception?.message
+                        )
+                    )
+            }
+        }.start()
     }
 
     fun loginDataChanged(username: String, password: String) {

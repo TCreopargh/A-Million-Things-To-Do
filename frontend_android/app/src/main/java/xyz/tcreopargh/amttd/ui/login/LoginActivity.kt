@@ -1,6 +1,7 @@
 package xyz.tcreopargh.amttd.ui.login
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
@@ -11,19 +12,19 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import xyz.tcreopargh.amttd.ActivityManager
+import xyz.tcreopargh.amttd.BaseActivity
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.util.PACKAGE_NAME_DOT
 import xyz.tcreopargh.amttd.util.afterTextChanged
+import xyz.tcreopargh.amttd.util.i18n
 import java.util.*
 
 /**
  * @author TCreopargh
  */
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
 
@@ -32,11 +33,10 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-        ActivityManager.addActivity(this)
-
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
+        val register = findViewById<Button>(R.id.register)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
@@ -47,6 +47,7 @@ class LoginActivity : AppCompatActivity() {
 
             // disable login button unless both username / password is valid
             login.isEnabled = loginState.isDataValid
+            register.isEnabled = loginState.isDataValid
 
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)
@@ -61,21 +62,21 @@ class LoginActivity : AppCompatActivity() {
 
             loading.visibility = View.GONE
             if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
+                showLoginFailed(loginResult.error, loginResult.errorString)
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
-            }
-            setResult(Activity.RESULT_OK)
+                setResult(Activity.RESULT_OK)
 
-            // Send user info back to MainActivity
-            val backIntent = Intent().putExtra(
-                PACKAGE_NAME_DOT + "User",
-                loginViewModel.loginRepository.loggedInUser as Parcelable
-            )
-            setResult(RESULT_OK, backIntent)
-            //Complete and destroy login activity once successful
-            finish()
+                // Send user info back to MainActivity
+                // Complete and destroy login activity once successful
+                val backIntent = Intent().putExtra(
+                    PACKAGE_NAME_DOT + "User",
+                    loginViewModel.loginRepository.loggedInUser as Parcelable
+                )
+                setResult(RESULT_OK, backIntent)
+                finish()
+            }
         })
 
         username.afterTextChanged {
@@ -111,11 +112,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        ActivityManager.removeActivity(this)
-    }
-
     private fun updateUiWithUser(model: LoggedInUserView) {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
@@ -127,7 +123,11 @@ class LoginActivity : AppCompatActivity() {
         ).show()
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    private fun showLoginFailed(@StringRes errorString: Int, errorMsg: String?) {
+        AlertDialog.Builder(this)
+            .setTitle(errorString)
+            .setMessage(errorMsg ?: i18n(R.string.login_failed_unknown_error))
+            .setPositiveButton(R.string.confirm, null)
+            .show()
     }
 }
