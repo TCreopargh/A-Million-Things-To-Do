@@ -14,6 +14,7 @@ import android.util.Log
 import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import okhttp3.RequestBody
@@ -72,6 +73,21 @@ fun JsonObject.map(vararg args: Pair<String, Any>) {
 fun jsonObjectOf(vararg args: Pair<String, Any>): JsonObject {
     return JsonObject().apply {
         map(*args)
+    }
+}
+
+fun jsonArrayOf(vararg args: Any): JsonArray {
+    return JsonArray().apply {
+        for (element in args) {
+            when (element) {
+                is Boolean -> this.add(element)
+                is String -> this.add(element)
+                is Number -> this.add(element)
+                is Char -> this.add(element)
+                is JsonElement -> this.add(element)
+                else           -> this.add(element.toString())
+            }
+        }
     }
 }
 

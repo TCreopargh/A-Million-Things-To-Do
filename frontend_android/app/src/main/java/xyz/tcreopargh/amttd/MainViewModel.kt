@@ -10,7 +10,7 @@ import xyz.tcreopargh.amttd.user.LocalUser
 /**
  * @author TCreopargh
  */
-class MainViewModel: ViewModel() {
+class MainViewModel : ViewModel() {
     private var _loginRepo = MutableLiveData<LoginRepository>()
     var loginRepo: LiveData<LoginRepository> = _loginRepo
 

@@ -1,5 +1,6 @@
 package xyz.tcreopargh.amttd_web.util
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import org.slf4j.Logger
@@ -29,12 +30,12 @@ fun Random.nextString(
 fun JsonObject.map(vararg args: Pair<String, Any>) {
     for (pair in args) {
         when (pair.second) {
-            is Boolean -> addProperty(pair.first, pair.second as Boolean)
-            is String -> addProperty(pair.first, pair.second as String)
-            is Number -> addProperty(pair.first, pair.second as Number)
-            is Char -> addProperty(pair.first, pair.second as Char)
+            is Boolean     -> addProperty(pair.first, pair.second as Boolean)
+            is String      -> addProperty(pair.first, pair.second as String)
+            is Number      -> addProperty(pair.first, pair.second as Number)
+            is Char        -> addProperty(pair.first, pair.second as Char)
             is JsonElement -> add(pair.first, pair.second as JsonElement)
-            else -> addProperty(pair.first, pair.second.toString())
+            else           -> addProperty(pair.first, pair.second.toString())
         }
     }
 }
@@ -42,6 +43,21 @@ fun JsonObject.map(vararg args: Pair<String, Any>) {
 fun jsonObjectOf(vararg args: Pair<String, Any>): JsonObject {
     return JsonObject().apply {
         map(*args)
+    }
+}
+
+fun jsonArrayOf(vararg args: Any): JsonArray {
+    return JsonArray().apply {
+        for (element in args) {
+            when (element) {
+                is Boolean     -> this.add(element)
+                is String      -> this.add(element)
+                is Number      -> this.add(element)
+                is Char        -> this.add(element)
+                is JsonElement -> this.add(element)
+                else           -> this.add(element.toString())
+            }
+        }
     }
 }
 

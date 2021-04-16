@@ -28,5 +28,6 @@ enum class Status(@ColorInt val color: Int, val sortOrder: Int) {
         ON_HOLD -> i18n(R.string.status_on_hold)
         CANCELLED -> i18n(R.string.status_cancelled)
     }
+
     fun getColoredString() = SpannableString(getDisplayString()).setColor(this.sortOrder)
 }

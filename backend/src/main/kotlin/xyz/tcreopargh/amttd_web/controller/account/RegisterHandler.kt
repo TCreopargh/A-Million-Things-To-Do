@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException.State
-import xyz.tcreopargh.amttd_web.exception.LoginFailedException
 import xyz.tcreopargh.amttd_web.exception.RegisterFailedException
 import xyz.tcreopargh.amttd_web.util.*
 import javax.servlet.http.HttpServletRequest

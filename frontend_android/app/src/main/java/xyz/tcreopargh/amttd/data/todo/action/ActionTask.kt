@@ -12,18 +12,26 @@ import java.util.*
  * @author TCreopargh
  */
 
-interface IActionTask: IAction {
+interface IActionTask : IAction {
     val task: Task
 }
 
-class ActionTaskCompleted(override val user: AbstractUser, override val timeCreated: Calendar, override val task: Task) :
+class ActionTaskCompleted(
+    override val user: AbstractUser,
+    override val timeCreated: Calendar,
+    override val task: Task
+) :
     IActionTask {
     override fun getActionText(): Spannable {
         return SpannableString(i18n(R.string.action_task_completed) + task.name)
     }
 }
 
-class ActionTaskUncompleted(override val user: AbstractUser, override val timeCreated: Calendar, override val task: Task) :
+class ActionTaskUncompleted(
+    override val user: AbstractUser,
+    override val timeCreated: Calendar,
+    override val task: Task
+) :
     IActionTask {
     override fun getActionText(): Spannable {
         return SpannableString(i18n(R.string.action_task_uncompleted) + task.name)

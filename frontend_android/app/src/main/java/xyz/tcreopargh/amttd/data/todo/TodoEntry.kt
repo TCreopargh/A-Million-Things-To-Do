@@ -17,19 +17,19 @@ data class TodoEntry(
     var actionHistory: MutableList<IAction> = mutableListOf(),
     val uuid: UUID = UUID.randomUUID(),
     val timeCreated: Calendar = Calendar.getInstance()
-): Comparable<TodoEntry> {
+) : Comparable<TodoEntry> {
     fun addAction(action: IAction) {
         actionHistory.add(action)
     }
 
     override fun compareTo(other: TodoEntry): Int {
-        if(this.status.isActive() && !other.status.isActive()) {
+        if (this.status.isActive() && !other.status.isActive()) {
             return 1
         }
-        if(!this.status.isActive() && other.status.isActive()) {
+        if (!this.status.isActive() && other.status.isActive()) {
             return -1
         }
-        if(this.status.sortOrder.absoluteValue != other.status.sortOrder.absoluteValue) {
+        if (this.status.sortOrder.absoluteValue != other.status.sortOrder.absoluteValue) {
             return -1 * this.status.sortOrder.absoluteValue.compareTo(other.status.sortOrder.absoluteValue)
         }
         return this.timeCreated.compareTo(other.timeCreated)

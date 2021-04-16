@@ -10,7 +10,11 @@ import java.util.*
 /**
  * @author TCreopargh
  */
-class ActionComment(override val user: AbstractUser, override val timeCreated: Calendar, var comment: String) : IAction {
+class ActionComment(
+    override val user: AbstractUser,
+    override val timeCreated: Calendar,
+    var comment: String
+) : IAction {
     override fun getActionText(): Spannable {
         return SpannableString(i18n(R.string.action_comment) + comment)
     }

@@ -11,7 +11,7 @@ import java.util.*
  * @author TCreopargh
  * Actions are operations that are done to a TodoEntry.
  */
-interface IAction: Comparable<IAction> {
+interface IAction : Comparable<IAction> {
     /**
      * The user who initiated the action
      */

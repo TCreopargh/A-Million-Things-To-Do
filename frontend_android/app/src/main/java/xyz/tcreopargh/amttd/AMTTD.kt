@@ -19,8 +19,9 @@ class AMTTD : App() {
         lateinit var okHttpClient: OkHttpClient
             private set
         val logTag = "AMTTD"
-        fun i18n(@StringRes stringId: Int)  = context.getString(stringId)
-        fun i18n(@StringRes stringId: Int, vararg objects: Any?)  = context.getString(stringId, *objects)
+        fun i18n(@StringRes stringId: Int) = context.getString(stringId)
+        fun i18n(@StringRes stringId: Int, vararg objects: Any?) =
+            context.getString(stringId, *objects)
     }
 
     override fun onCreate() {
