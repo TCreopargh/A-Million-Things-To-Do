@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    dbcp2:
+      connection-properties: characterEncoding=utf8
+      initial-size: 2
+      max-wait-millis: 60000
+      min-idle: 20
+      test-on-borrow: true
+      test-on-return: false
+      test-while-idle: true
+      validation-query: SELECT 1
+    driver-class-name: com.mysql.jdbc.Driver
+    password: 2147483647
+    url: jdbc:mysql://localhost:3306/amttd
+    username: root
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update

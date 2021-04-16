@@ -37,4 +37,5 @@
     <string name="status_on_hold">On Hold</string>
     <string name="status_cancelled">Cancelled</string>
     <string name="logout">Log Out</string>
+    <string name="register_failed">Register Failed</string>
 </resources>

@@ -42,6 +42,15 @@ class LoginRepository(val dataSource: LoginDataSource, var loggedInUser: LocalUs
         return result
     }
 
+    fun register(username: String, password: String): LoginResult<LocalUser> {
+        val result = dataSource.register(username, password)
+        if (result is LoginResult.Success) {
+            this.loggedInUser = result.data
+        }
+        Log.i(AMTTD.logTag, "Register status: $result")
+        return result
+    }
+
     fun loginWithAuthToken(uuid: UUID, authToken: String): LoginResult<LocalUser> {
         val result = dataSource.loginWithAuthToken(uuid, authToken)
         if (result is LoginResult.Success) {

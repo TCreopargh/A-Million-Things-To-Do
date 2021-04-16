@@ -109,6 +109,10 @@ class LoginActivity : BaseActivity() {
                 loading.visibility = View.VISIBLE
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
+            register.setOnClickListener {
+                loading.visibility = View.VISIBLE
+                loginViewModel.register(username.text.toString(), password.text.toString())
+            }
         }
     }
 

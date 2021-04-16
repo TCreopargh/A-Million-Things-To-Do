@@ -1,4 +1,4 @@
-package xyz.tcreopargh.amttd.data.exception
+package xyz.tcreopargh.amttd_web.exception
 
 /**
  * @author TCreopargh
@@ -21,7 +21,7 @@ class LoginFailedException(state: State = State.UNKNOWN) : AuthenticationExcepti
     constructor(reason: String) : this(
         try {
             State.valueOf(reason)
-        } catch (_: IllegalArgumentException) {
+        } catch (_: java.lang.IllegalArgumentException) {
             State.UNKNOWN
         }
     )
@@ -31,7 +31,7 @@ class RegisterFailedException(state: State = State.UNKNOWN) : AuthenticationExce
     constructor(reason: String) : this(
         try {
             State.valueOf(reason)
-        } catch (_: IllegalArgumentException) {
+        } catch (_: java.lang.IllegalArgumentException) {
             State.UNKNOWN
         }
     )

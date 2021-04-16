@@ -33,6 +33,20 @@ class LoginDataSource {
         return sendRequest(loginRequest)
     }
 
+    fun register(username: String, password: String): LoginResult<LocalUser> {
+        // TODO: acquire UUID and authToken from server
+        val registerRequest = Request.Builder()
+            .post(
+                jsonObjectOf(
+                    "username" to username,
+                    "password" to password
+                ).toRequestBody()
+            ).url(rootUrl.withPath("/register"))
+            .build()
+        return sendRequest(registerRequest)
+
+    }
+
     fun loginWithAuthToken(uuid: UUID, authToken: String): LoginResult<LocalUser> {
         // TODO: handle login with auth token here
         val arr = authToken.split("-", limit = 2)

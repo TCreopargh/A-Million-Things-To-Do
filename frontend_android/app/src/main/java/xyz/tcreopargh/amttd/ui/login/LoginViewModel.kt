@@ -1,6 +1,5 @@
 package xyz.tcreopargh.amttd.ui.login
 
-import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,10 +20,7 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
 
     fun login(username: String, password: String) {
         Thread {
-            // can be launched in a separate asynchronous job
-            val result = loginRepository.login(username, password)
-
-            when (result) {
+            when (val result = loginRepository.login(username, password)) {
                 is LoginResult.Success ->
                     _loginResult.postValue(
                         AuthResult(success = LoggedInUserView(displayName = result.data.username))
@@ -34,6 +30,28 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
                         AuthResult(
                             error = R.string.login_failed,
                             errorString = (result as? LoginResult.Error)?.exception?.message
+                        )
+                    )
+            }
+        }.start()
+    }
+
+    fun register(username: String, password: String) {
+        Thread {
+            when (val result = loginRepository.register(username, password)) {
+                is LoginResult.Success ->
+                    _loginResult.postValue(
+                        AuthResult(
+                            success = LoggedInUserView(displayName = result.data.username),
+                            isRegister = true
+                        )
+                    )
+                is LoginResult.Error ->
+                    _loginResult.postValue(
+                        AuthResult(
+                            error = R.string.register_failed,
+                            errorString = (result as? LoginResult.Error)?.exception?.message,
+                            isRegister = true
                         )
                     )
             }
@@ -50,17 +68,11 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
         }
     }
 
-    // A placeholder username validation check
     private fun isUserNameValid(username: String): Boolean {
-        return if (username.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
-        } else {
-            username.isNotBlank()
-        }
+        return username.matches(Regex("^([\\u4e00-\\u9fa5]{2,3})|([A-Za-z0-9_]{3,32})|([a-zA-Z0-9_\\u4e00-\\u9fa5]{3,32})\$"))
     }
 
-    // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
+        return password.length in 6..1024
     }
 }
