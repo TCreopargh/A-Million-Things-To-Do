@@ -1,5 +1,6 @@
 package xyz.tcreopargh.amttd
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -11,11 +12,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -70,12 +67,12 @@ class MainActivity : BaseActivity() {
                         .commit()
                     true
                 }
-                R.id.nav_logout     -> {
+                R.id.nav_logout -> {
                     drawerLayout.closeDrawer(navView)
                     logoutAndRestart()
                     false
                 }
-                else            -> {
+                else                -> {
                     false
                 }
             }
@@ -105,6 +102,7 @@ class MainActivity : BaseActivity() {
         navView.menu.findItem(R.id.nav_group_view).isChecked = true
     }
 
+    @SuppressLint("ApplySharedPref")
     private fun logoutAndRestart() {
         Log.i(AMTTD.logTag, "Restarting!")
         val prefs: SharedPreferences =
