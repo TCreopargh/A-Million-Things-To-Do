@@ -20,7 +20,10 @@ class LoginHandler : AuthenticationController() {
     @RequestMapping("/login", method = [RequestMethod.POST])
     fun resolveLogin(request: HttpServletRequest, response: HttpServletResponse) {
         val body = request.reader.readAndClose()
-        var jsonResponse = jsonObjectOf()
+        var jsonResponse = jsonObjectOf(
+            "success" to false,
+            "reason" to State.UNKNOWN.name
+        )
         try {
             val jsonObject: JsonObject = try {
                 JsonParser.parseString(body) as? JsonObject ?: throw JsonParseException("Json is empty!")
@@ -33,11 +36,11 @@ class LoginHandler : AuthenticationController() {
             if (!isUserNameValid(username)) {
                 throw LoginFailedException(State.ILLEGAL_USERNAME)
             }
-            if (!isPasswordValid(username)) {
+            if (!isPasswordValid(password)) {
                 throw LoginFailedException(State.ILLEGAL_PASSWORD)
             }
             logger.info("Received login JSON: $body")
-            val generatedToken = random.nextString(128)
+            val generatedToken = generateToken()
             val users: List<EntityUser> = userService.findByUsername(username ?: "")
             var loggedInUser: EntityUser? = null
             for (user in users) {

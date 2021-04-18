@@ -14,15 +14,15 @@ class UserService {
     private lateinit var userRepository: UserRepository
     fun getAllUsers() = userRepository.findAll()
     fun save(user: EntityUser) = userRepository.save(user)
+    fun saveImmediately(user: EntityUser) = userRepository.saveAndFlush(user)
     fun saveAll(users: List<EntityUser>) = userRepository.saveAll(users)
-    fun findByUsername(username: String) = userRepository.findByUsername(username)
+    fun findByUsername(username: String) = userRepository.findByName(username)
 
     @Transactional
     fun update(uuid: UUID, newUser: EntityUser) {
         userRepository.findById(uuid).orElse(null)?.apply Repo@{
             name = newUser.name
             password = newUser.password
-            dateCreated = newUser.dateCreated
             userRepository.save(this@Repo)
         }
     }

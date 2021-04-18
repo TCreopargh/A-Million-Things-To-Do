@@ -1,4 +1,4 @@
-package xyz.tcreopargh.amttd.ui.slideshow
+package xyz.tcreopargh.amttd.ui.group
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 /**
  * @author TCreopargh
  */
-class SlideshowViewModel : ViewModel() {
+class GroupViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is slideshow Fragment"
+        value = "Group View"
     }
     val text: LiveData<String> = _text
 }

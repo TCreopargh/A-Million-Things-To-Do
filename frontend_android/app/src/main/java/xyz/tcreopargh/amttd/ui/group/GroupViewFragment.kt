@@ -1,4 +1,4 @@
-package xyz.tcreopargh.amttd.ui.home
+package xyz.tcreopargh.amttd.ui.group
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import xyz.tcreopargh.amttd.R
 /**
  * @author TCreopargh
  */
-class GroupFragment : Fragment() {
+class GroupViewFragment : Fragment() {
 
     private lateinit var homeViewModel: GroupViewModel
 
@@ -29,5 +29,10 @@ class GroupFragment : Fragment() {
             textView.text = it
         })
         return root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 }

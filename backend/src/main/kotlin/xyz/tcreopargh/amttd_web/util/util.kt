@@ -16,6 +16,8 @@ val logger: Logger by lazy {
     return@lazy LoggerFactory.getLogger(MainApplication::class.java)
 }
 
+fun generateToken() = random.nextString(128)
+
 fun Random.nextString(
     length: Int,
     dictionary: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"

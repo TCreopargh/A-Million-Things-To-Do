@@ -4,8 +4,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.view.Menu
 import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -18,12 +20,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import xyz.tcreopargh.amttd.data.login.LoginResult
+import xyz.tcreopargh.amttd.ui.group.GroupViewFragment
 import xyz.tcreopargh.amttd.ui.login.LoginActivity
 import xyz.tcreopargh.amttd.user.LocalUser
 import xyz.tcreopargh.amttd.util.CODE_LOGIN
 import xyz.tcreopargh.amttd.util.PACKAGE_NAME_DOT
 import xyz.tcreopargh.amttd.util.doRestart
 import java.util.*
+
 
 /**
  * @author TCreopargh
@@ -33,6 +37,8 @@ class MainActivity : BaseActivity() {
     private lateinit var viewModel: MainViewModel
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    private lateinit var drawerToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,17 +56,42 @@ class MainActivity : BaseActivity() {
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
 
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
-            ), drawerLayout
+        navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.nav_group_view -> {
+                    Log.i(AMTTD.logTag, "Selected group view")
+                    val fragmentManager = supportFragmentManager
+                    fragmentManager.beginTransaction()
+                        .replace(R.id.main_fragment_parent, GroupViewFragment::class.java, null)
+                        .addToBackStack(null)
+                        .commit()
+                    true
+                }
+                R.id.nav_logout     -> {
+                    drawerLayout.closeDrawer(navView)
+                    logoutAndRestart()
+                    false
+                }
+                else            -> {
+                    false
+                }
+            }
+        }
+
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        drawerToggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.open_drawer,
+            R.string.close_drawer
         )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+
+        drawerLayout.addDrawerListener(drawerToggle)
 
         // Restore instance state
         if (savedInstanceState?.containsKey("User") == true) {
@@ -71,14 +102,20 @@ class MainActivity : BaseActivity() {
             val loginIntent = Intent(this, LoginActivity::class.java)
             startActivityForResult(loginIntent, CODE_LOGIN)
         }
-
+        navView.menu.findItem(R.id.nav_group_view).isChecked = true
     }
 
-    fun logoutAndRestart() {
+    private fun logoutAndRestart() {
+        Log.i(AMTTD.logTag, "Restarting!")
         val prefs: SharedPreferences =
             getSharedPreferences("user_data", MODE_PRIVATE)
         prefs.edit().clear().commit()
         doRestart(this)
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        drawerToggle.syncState()
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
@@ -115,11 +152,6 @@ class MainActivity : BaseActivity() {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
     private fun attemptLoginWithLocalCache() {

@@ -2,22 +2,32 @@ package xyz.tcreopargh.amttd_web.entity
 
 import org.hibernate.annotations.Type
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 data class EntityUser(
-    //@GeneratedValue(generator = "uuid2")
-    //@GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Id
-    @Type(type = "uuid-char")
-    @Column(name = "uuid", columnDefinition = "VARCHAR(255)")
-    var uuid: UUID = UUID.randomUUID(),
 
     var name: String? = null,
     var password: String? = null,
-    var dateCreated: Date? = Date()
-) : EntityBase()
+
+    @Id
+    @Column(name="user_uuid", insertable = false, updatable = false, nullable = false, columnDefinition = "varchar(128)")
+    @Type(type = "uuid-char")
+    val uuid: UUID = UUID.randomUUID(),
+
+    @Basic
+    @Temporal(TemporalType.TIMESTAMP)
+    val timeCreated: Calendar = Calendar.getInstance()
+) : EntityBase() {
+
+    override fun equals(other: Any?): Boolean = this.uuid == (other as? EntityUser)?.uuid
+
+    override fun hashCode(): Int {
+        var result = uuid.hashCode()
+        result = 31 * result + (name?.hashCode() ?: 0)
+        result = 31 * result + (password?.hashCode() ?: 0)
+        result = 31 * result + timeCreated.hashCode()
+        return result
+    }
+}

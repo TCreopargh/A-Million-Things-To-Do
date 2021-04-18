@@ -6,7 +6,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
+    <string name="menu_group_view">Todo</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="title_activity_login">LoginActivity</string>
@@ -38,4 +38,7 @@
     <string name="status_cancelled">Cancelled</string>
     <string name="logout">Log Out</string>
     <string name="register_failed">Register Failed</string>
+    <string name="add_entry">Add entry</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
 </resources>
