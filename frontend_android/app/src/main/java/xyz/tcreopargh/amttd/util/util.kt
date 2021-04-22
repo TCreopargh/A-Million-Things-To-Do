@@ -4,7 +4,6 @@
 package xyz.tcreopargh.amttd.util
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.text.*
 import android.text.style.ForegroundColorSpan
@@ -19,7 +18,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import xyz.tcreopargh.amttd.AMTTD
-import xyz.tcreopargh.amttd.MainActivity
 import java.net.URL
 
 

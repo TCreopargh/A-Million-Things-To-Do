@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.login.LoginRepository
 import xyz.tcreopargh.amttd.data.login.LoginResult
-import java.util.*
 
 /**
  * @author TCreopargh

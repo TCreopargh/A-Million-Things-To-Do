@@ -65,7 +65,7 @@ class MainActivity : BaseActivity() {
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_group_view -> {
-                    if(mainProgressBar.visibility == View.VISIBLE) {
+                    if (mainProgressBar.visibility == View.VISIBLE) {
                         return@setNavigationItemSelectedListener false
                     }
                     selectGroup()
@@ -229,7 +229,7 @@ class MainActivity : BaseActivity() {
                 LOGIN_FAILED -> {
                     val loginIntent = Intent(activity, LoginActivity::class.java)
                     activity?.startActivityForResult(loginIntent, CODE_LOGIN)
-                    if(activity?.exception != null) {
+                    if (activity?.exception != null) {
                         Toast.makeText(activity, R.string.token_expired, Toast.LENGTH_SHORT).show()
                     }
                 }

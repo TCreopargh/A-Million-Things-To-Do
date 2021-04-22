@@ -13,7 +13,6 @@ import xyz.tcreopargh.amttd.util.toRequestBody
 import xyz.tcreopargh.amttd.util.withPath
 import java.io.IOException
 import java.util.*
-import kotlin.math.log
 
 
 /**

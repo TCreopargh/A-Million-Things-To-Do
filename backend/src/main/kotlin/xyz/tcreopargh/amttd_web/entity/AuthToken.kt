@@ -1,8 +1,6 @@
 package xyz.tcreopargh.amttd_web.entity
 
 import xyz.tcreopargh.amttd_web.util.generateToken
-import java.time.Duration
-import java.time.ZoneId
 import java.util.*
 import javax.persistence.*
 
@@ -12,7 +10,7 @@ import javax.persistence.*
 data class AuthToken(
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_uuid")
+    @JoinColumn(name = "user_uuid", columnDefinition = "varchar(128)", updatable = false)
     var user: EntityUser? = null,
 
     @Id
@@ -25,17 +23,11 @@ data class AuthToken(
 
 ) : EntityBase() {
     companion object {
-        val LIFESPAN: Duration = Duration.ofDays(14)
+        val LIFESPAN: Long by lazy { 86400000L * 7 }
     }
 
     fun isExpired(): Boolean {
-        val start = timeCreated.toInstant()
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
-        val end = timeCreated.toInstant()
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
-        val period = Duration.between(start, end)
+        val period = Calendar.getInstance().timeInMillis - timeCreated.timeInMillis
         return period > LIFESPAN
     }
 

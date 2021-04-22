@@ -8,11 +8,19 @@ import javax.persistence.*
 @Table(name = "user")
 data class EntityUser(
 
+    @Column(unique = true)
     var name: String? = null,
+
     var password: String? = null,
 
     @Id
-    @Column(name="user_uuid", insertable = false, updatable = false, nullable = false, columnDefinition = "varchar(128)")
+    @Column(
+        name = "user_uuid",
+        insertable = false,
+        updatable = false,
+        nullable = false,
+        columnDefinition = "varchar(128)"
+    )
     @Type(type = "uuid-char")
     val uuid: UUID = UUID.randomUUID(),
 
