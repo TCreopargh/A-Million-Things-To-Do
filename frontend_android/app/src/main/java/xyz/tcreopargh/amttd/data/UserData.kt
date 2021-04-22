@@ -6,5 +6,5 @@ import xyz.tcreopargh.amttd.data.group.WorkGroup
  * @author TCreopargh
  */
 class UserData {
-    var attendedGroups  = mutableListOf<WorkGroup>()
+    var attendedGroups = mutableListOf<WorkGroup>()
 }

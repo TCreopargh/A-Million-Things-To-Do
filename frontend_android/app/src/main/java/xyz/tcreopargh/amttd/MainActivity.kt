@@ -3,19 +3,20 @@ package xyz.tcreopargh.amttd
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Bundle
-import android.os.PersistableBundle
+import android.os.*
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.content_main.*
 import xyz.tcreopargh.amttd.data.login.LoginResult
 import xyz.tcreopargh.amttd.ui.group.GroupViewFragment
 import xyz.tcreopargh.amttd.ui.login.LoginActivity
@@ -23,6 +24,7 @@ import xyz.tcreopargh.amttd.user.LocalUser
 import xyz.tcreopargh.amttd.util.CODE_LOGIN
 import xyz.tcreopargh.amttd.util.PACKAGE_NAME_DOT
 import xyz.tcreopargh.amttd.util.doRestart
+import java.lang.ref.WeakReference
 import java.util.*
 
 
@@ -33,9 +35,13 @@ class MainActivity : BaseActivity() {
 
     private lateinit var viewModel: MainViewModel
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-
     private lateinit var drawerToggle: ActionBarDrawerToggle
+
+    private lateinit var navView: NavigationView
+
+    private val handler: LoginHandler = LoginHandler(this)
+
+    private var exception: Exception? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,19 +58,17 @@ class MainActivity : BaseActivity() {
                 .setAction("Action", null).show()
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
+        navView = findViewById(R.id.nav_view)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
 
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_group_view -> {
-                    Log.i(AMTTD.logTag, "Selected group view")
-                    val fragmentManager = supportFragmentManager
-                    fragmentManager.beginTransaction()
-                        .replace(R.id.main_fragment_parent, GroupViewFragment::class.java, null)
-                        .addToBackStack(null)
-                        .commit()
+                    if(mainProgressBar.visibility == View.VISIBLE) {
+                        return@setNavigationItemSelectedListener false
+                    }
+                    selectGroup()
                     true
                 }
                 R.id.nav_logout -> {
@@ -95,10 +99,14 @@ class MainActivity : BaseActivity() {
             viewModel.setUser(savedInstanceState.getParcelable("User") as? LocalUser)
         }
         attemptLoginWithLocalCache()
-        if (viewModel.getUser() == null) {
-            val loginIntent = Intent(this, LoginActivity::class.java)
-            startActivityForResult(loginIntent, CODE_LOGIN)
-        }
+    }
+
+    private fun selectGroup() {
+        val fragmentManager = supportFragmentManager
+        fragmentManager.beginTransaction()
+            .replace(R.id.main_fragment_parent, GroupViewFragment::class.java, null)
+            .addToBackStack(null)
+            .commit()
         navView.menu.findItem(R.id.nav_group_view).isChecked = true
     }
 
@@ -131,6 +139,7 @@ class MainActivity : BaseActivity() {
                     )
                     cacheUserLoginInfo()
                     updateSidebarHeader()
+                    selectGroup()
                 }
             }
         }
@@ -162,12 +171,34 @@ class MainActivity : BaseActivity() {
             null
         }
         if (token != null && uuid != null) {
-            val result = viewModel.loginRepo.value?.loginWithAuthToken(uuid, token)
-            if (result is LoginResult.Success) {
-                viewModel.setUser(result.data)
-                updateSidebarHeader()
-            }
+            loginWithToken(uuid, token)
+        } else {
+            handler.sendMessage(Message().apply {
+                what = LOGIN_FAILED
+            })
         }
+    }
+
+    private fun loginWithToken(uuid: UUID, authToken: String) {
+        mainProgressBar.visibility = View.VISIBLE
+        Thread {
+            when (val result =
+                viewModel.loginRepository.value?.loginWithAuthToken(uuid, authToken)) {
+                is LoginResult.Success -> {
+                    viewModel.setUser(result.data)
+                    handler.sendMessage(Message().apply {
+                        what = LOGIN_SUCCESS
+                    })
+                }
+                is LoginResult.Error -> {
+                    exception = result.exception
+                    Log.w(AMTTD.logTag, "Login with token failed with exception: ", exception)
+                    handler.sendMessage(Message().apply {
+                        what = LOGIN_FAILED
+                    })
+                }
+            }
+        }.start()
     }
 
     private fun updateSidebarHeader() {
@@ -181,5 +212,34 @@ class MainActivity : BaseActivity() {
                 text = user.uuid.toString()
             }
         }
+    }
+
+    class LoginHandler(activity: MainActivity) : Handler(Looper.getMainLooper()) {
+        private val activityRef: WeakReference<MainActivity> = WeakReference(activity)
+        private val activity: MainActivity?
+            get() = activityRef.get()
+
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            when (msg.what) {
+                LOGIN_SUCCESS -> {
+                    activity?.selectGroup()
+                    activity?.updateSidebarHeader()
+                }
+                LOGIN_FAILED -> {
+                    val loginIntent = Intent(activity, LoginActivity::class.java)
+                    activity?.startActivityForResult(loginIntent, CODE_LOGIN)
+                    if(activity?.exception != null) {
+                        Toast.makeText(activity, R.string.token_expired, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            activity?.mainProgressBar?.visibility = View.GONE
+        }
+    }
+
+    companion object {
+        const val LOGIN_SUCCESS = 0
+        const val LOGIN_FAILED = 1
     }
 }

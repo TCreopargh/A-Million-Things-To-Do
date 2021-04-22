@@ -13,6 +13,7 @@ import xyz.tcreopargh.amttd.util.toRequestBody
 import xyz.tcreopargh.amttd.util.withPath
 import java.io.IOException
 import java.util.*
+import kotlin.math.log
 
 
 /**
@@ -34,7 +35,6 @@ class LoginDataSource {
     }
 
     fun register(username: String, password: String): LoginResult<LocalUser> {
-        // TODO: acquire UUID and authToken from server
         val registerRequest = Request.Builder()
             .post(
                 jsonObjectOf(
@@ -48,11 +48,15 @@ class LoginDataSource {
     }
 
     fun loginWithAuthToken(uuid: UUID, authToken: String): LoginResult<LocalUser> {
-        // TODO: handle login with auth token here
-        val arr = authToken.split("-", limit = 2)
-        val fakeUserName = arr[0]
-        val fakeUser = LocalUser(fakeUserName, uuid, authToken)
-        return LoginResult.Success(fakeUser)
+        val loginRequest = Request.Builder()
+            .post(
+                jsonObjectOf(
+                    "uuid" to uuid,
+                    "token" to authToken
+                ).toRequestBody()
+            ).url(rootUrl.withPath("/login"))
+            .build()
+        return sendRequest(loginRequest)
     }
 
     private fun sendRequest(request: Request): LoginResult<LocalUser> {

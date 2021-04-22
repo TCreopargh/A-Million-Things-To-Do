@@ -1,10 +1,16 @@
 package xyz.tcreopargh.amttd.data.group
 
 import xyz.tcreopargh.amttd.data.todo.TodoEntry
+import xyz.tcreopargh.amttd.user.AbstractUser
+import java.util.*
 
 /**
  * @author TCreopargh
  */
-class WorkGroup {
-    val entries = mutableListOf<TodoEntry>()
-}
+data class WorkGroup(
+    val groupId: UUID = UUID.randomUUID(),
+    var name: String = "",
+    val timeCreated: Calendar = Calendar.getInstance(),
+    val entries: MutableList<TodoEntry> = mutableListOf(),
+    val users: MutableList<AbstractUser> = mutableListOf()
+)

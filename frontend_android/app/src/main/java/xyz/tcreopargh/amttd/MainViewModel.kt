@@ -5,14 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import xyz.tcreopargh.amttd.data.login.LoginDataSource
 import xyz.tcreopargh.amttd.data.login.LoginRepository
+import xyz.tcreopargh.amttd.data.login.LoginResult
+import xyz.tcreopargh.amttd.ui.login.AuthResult
+import xyz.tcreopargh.amttd.ui.login.LoggedInUserView
 import xyz.tcreopargh.amttd.user.LocalUser
+import java.util.*
 
 /**
  * @author TCreopargh
  */
 class MainViewModel : ViewModel() {
     private var _loginRepo = MutableLiveData<LoginRepository>()
-    var loginRepo: LiveData<LoginRepository> = _loginRepo
+    var loginRepository: LiveData<LoginRepository> = _loginRepo
 
     init {
         _loginRepo.value = LoginRepository(LoginDataSource())
@@ -23,4 +27,6 @@ class MainViewModel : ViewModel() {
     }
 
     fun getUser() = _loginRepo.value?.loggedInUser
+
+
 }
