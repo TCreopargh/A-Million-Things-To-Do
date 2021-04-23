@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/todoCard"
+        android:layout_width="match_parent"
+        style="@style/CardViewBase"
+        android:clickable="true"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="3dp"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginVertical="2dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+        <View
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:id="@+id/todoBarColor"
+                android:background="@color/primary" />
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/todoNameText"
+                    android:text="@string/loading"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="16dp"
+                    android:textSize="24sp" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_below="@+id/todoNameText"
+                    android:id="@+id/groupViewBottomLayout"
+                    android:layout_height="wrap_content">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/circle"
+                        android:id="@+id/todoIconColor"
+                        android:contentDescription="@string/todo_status"
+                        app:tint="@color/primary" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:id="@+id/todoStatusText"
+                        android:text="@string/loading" />
+
+                <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:id="@+id/todoViewTaskIcon"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/ic_baseline_check_circle_outline_24"
+                        android:layout_gravity="center_vertical"
+                        app:tint="@color/grey"
+                        android:contentDescription="@string/user_count" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:id="@+id/todoTaskText"
+                        android:text="@string/default_task_count" />
+
+                <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:id="@+id/todoViewTimeIcon"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/ic_baseline_access_time_24"
+                        android:layout_gravity="center_vertical"
+                        app:tint="@color/grey"
+                        android:contentDescription="@string/user_count" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:id="@+id/todoTimeText"
+                        android:text="@string/loading" />
+
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

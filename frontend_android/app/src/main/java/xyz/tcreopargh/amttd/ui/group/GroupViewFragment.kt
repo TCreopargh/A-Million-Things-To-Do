@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.group.WorkGroup
+import xyz.tcreopargh.amttd.ui.todo.TodoViewViewModel
 import java.util.*
 
 /**
@@ -17,19 +18,19 @@ import java.util.*
  */
 class GroupViewFragment : Fragment() {
 
-    private lateinit var groupViewModel: GroupViewModel
+    private lateinit var viewModel: GroupViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        groupViewModel =
+        viewModel =
             ViewModelProvider(this).get(GroupViewModel::class.java)
-        val view = inflater.inflate(R.layout.fragment_group_view, container, false)
-        groupViewModel.groups.value?.add(WorkGroup(UUID.randomUUID(), "WorkGroup"))
+        val view = inflater.inflate(R.layout.group_view_fragment, container, false)
+        viewModel.groups.value?.add(WorkGroup(UUID.randomUUID(), "WorkGroup"))
         val groupRecyclerView = view.findViewById<RecyclerView>(R.id.groupRecyclerView)
-        val adapter = GroupViewAdapter(groupViewModel.groups)
+        val adapter = GroupViewAdapter(viewModel.groups, activity)
         groupRecyclerView.adapter = adapter
         groupRecyclerView.layoutManager = LinearLayoutManager(context)
         return view
@@ -40,4 +41,5 @@ class GroupViewFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
+
 }

@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import xyz.tcreopargh.amttd.ActivityManager
 import xyz.tcreopargh.amttd.BaseActivity
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.util.PACKAGE_NAME_DOT
@@ -113,6 +114,17 @@ class LoginActivity : BaseActivity() {
                 loading.visibility = View.VISIBLE
                 loginViewModel.register(username.text.toString(), password.text.toString())
             }
+        }
+    }
+
+    private var lastBackPressed: Long = 0
+
+    override fun onBackPressed() {
+        if (System.currentTimeMillis() - lastBackPressed < 2000) {
+            ActivityManager.finishAll()
+        } else {
+            lastBackPressed = System.currentTimeMillis()
+            Toast.makeText(this, R.string.press_back_again, Toast.LENGTH_SHORT).show()
         }
     }
 

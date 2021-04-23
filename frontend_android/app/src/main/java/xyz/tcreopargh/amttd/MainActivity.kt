@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -42,6 +43,9 @@ class MainActivity : BaseActivity() {
     private val handler: LoginHandler = LoginHandler(this)
 
     private var exception: Exception? = null
+
+    val loggedInUser
+    get() = viewModel.getUser()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +110,7 @@ class MainActivity : BaseActivity() {
         fragmentManager.beginTransaction()
             .replace(R.id.main_fragment_parent, GroupViewFragment::class.java, null)
             .addToBackStack(null)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit()
         navView.menu.findItem(R.id.nav_group_view).isChecked = true
     }
@@ -237,6 +242,8 @@ class MainActivity : BaseActivity() {
             activity?.mainProgressBar?.visibility = View.GONE
         }
     }
+
+    private var lastBackPressed: Long = 0
 
     companion object {
         const val LOGIN_SUCCESS = 0

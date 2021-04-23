@@ -19,6 +19,8 @@ import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import xyz.tcreopargh.amttd.AMTTD
 import java.net.URL
+import java.text.DateFormat
+import java.util.*
 
 
 const val PACKAGE_NAME = "xyz.tcreopargh.amttd"
@@ -27,6 +29,11 @@ const val PACKAGE_NAME_DOT = "$PACKAGE_NAME."
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.
  */
+fun Calendar.format() = DateFormat.getDateInstance(
+    DateFormat.MEDIUM,
+    AMTTD.context.resources.configuration.locales.get(0)
+).format(this.time)
+
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(editable: Editable?) {

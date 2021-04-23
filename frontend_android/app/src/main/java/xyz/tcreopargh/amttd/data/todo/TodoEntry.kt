@@ -3,6 +3,7 @@ package xyz.tcreopargh.amttd.data.todo
 import xyz.tcreopargh.amttd.data.todo.action.IAction
 import xyz.tcreopargh.amttd.user.AbstractUser
 import java.util.*
+import java.util.stream.Collectors
 import kotlin.math.absoluteValue
 
 /**
@@ -12,7 +13,7 @@ data class TodoEntry(
     val creator: AbstractUser,
     var title: String,
     var description: String = "",
-    var tasks: MutableList<Task> = mutableListOf(),
+    var tasks: MutableList<Task> = mutableListOf(Task(title)),
     var status: Status = Status.NOT_STARTED,
     var actionHistory: MutableList<IAction> = mutableListOf(),
     val uuid: UUID = UUID.randomUUID(),
@@ -21,6 +22,11 @@ data class TodoEntry(
     fun addAction(action: IAction) {
         actionHistory.add(action)
     }
+
+    private fun completedTasks(): MutableList<Task> =
+        tasks.stream().filter { it.isDone }.collect(Collectors.toList())
+
+    fun getCompletionText() = "${completedTasks().size} / ${tasks.size}"
 
     override fun compareTo(other: TodoEntry): Int {
         if (this.status.isActive() && !other.status.isActive()) {
@@ -37,5 +43,17 @@ data class TodoEntry(
 
     override fun equals(other: Any?): Boolean {
         return this.uuid == (other as? TodoEntry)?.uuid
+    }
+
+    override fun hashCode(): Int {
+        var result = creator.hashCode()
+        result = 31 * result + title.hashCode()
+        result = 31 * result + description.hashCode()
+        result = 31 * result + tasks.hashCode()
+        result = 31 * result + status.hashCode()
+        result = 31 * result + actionHistory.hashCode()
+        result = 31 * result + uuid.hashCode()
+        result = 31 * result + timeCreated.hashCode()
+        return result
     }
 }

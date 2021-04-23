@@ -8,7 +8,7 @@ import java.util.*
  * @author TCreopargh
  */
 data class WorkGroup(
-    val groupId: UUID = UUID.randomUUID(),
+    val uuid: UUID = UUID.randomUUID(),
     var name: String = "",
     val timeCreated: Calendar = Calendar.getInstance(),
     val entries: MutableList<TodoEntry> = mutableListOf(),

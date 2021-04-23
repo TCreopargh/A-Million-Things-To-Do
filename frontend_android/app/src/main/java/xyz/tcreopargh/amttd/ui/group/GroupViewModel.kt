@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import xyz.tcreopargh.amttd.data.group.WorkGroup
+import java.util.*
 
 /**
  * @author TCreopargh
@@ -14,4 +15,6 @@ class GroupViewModel : ViewModel() {
         value = mutableListOf()
     }
     val groups: LiveData<MutableList<WorkGroup>> = _groups
+
+    fun findGroupById(uuid: UUID): WorkGroup? = groups.value?.find { it.uuid == uuid}
 }

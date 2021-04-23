@@ -44,4 +44,7 @@
     <string name="loading">Loading...</string>
     <string name="user_count">User Count</string>
     <string name="token_expired">Login token expired. Please log in manually.</string>
+    <string name="press_back_again">Press back button again to exit the app!</string>
+    <string name="todo_status">Todo Status</string>
+    <string name="default_task_count">0 / 0</string>
 </resources>
