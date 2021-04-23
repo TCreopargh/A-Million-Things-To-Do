@@ -109,7 +109,6 @@ class MainActivity : BaseActivity() {
         val fragmentManager = supportFragmentManager
         fragmentManager.beginTransaction()
             .replace(R.id.main_fragment_parent, GroupViewFragment::class.java, null)
-            .addToBackStack(null)
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit()
         navView.menu.findItem(R.id.nav_group_view).isChecked = true

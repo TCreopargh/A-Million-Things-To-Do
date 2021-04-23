@@ -26,7 +26,6 @@ class TodoViewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(this).get(TodoViewViewModel::class.java)
         val view = inflater.inflate(R.layout.todo_view_fragment, container, false)
         val todoRecyclerView = view.findViewById<RecyclerView>(R.id.todoRecyclerView)
         viewModel.entries.value?.add(
@@ -82,6 +81,11 @@ class TodoViewFragment : Fragment() {
         todoRecyclerView.adapter = adapter
         todoRecyclerView.layoutManager = LinearLayoutManager(context)
         return view
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(TodoViewViewModel::class.java)
     }
 
 }

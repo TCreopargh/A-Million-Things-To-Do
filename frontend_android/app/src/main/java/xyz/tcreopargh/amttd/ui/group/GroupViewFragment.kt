@@ -25,10 +25,7 @@ class GroupViewFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel =
-            ViewModelProvider(this).get(GroupViewModel::class.java)
         val view = inflater.inflate(R.layout.group_view_fragment, container, false)
-        viewModel.groups.value?.add(WorkGroup(UUID.randomUUID(), "WorkGroup"))
         val groupRecyclerView = view.findViewById<RecyclerView>(R.id.groupRecyclerView)
         val adapter = GroupViewAdapter(viewModel.groups, activity)
         groupRecyclerView.adapter = adapter
@@ -36,9 +33,11 @@ class GroupViewFragment : Fragment() {
         return view
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel =
+            ViewModelProvider(this).get(GroupViewModel::class.java)
+        viewModel.groups.value?.add(WorkGroup(UUID.randomUUID(), "WorkGroup"))
         setHasOptionsMenu(true)
     }
 
