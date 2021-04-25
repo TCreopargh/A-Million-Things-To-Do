@@ -17,7 +17,8 @@ data class TodoEntry(
     var status: Status = Status.NOT_STARTED,
     var actionHistory: MutableList<IAction> = mutableListOf(),
     val uuid: UUID = UUID.randomUUID(),
-    val timeCreated: Calendar = Calendar.getInstance()
+    val timeCreated: Calendar = Calendar.getInstance(),
+    val deadline: Calendar? = null
 ) : Comparable<TodoEntry> {
     fun addAction(action: IAction) {
         actionHistory.add(action)

@@ -7,11 +7,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import org.w3c.dom.Text
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.todo.TodoEntry
+import xyz.tcreopargh.amttd.ui.todoedit.TodoEditFragment
 import xyz.tcreopargh.amttd.util.format
 
 /**
@@ -48,7 +50,15 @@ class TodoViewAdapter(
             todoStatusText.text = item.status.getDisplayString()
             todoBarColor.setBackgroundColor(item.status.color)
             todoIconColor.setColorFilter(item.status.color, android.graphics.PorterDuff.Mode.SRC)
-
+            todoCard.setOnClickListener {
+                val fragmentManager = activity?.supportFragmentManager
+                fragmentManager?.beginTransaction()?.apply {
+                    replace(R.id.main_fragment_parent, TodoEditFragment::class.java, null)
+                    setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    addToBackStack(null)
+                    commit()
+                }
+            }
         }
     }
 

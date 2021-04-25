@@ -47,4 +47,15 @@
     <string name="press_back_again">Press back button again to exit the app!</string>
     <string name="todo_status">Todo Status</string>
     <string name="default_task_count">0 / 0</string>
+    <string name="todo_title">Title</string>
+    <string name="todo_description">Todo Description</string>
+    <string name="todo_title_text">Title</string>
+    <string name="todo_description_text">Description</string>
+    <string name="todo_tasks_text">Tasks</string>
+    <string name="todo_deadline_text">Deadline</string>
+    <string name="deadline_not_set">Not Set</string>
+    <string name="edit">Edit</string>
+    <string name="todo_status_text">Status</string>
+    <string name="todo_action_history_text">Action History</string>
+    <string name="expand">Expand</string>
 </resources>

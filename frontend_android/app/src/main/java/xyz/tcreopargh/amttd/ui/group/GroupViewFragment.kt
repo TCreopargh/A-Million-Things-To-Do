@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.group.WorkGroup
-import xyz.tcreopargh.amttd.ui.todo.TodoViewViewModel
 import java.util.*
 
 /**
@@ -37,8 +36,13 @@ class GroupViewFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel =
             ViewModelProvider(this).get(GroupViewModel::class.java)
-        viewModel.groups.value?.add(WorkGroup(UUID.randomUUID(), "WorkGroup"))
         setHasOptionsMenu(true)
+        initializeItems()
+    }
+
+    //TODO: Replace with actual data
+    private fun initializeItems() {
+        viewModel.groups.value?.add(WorkGroup(UUID.randomUUID(), "WorkGroup"))
     }
 
 }

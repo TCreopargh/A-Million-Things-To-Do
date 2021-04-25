@@ -28,6 +28,21 @@ class TodoViewFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.todo_view_fragment, container, false)
         val todoRecyclerView = view.findViewById<RecyclerView>(R.id.todoRecyclerView)
+
+        val adapter = TodoViewAdapter(viewModel.entries, activity)
+        todoRecyclerView.adapter = adapter
+        todoRecyclerView.layoutManager = LinearLayoutManager(context)
+        return view
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(TodoViewViewModel::class.java)
+        initializeItems()
+    }
+
+    // TODO: Replace with actual data
+    private fun initializeItems() {
         viewModel.entries.value?.add(
             TodoEntry(
                 (activity as? MainActivity)?.loggedInUser!!,
@@ -77,15 +92,6 @@ class TodoViewFragment : Fragment() {
                 status = Status.IN_PROGRESS
             )
         )
-        val adapter = TodoViewAdapter(viewModel.entries, activity)
-        todoRecyclerView.adapter = adapter
-        todoRecyclerView.layoutManager = LinearLayoutManager(context)
-        return view
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(TodoViewViewModel::class.java)
     }
 
 }
