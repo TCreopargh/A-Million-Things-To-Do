@@ -18,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.content_main.*
+import xyz.tcreopargh.amttd.data.exception.LoginFailedException
 import xyz.tcreopargh.amttd.data.login.LoginResult
 import xyz.tcreopargh.amttd.ui.group.GroupViewFragment
 import xyz.tcreopargh.amttd.ui.login.LoginActivity
@@ -184,7 +185,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun loginWithToken(uuid: UUID, authToken: String) {
-        mainProgressBar.visibility = View.VISIBLE
+        mainProgressBar?.visibility = View.VISIBLE
         Thread {
             when (val result =
                 viewModel.loginRepository.value?.loginWithAuthToken(uuid, authToken)) {
@@ -234,7 +235,13 @@ class MainActivity : BaseActivity() {
                     val loginIntent = Intent(activity, LoginActivity::class.java)
                     activity?.startActivityForResult(loginIntent, CODE_LOGIN)
                     if (activity?.exception != null) {
-                        Toast.makeText(activity, R.string.token_expired, Toast.LENGTH_SHORT).show()
+                        if(activity?.exception is LoginFailedException) {
+                            Toast.makeText(activity, R.string.token_expired, Toast.LENGTH_SHORT)
+                                .show()
+                        } else {
+                            Toast.makeText(activity, R.string.login_token_failed, Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     }
                 }
             }

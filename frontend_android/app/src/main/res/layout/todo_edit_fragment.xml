@@ -163,18 +163,23 @@
                     android:layout_marginStart="8dp"
                     android:textSize="16sp"
                     android:id="@+id/todoEditStatusText"
-                    android:text="@string/loading" />
+                    android:text="@string/loading"
+                    tools:ignore="RelativeOverlap" />
 
-            <Button
+            <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_gravity="end"
-                    android:text="@string/edit"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:id="@+id/todoEditStatusEditButton"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    tools:ignore="RelativeOverlap" />
+                    tools:ignore="RelativeOverlap"
+                    android:contentDescription="@string/edit"
+                    android:src="@drawable/ic_baseline_edit_24"
+                    android:clickable="true"
+                    android:tint="@color/primary"
+                    android:background="?android:selectableItemBackground" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -197,20 +202,26 @@
                     android:layout_alignParentStart="true"
                     android:textSize="16sp"
                     android:layout_marginStart="8dp"
+                    android:id="@+id/todoEditDeadlineText"
                     android:layout_gravity="start"
                     android:layout_centerVertical="true"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="8dp"
+                    tools:ignore="RelativeOverlap" />
 
-            <Button
+            <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_gravity="end"
-                    android:text="@string/edit"
+                    android:clickable="true"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:id="@+id/todoEditDeadlineEditButton"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    tools:ignore="RelativeOverlap" />
+                    tools:ignore="RelativeOverlap"
+                    android:contentDescription="@string/edit"
+                    android:src="@drawable/ic_baseline_edit_24"
+                    android:tint="@color/primary"
+                    android:background="?android:selectableItemBackground" />
         </RelativeLayout>
 
         <Button
