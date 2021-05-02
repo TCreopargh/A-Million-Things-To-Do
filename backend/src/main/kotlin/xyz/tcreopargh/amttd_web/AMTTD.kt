@@ -11,18 +11,5 @@ import org.springframework.web.bind.annotation.RestController
 import javax.sql.DataSource
 
 @SpringBootApplication
-@RestController
-@EnableAutoConfiguration
-@EnableConfigurationProperties
-@EntityScan
 @EnableJpaRepositories
-class MainApplication {
-
-    @Autowired
-    val mainDataSource: DataSource? = null
-
-    @RequestMapping("/")
-    fun root(): String {
-        return "<h1>Hello, World!</h1>"
-    }
-}
+class AMTTD

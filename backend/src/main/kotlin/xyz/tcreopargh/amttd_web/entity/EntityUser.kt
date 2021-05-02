@@ -31,11 +31,5 @@ data class EntityUser(
 
     override fun equals(other: Any?): Boolean = this.uuid == (other as? EntityUser)?.uuid
 
-    override fun hashCode(): Int {
-        var result = uuid.hashCode()
-        result = 31 * result + (name?.hashCode() ?: 0)
-        result = 31 * result + (password?.hashCode() ?: 0)
-        result = 31 * result + timeCreated.hashCode()
-        return result
-    }
+    override fun hashCode(): Int = uuid.hashCode()
 }
