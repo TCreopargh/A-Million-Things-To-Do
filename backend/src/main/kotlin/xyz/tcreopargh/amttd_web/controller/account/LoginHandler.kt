@@ -13,21 +13,16 @@ import xyz.tcreopargh.amttd_web.exception.AuthenticationException.State
 import xyz.tcreopargh.amttd_web.exception.LoginFailedException
 import xyz.tcreopargh.amttd_web.util.jsonObjectOf
 import xyz.tcreopargh.amttd_web.util.logger
-import xyz.tcreopargh.amttd_web.util.printlnAndClose
 import xyz.tcreopargh.amttd_web.util.readAndClose
 import java.util.*
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @RestController
 class LoginHandler : AuthenticationController() {
     @RequestMapping("/login", method = [RequestMethod.POST])
-    fun resolveLogin(request: HttpServletRequest, response: HttpServletResponse) {
+    fun resolveLogin(request: HttpServletRequest): String {
         val body = request.reader.readAndClose()
-        var jsonResponse = jsonObjectOf(
-            "success" to false,
-            "reason" to State.UNKNOWN.name
-        )
+        val jsonResponse: JsonObject
         try {
             val jsonObject: JsonObject = try {
                 JsonParser.parseString(body) as? JsonObject ?: throw JsonParseException("Json is empty!")
@@ -96,14 +91,12 @@ class LoginHandler : AuthenticationController() {
                     throw LoginFailedException(State.INCORRECT_PASSWORD)
                 }
             }
+            return jsonResponse.toString()
         } catch (e: AuthenticationException) {
-            jsonResponse =
-                jsonObjectOf(
-                    "success" to false,
-                    "reason" to e.state.name
-                )
-        } finally {
-            response.writer.printlnAndClose(jsonResponse.toString())
+            return jsonObjectOf(
+                "success" to false,
+                "reason" to e.state.name
+            ).toString()
         }
     }
 }

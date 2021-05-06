@@ -13,20 +13,14 @@ import xyz.tcreopargh.amttd_web.exception.AuthenticationException.State
 import xyz.tcreopargh.amttd_web.exception.RegisterFailedException
 import xyz.tcreopargh.amttd_web.util.jsonObjectOf
 import xyz.tcreopargh.amttd_web.util.logger
-import xyz.tcreopargh.amttd_web.util.printlnAndClose
 import xyz.tcreopargh.amttd_web.util.readAndClose
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @RestController
 class RegisterHandler : AuthenticationController() {
     @RequestMapping("/register", method = [RequestMethod.POST])
-    fun resolveRegister(request: HttpServletRequest, response: HttpServletResponse) {
+    fun resolveRegister(request: HttpServletRequest): String {
         val body = request.reader.readAndClose()
-        var jsonResponse = jsonObjectOf(
-            "success" to false,
-            "reason" to State.UNKNOWN.name
-        )
         try {
             val jsonObject: JsonObject = try {
                 JsonParser.parseString(body) as? JsonObject ?: throw JsonParseException("Json is empty!")
@@ -56,24 +50,17 @@ class RegisterHandler : AuthenticationController() {
             var generatedToken = AuthToken(user)
             generatedToken = tokenService.saveImmediately(generatedToken)
 
-            jsonResponse =
-                jsonObjectOf(
-                    "success" to true,
-                    "username" to (user.name ?: ""),
-                    "uuid" to user.uuid,
-                    "token" to generatedToken.token
-                )
-
-
+            return jsonObjectOf(
+                "success" to true,
+                "username" to (user.name ?: ""),
+                "uuid" to user.uuid,
+                "token" to generatedToken.token
+            ).toString()
         } catch (e: AuthenticationException) {
-            jsonResponse =
-                jsonObjectOf(
-                    "success" to false,
-                    "reason" to e.state.name
-                )
-
-        } finally {
-            response.writer.printlnAndClose(jsonResponse.toString())
+            return jsonObjectOf(
+                "success" to false,
+                "reason" to e.state.name
+            ).toString()
         }
     }
 }
