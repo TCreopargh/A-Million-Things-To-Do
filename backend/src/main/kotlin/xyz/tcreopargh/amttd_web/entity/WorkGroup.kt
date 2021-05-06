@@ -20,5 +20,6 @@ data class WorkGroup(
     )
     @Type(type = "uuid-char")
     val groupId: UUID = UUID.randomUUID(),
-    val groupName: String
-) : EntityBase()
+    val groupName: String = ""
+) : EntityBase() {
+}
