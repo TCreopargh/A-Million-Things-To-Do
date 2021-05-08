@@ -9,7 +9,7 @@ import java.util.*
 /**
  * @author TCreopargh
  */
-class GroupViewModel() : ViewModel() {
+class GroupViewModel : ViewModel() {
 
     private val _groups = MutableLiveData<MutableList<IWorkGroup>>().apply {
         value = mutableListOf()

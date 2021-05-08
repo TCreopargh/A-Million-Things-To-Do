@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.interactive.IUser
 import xyz.tcreopargh.amttd.data.interactive.IWorkGroup
 import java.util.*
 
