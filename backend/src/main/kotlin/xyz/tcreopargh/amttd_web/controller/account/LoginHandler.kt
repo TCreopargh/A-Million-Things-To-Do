@@ -15,7 +15,6 @@ import xyz.tcreopargh.amttd_web.exception.AuthenticationException.State
 import xyz.tcreopargh.amttd_web.exception.LoginFailedException
 import xyz.tcreopargh.amttd_web.util.jsonObjectOf
 import xyz.tcreopargh.amttd_web.util.logger
-import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
@@ -44,7 +43,7 @@ class LoginHandler : ControllerBase() {
                         jsonResponse = jsonObjectOf(
                             "success" to true,
                             "username" to (tokenUser?.name ?: ""),
-                            "uuid" to UUID.randomUUID(),
+                            "uuid" to uuid.toString(),
                             "token" to token
                         )
                     } else {

@@ -37,10 +37,8 @@ data class EntityUser(
     )
     var joinedWorkGroups: Set<EntityWorkGroup> = setOf()
 ) : IEntity, IUser {
-
+    @Transient
     override var username: String = name.toString()
-
     override fun equals(other: Any?): Boolean = this.uuid == (other as? EntityUser)?.uuid
-
     override fun hashCode(): Int = uuid.hashCode()
 }

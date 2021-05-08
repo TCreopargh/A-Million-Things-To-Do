@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.interactive.IWorkGroup
@@ -18,12 +17,9 @@ import xyz.tcreopargh.amttd.util.format
  * @author TCreopargh
  */
 class GroupViewAdapter(
-    private val workGroupsData: LiveData<MutableList<IWorkGroup>>,
+    var workGroups: MutableList<IWorkGroup>,
     private val activity: FragmentActivity?
 ) : RecyclerView.Adapter<GroupViewAdapter.ViewHolder>() {
-
-    private val workGroups
-        get() = workGroupsData.value ?: mutableListOf()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val groupNameText: TextView = view.findViewById(R.id.groupNameText)

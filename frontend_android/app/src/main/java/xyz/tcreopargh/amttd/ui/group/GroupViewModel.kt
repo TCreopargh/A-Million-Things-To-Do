@@ -17,4 +17,12 @@ class GroupViewModel : ViewModel() {
     val groups: LiveData<MutableList<IWorkGroup>> = _groups
 
     fun findGroupById(uuid: UUID): IWorkGroup? = groups.value?.find { it.groupId == uuid }
+
+    fun setValue(value: MutableList<IWorkGroup>) {
+        _groups.value = value
+    }
+
+    fun postValue(value: MutableList<IWorkGroup>) {
+        _groups.postValue(value)
+    }
 }

@@ -19,6 +19,7 @@ data class EntityWorkGroup(
     )
     @Type(type = "uuid-char")
     override val groupId: UUID = UUID.randomUUID(),
+
     val groupName: String = "",
 
     @Basic
@@ -30,7 +31,8 @@ data class EntityWorkGroup(
 
 
 ) : IWorkGroup, IEntity {
-    override var name: String = groupName
+    override val name: String
+        get() = groupName
     override val usersInGroup: List<IUser>
         get() = users.toList()
 }

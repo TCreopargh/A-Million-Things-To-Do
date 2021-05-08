@@ -18,3 +18,6 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
+logging:
+  level:
+    root: INFO

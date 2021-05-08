@@ -35,7 +35,7 @@ import java.util.*
  */
 class MainActivity : BaseActivity() {
 
-    private lateinit var viewModel: MainViewModel
+    lateinit var viewModel: MainViewModel
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
