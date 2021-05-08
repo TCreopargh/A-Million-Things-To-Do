@@ -24,6 +24,6 @@ class WorkGroupPresenter : ControllerBase() {
                 workGroups = this@Groups
             }
         }
-        return gson.toJson(workGroups.toList(),  object: TypeToken<List<EntityWorkGroup>>() {}.type)
+        return gson.toJson(workGroups.toList(), object : TypeToken<List<EntityWorkGroup>>() {}.type)
     }
 }

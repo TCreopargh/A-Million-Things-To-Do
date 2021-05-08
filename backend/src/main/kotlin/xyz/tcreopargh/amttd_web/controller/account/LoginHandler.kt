@@ -2,7 +2,10 @@ package xyz.tcreopargh.amttd_web.controller.account
 
 import com.google.gson.JsonObject
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.binding.LoginBody
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.AuthToken
@@ -73,7 +76,7 @@ class LoginHandler : ControllerBase() {
                     throw LoginFailedException(State.INCORRECT_PASSWORD)
                 }
             }
-            if(jsonResponse.get("success")?.asBoolean == true) {
+            if (jsonResponse.get("success")?.asBoolean == true) {
                 request.session.setAttribute("uuid", jsonResponse.get("uuid").asString)
                 request.session.setAttribute("token", jsonResponse.get("token").asString)
             }

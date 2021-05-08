@@ -1,4 +1,5 @@
 package xyz.tcreopargh.amttd_web.data
+
 import java.io.Serializable
 import java.util.*
 
