@@ -8,8 +8,8 @@ import java.util.*
  */
 interface IWorkGroup : Serializable {
     val groupId: UUID
-    var name: String
-    var timeCreated: Calendar
+    val name: String
+    val timeCreated: Calendar
 
     val usersInGroup: List<IUser> get() = listOf()
 }

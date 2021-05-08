@@ -8,6 +8,6 @@ import java.util.*
  * The base class of all users
  */
 interface IUser : Serializable {
-    var username: String
+    val username: String
     val uuid: UUID
 }
