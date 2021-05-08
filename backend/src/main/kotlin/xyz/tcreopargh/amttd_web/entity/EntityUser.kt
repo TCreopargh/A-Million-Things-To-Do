@@ -1,6 +1,7 @@
 package xyz.tcreopargh.amttd_web.entity
 
 import org.hibernate.annotations.Type
+import xyz.tcreopargh.amttd_web.data.IUser
 import java.util.*
 import javax.persistence.*
 
@@ -19,15 +20,25 @@ data class EntityUser(
         insertable = false,
         updatable = false,
         nullable = false,
-        columnDefinition = "varchar(128)"
+        columnDefinition = "varchar(64)"
     )
     @Type(type = "uuid-char")
-    val uuid: UUID = UUID.randomUUID(),
+    override val uuid: UUID = UUID.randomUUID(),
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
-    val timeCreated: Calendar = Calendar.getInstance()
-) : EntityBase() {
+    val timeCreated: Calendar = Calendar.getInstance(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_in_work_group",
+        joinColumns = [JoinColumn(name = "uuid")],
+        inverseJoinColumns = [JoinColumn(name = "groupId")]
+    )
+    var joinedWorkGroups: Set<EntityWorkGroup> = setOf()
+) : IEntity, IUser {
+
+    override var username: String = name.toString()
 
     override fun equals(other: Any?): Boolean = this.uuid == (other as? EntityUser)?.uuid
 

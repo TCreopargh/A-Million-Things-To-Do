@@ -22,11 +22,11 @@ enum class Status(@ColorInt val color: Int, val sortOrder: Int) {
     fun isActive() = !(this == ON_HOLD || this == CANCELLED || this == COMPLETED)
     fun getDisplayString() = when (this) {
         NOT_STARTED -> i18n(R.string.status_not_started)
-        IN_PLAN -> i18n(R.string.status_in_plan)
+        IN_PLAN     -> i18n(R.string.status_in_plan)
         IN_PROGRESS -> i18n(R.string.status_in_progress)
-        COMPLETED -> i18n(R.string.status_completed)
-        ON_HOLD -> i18n(R.string.status_on_hold)
-        CANCELLED -> i18n(R.string.status_cancelled)
+        COMPLETED   -> i18n(R.string.status_completed)
+        ON_HOLD     -> i18n(R.string.status_on_hold)
+        CANCELLED   -> i18n(R.string.status_cancelled)
     }
 
     fun getColoredString() = SpannableString(getDisplayString()).setColor(this.sortOrder)

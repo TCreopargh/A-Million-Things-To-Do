@@ -1,10 +1,10 @@
-package xyz.tcreopargh.amttd_web.controller.account
+package xyz.tcreopargh.amttd_web.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import xyz.tcreopargh.amttd_web.service.TokenService
 import xyz.tcreopargh.amttd_web.service.UserService
 
-open class AuthenticationController {
+abstract class ControllerBase {
     @Autowired
     lateinit var userService: UserService
 

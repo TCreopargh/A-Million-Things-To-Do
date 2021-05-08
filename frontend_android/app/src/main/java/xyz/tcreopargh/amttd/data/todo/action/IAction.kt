@@ -3,7 +3,7 @@ package xyz.tcreopargh.amttd.data.todo.action
 import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableString
-import xyz.tcreopargh.amttd.user.AbstractUser
+import xyz.tcreopargh.amttd.data.interactive.IUser
 import xyz.tcreopargh.amttd.util.setColor
 import java.util.*
 
@@ -15,7 +15,7 @@ interface IAction : Comparable<IAction> {
     /**
      * The user who initiated the action
      */
-    val user: AbstractUser
+    val user: IUser
     val timeCreated: Calendar
     fun getUserNameText(): Spannable {
         return SpannableString(user.username).setColor(Color.parseColor("#2196f3"))

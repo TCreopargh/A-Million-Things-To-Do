@@ -3,6 +3,7 @@ package xyz.tcreopargh.amttd_web.controller.account
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import xyz.tcreopargh.amttd_web.binding.RegisterBody
+import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.AuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException
@@ -12,7 +13,7 @@ import xyz.tcreopargh.amttd_web.util.jsonObjectOf
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-class RegisterHandler : AuthenticationController() {
+class RegisterHandler : ControllerBase() {
     @RequestMapping("/register", method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun resolveRegister(request: HttpServletRequest, @RequestBody registerBody: RegisterBody): String {
         try {

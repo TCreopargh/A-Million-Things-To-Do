@@ -10,18 +10,18 @@ import javax.persistence.*
 data class AuthToken(
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_uuid", columnDefinition = "varchar(128)", updatable = false)
+    @JoinColumn(name = "user_uuid", columnDefinition = "varchar(64)", updatable = false)
     var user: EntityUser? = null,
 
     @Id
-    @Column(name = "token", columnDefinition = "VARCHAR(128)", nullable = false, updatable = false)
+    @Column(name = "token", columnDefinition = "VARCHAR(64", nullable = false, updatable = false)
     var token: String = generateToken(),
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
     var timeCreated: Calendar = Calendar.getInstance()
 
-) : EntityBase() {
+) : IEntity {
     companion object {
         val LIFESPAN: Long by lazy { 86400000L * 7 }
     }

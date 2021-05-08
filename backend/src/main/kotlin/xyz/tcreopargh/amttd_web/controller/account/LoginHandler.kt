@@ -4,6 +4,7 @@ import com.google.gson.JsonObject
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import xyz.tcreopargh.amttd_web.binding.LoginBody
+import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.AuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException
@@ -15,7 +16,7 @@ import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-class LoginHandler : AuthenticationController() {
+class LoginHandler : ControllerBase() {
     @RequestMapping("/login", method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun resolveLogin(request: HttpServletRequest, @RequestBody loginBody: LoginBody): String {
         val jsonResponse: JsonObject
@@ -23,15 +24,9 @@ class LoginHandler : AuthenticationController() {
             val password = loginBody.password
             val username = loginBody.username
             val token = loginBody.token
-            val uuidString = loginBody.uuid
+            val uuid = loginBody.uuid
             if (token != null) {
                 //Token is present, attempt login with token
-                val uuid = try {
-                    UUID.fromString(uuidString)
-                } catch (e: IllegalArgumentException) {
-                    logger.info("User not found!")
-                    throw LoginFailedException(State.USER_NOT_FOUND)
-                }
                 val tokenFound = tokenService.findByToken(token)
                 if (tokenFound == null) {
                     logger.info("Token not found!  $token")
@@ -67,7 +62,6 @@ class LoginHandler : AuthenticationController() {
                 val user = users.getOrNull(0)
                 var generatedToken = AuthToken(user)
                 generatedToken = tokenService.saveImmediately(generatedToken)
-
                 if (user?.password == password && user?.name == username) {
                     jsonResponse = jsonObjectOf(
                         "success" to true,

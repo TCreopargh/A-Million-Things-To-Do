@@ -1,6 +1,7 @@
 package xyz.tcreopargh.amttd_web.service
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import xyz.tcreopargh.amttd_web.entity.EntityUser
@@ -17,6 +18,7 @@ class UserService {
     fun saveImmediately(user: EntityUser) = userRepository.saveAndFlush(user)
     fun saveAll(users: List<EntityUser>) = userRepository.saveAll(users)
     fun findByUsername(username: String) = userRepository.findByName(username)
+    fun findById(uuid: UUID) = userRepository.findByIdOrNull(uuid)
 
     @Transactional
     fun update(uuid: UUID, newUser: EntityUser) {

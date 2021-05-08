@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
-import org.w3c.dom.Text
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.todo.TodoEntry
 import xyz.tcreopargh.amttd.ui.todoedit.TodoEditFragment

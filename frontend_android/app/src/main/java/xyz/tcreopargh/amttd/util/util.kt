@@ -10,6 +10,7 @@ import android.text.style.ForegroundColorSpan
 import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -25,6 +26,8 @@ import java.util.*
 
 const val PACKAGE_NAME = "xyz.tcreopargh.amttd"
 const val PACKAGE_NAME_DOT = "$PACKAGE_NAME."
+
+val gson: Gson = Gson()
 
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.
@@ -62,10 +65,10 @@ fun SpannableString.setColor(@ColorInt color: Int): SpannableString = apply {
 fun JsonObject.map(vararg args: Pair<String, Any>) {
     for (pair in args) {
         when (pair.second) {
-            is Boolean -> addProperty(pair.first, pair.second as Boolean)
-            is String -> addProperty(pair.first, pair.second as String)
-            is Number -> addProperty(pair.first, pair.second as Number)
-            is Char -> addProperty(pair.first, pair.second as Char)
+            is Boolean     -> addProperty(pair.first, pair.second as Boolean)
+            is String      -> addProperty(pair.first, pair.second as String)
+            is Number      -> addProperty(pair.first, pair.second as Number)
+            is Char        -> addProperty(pair.first, pair.second as Char)
             is JsonElement -> add(pair.first, pair.second as JsonElement)
             else           -> addProperty(pair.first, pair.second.toString())
         }
@@ -82,10 +85,10 @@ fun jsonArrayOf(vararg args: Any): JsonArray {
     return JsonArray().apply {
         for (element in args) {
             when (element) {
-                is Boolean -> this.add(element)
-                is String -> this.add(element)
-                is Number -> this.add(element)
-                is Char -> this.add(element)
+                is Boolean     -> this.add(element)
+                is String      -> this.add(element)
+                is Number      -> this.add(element)
+                is Char        -> this.add(element)
                 is JsonElement -> this.add(element)
                 else           -> this.add(element.toString())
             }

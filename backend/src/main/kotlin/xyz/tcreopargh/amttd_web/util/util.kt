@@ -1,5 +1,6 @@
 package xyz.tcreopargh.amttd_web.util
 
+import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -16,7 +17,9 @@ val logger: Logger by lazy {
     return@lazy LoggerFactory.getLogger(AMTTD::class.java)
 }
 
-fun generateToken() = random.nextString(128)
+fun generateToken() = random.nextString(64)
+
+val gson: Gson = Gson()
 
 fun Random.nextString(
     length: Int,

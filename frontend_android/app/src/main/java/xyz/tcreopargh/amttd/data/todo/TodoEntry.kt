@@ -1,7 +1,7 @@
 package xyz.tcreopargh.amttd.data.todo
 
+import xyz.tcreopargh.amttd.data.interactive.IUser
 import xyz.tcreopargh.amttd.data.todo.action.IAction
-import xyz.tcreopargh.amttd.user.AbstractUser
 import java.util.*
 import java.util.stream.Collectors
 import kotlin.math.absoluteValue
@@ -10,7 +10,7 @@ import kotlin.math.absoluteValue
  * @author TCreopargh
  */
 data class TodoEntry(
-    val creator: AbstractUser,
+    val creator: IUser,
     var title: String,
     var description: String = "",
     var tasks: MutableList<Task> = mutableListOf(Task(title)),

@@ -10,16 +10,15 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.group.WorkGroup
+import xyz.tcreopargh.amttd.data.interactive.IWorkGroup
 import xyz.tcreopargh.amttd.ui.todo.TodoViewFragment
 import xyz.tcreopargh.amttd.util.format
-import java.text.DateFormat
 
 /**
  * @author TCreopargh
  */
 class GroupViewAdapter(
-    private val workGroupsData: LiveData<MutableList<WorkGroup>>,
+    private val workGroupsData: LiveData<MutableList<IWorkGroup>>,
     private val activity: FragmentActivity?
 ) : RecyclerView.Adapter<GroupViewAdapter.ViewHolder>() {
 
@@ -41,7 +40,7 @@ class GroupViewAdapter(
         val workGroup = workGroups[position]
         holder.apply {
             groupNameText.text = workGroup.name
-            groupUserCountText.text = workGroup.users.size.toString()
+            groupUserCountText.text = workGroup.usersInGroup.size.toString()
             groupTimeText.text = workGroup.timeCreated.format()
             groupCard.setOnClickListener {
                 val fragmentManager = activity?.supportFragmentManager

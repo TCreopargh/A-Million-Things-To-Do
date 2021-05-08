@@ -46,7 +46,7 @@ class MainActivity : BaseActivity() {
     private var exception: Exception? = null
 
     val loggedInUser
-    get() = viewModel.getUser()
+        get() = viewModel.getUser()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +76,7 @@ class MainActivity : BaseActivity() {
                     selectGroup()
                     true
                 }
-                R.id.nav_logout -> {
+                R.id.nav_logout     -> {
                     drawerLayout.closeDrawer(navView)
                     logoutAndRestart()
                     false
@@ -101,7 +101,7 @@ class MainActivity : BaseActivity() {
 
         // Restore instance state
         if (savedInstanceState?.containsKey("User") == true) {
-            viewModel.setUser(savedInstanceState.getParcelable("User") as? LocalUser)
+            viewModel.setUser(savedInstanceState.getSerializable("User") as? LocalUser)
         }
         attemptLoginWithLocalCache()
     }
@@ -131,7 +131,7 @@ class MainActivity : BaseActivity() {
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
-        outState.putParcelable("User", viewModel.getUser())
+        outState.putSerializable("User", viewModel.getUser())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -140,7 +140,7 @@ class MainActivity : BaseActivity() {
             when (requestCode) {
                 CODE_LOGIN -> {
                     viewModel.setUser(
-                        data?.getParcelableExtra(PACKAGE_NAME_DOT + "User") as? LocalUser
+                        data?.getSerializableExtra(PACKAGE_NAME_DOT + "User") as? LocalUser
                     )
                     cacheUserLoginInfo()
                     updateSidebarHeader()
@@ -195,7 +195,7 @@ class MainActivity : BaseActivity() {
                         what = LOGIN_SUCCESS
                     })
                 }
-                is LoginResult.Error -> {
+                is LoginResult.Error   -> {
                     exception = result.exception
                     Log.w(AMTTD.logTag, "Login with token failed with exception: ", exception)
                     handler.sendMessage(Message().apply {
@@ -231,15 +231,19 @@ class MainActivity : BaseActivity() {
                     activity?.selectGroup()
                     activity?.updateSidebarHeader()
                 }
-                LOGIN_FAILED -> {
+                LOGIN_FAILED  -> {
                     val loginIntent = Intent(activity, LoginActivity::class.java)
                     activity?.startActivityForResult(loginIntent, CODE_LOGIN)
                     if (activity?.exception != null) {
-                        if(activity?.exception is LoginFailedException) {
+                        if (activity?.exception is LoginFailedException) {
                             Toast.makeText(activity, R.string.token_expired, Toast.LENGTH_SHORT)
                                 .show()
                         } else {
-                            Toast.makeText(activity, R.string.login_token_failed, Toast.LENGTH_SHORT)
+                            Toast.makeText(
+                                activity,
+                                R.string.login_token_failed,
+                                Toast.LENGTH_SHORT
+                            )
                                 .show()
                         }
                     }

@@ -9,7 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.group.WorkGroup
+import xyz.tcreopargh.amttd.data.interactive.IUser
+import xyz.tcreopargh.amttd.data.interactive.IWorkGroup
 import java.util.*
 
 /**
@@ -40,9 +41,14 @@ class GroupViewFragment : Fragment() {
         initializeItems()
     }
 
+
     //TODO: Replace with actual data
     private fun initializeItems() {
-        viewModel.groups.value?.add(WorkGroup(UUID.randomUUID(), "WorkGroup"))
+        viewModel.groups.value?.add(object : IWorkGroup {
+            override val groupId: UUID = UUID.randomUUID()
+            override var name: String = "WorkGroup"
+            override var timeCreated: Calendar = Calendar.getInstance()
+        })
     }
 
 }

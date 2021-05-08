@@ -3,8 +3,8 @@ package xyz.tcreopargh.amttd.data.todo.action
 import android.text.Spannable
 import android.text.SpannableString
 import xyz.tcreopargh.amttd.R
+import xyz.tcreopargh.amttd.data.interactive.IUser
 import xyz.tcreopargh.amttd.data.todo.Task
-import xyz.tcreopargh.amttd.user.AbstractUser
 import xyz.tcreopargh.amttd.util.i18n
 import java.util.*
 
@@ -17,7 +17,7 @@ interface IActionTask : IAction {
 }
 
 class ActionTaskCompleted(
-    override val user: AbstractUser,
+    override val user: IUser,
     override val timeCreated: Calendar,
     override val task: Task
 ) :
@@ -28,7 +28,7 @@ class ActionTaskCompleted(
 }
 
 class ActionTaskUncompleted(
-    override val user: AbstractUser,
+    override val user: IUser,
     override val timeCreated: Calendar,
     override val task: Task
 ) :

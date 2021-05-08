@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -73,7 +72,7 @@ class LoginActivity : BaseActivity() {
                 // Complete and destroy login activity once successful
                 val backIntent = Intent().putExtra(
                     PACKAGE_NAME_DOT + "User",
-                    loginViewModel.loginRepository.loggedInUser as Parcelable
+                    loginViewModel.loginRepository.loggedInUser
                 )
                 setResult(RESULT_OK, backIntent)
                 finish()
