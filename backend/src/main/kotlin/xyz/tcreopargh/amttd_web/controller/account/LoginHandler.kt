@@ -1,11 +1,9 @@
 package xyz.tcreopargh.amttd_web.controller.account
 
 import com.google.gson.JsonObject
-import com.google.gson.JsonParseException
-import com.google.gson.JsonParser
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.*
+import xyz.tcreopargh.amttd_web.binding.LoginBody
 import xyz.tcreopargh.amttd_web.entity.AuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException
@@ -13,31 +11,21 @@ import xyz.tcreopargh.amttd_web.exception.AuthenticationException.State
 import xyz.tcreopargh.amttd_web.exception.LoginFailedException
 import xyz.tcreopargh.amttd_web.util.jsonObjectOf
 import xyz.tcreopargh.amttd_web.util.logger
-import xyz.tcreopargh.amttd_web.util.readAndClose
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
 class LoginHandler : AuthenticationController() {
-    @RequestMapping("/login", method = [RequestMethod.POST])
-    fun resolveLogin(request: HttpServletRequest): String {
-        val body = request.reader.readAndClose()
+    @RequestMapping("/login", method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun resolveLogin(request: HttpServletRequest, @RequestBody loginBody: LoginBody): String {
         val jsonResponse: JsonObject
         try {
-            val jsonObject: JsonObject = try {
-                JsonParser.parseString(body) as? JsonObject ?: throw JsonParseException("Json is empty!")
-            } catch (e: JsonParseException) {
-                throw LoginFailedException(State.CORRUPTED_DATA)
-            }
-            val password = jsonObject.get("password")?.asString
-            val username = jsonObject.get("username")?.asString
-
-            val token = jsonObject.get("token")?.asString
-            logger.info("Received login JSON: $body")
-
+            val password = loginBody.password
+            val username = loginBody.username
+            val token = loginBody.token
+            val uuidString = loginBody.uuid
             if (token != null) {
                 //Token is present, attempt login with token
-                val uuidString = jsonObject.get("uuid")?.asString
                 val uuid = try {
                     UUID.fromString(uuidString)
                 } catch (e: IllegalArgumentException) {
@@ -90,6 +78,10 @@ class LoginHandler : AuthenticationController() {
                 } else {
                     throw LoginFailedException(State.INCORRECT_PASSWORD)
                 }
+            }
+            if(jsonResponse.get("success")?.asBoolean == true) {
+                request.session.setAttribute("uuid", jsonResponse.get("uuid").asString)
+                request.session.setAttribute("token", jsonResponse.get("token").asString)
             }
             return jsonResponse.toString()
         } catch (e: AuthenticationException) {

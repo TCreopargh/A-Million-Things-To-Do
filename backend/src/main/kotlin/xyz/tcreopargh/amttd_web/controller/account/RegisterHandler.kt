@@ -1,34 +1,23 @@
 package xyz.tcreopargh.amttd_web.controller.account
 
-import com.google.gson.JsonObject
-import com.google.gson.JsonParseException
-import com.google.gson.JsonParser
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.*
+import xyz.tcreopargh.amttd_web.binding.RegisterBody
 import xyz.tcreopargh.amttd_web.entity.AuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException.State
 import xyz.tcreopargh.amttd_web.exception.RegisterFailedException
 import xyz.tcreopargh.amttd_web.util.jsonObjectOf
-import xyz.tcreopargh.amttd_web.util.logger
-import xyz.tcreopargh.amttd_web.util.readAndClose
 import javax.servlet.http.HttpServletRequest
 
 @RestController
 class RegisterHandler : AuthenticationController() {
-    @RequestMapping("/register", method = [RequestMethod.POST])
-    fun resolveRegister(request: HttpServletRequest): String {
-        val body = request.reader.readAndClose()
+    @RequestMapping("/register", method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun resolveRegister(request: HttpServletRequest, @RequestBody registerBody: RegisterBody): String {
         try {
-            val jsonObject: JsonObject = try {
-                JsonParser.parseString(body) as? JsonObject ?: throw JsonParseException("Json is empty!")
-            } catch (e: JsonParseException) {
-                throw RegisterFailedException(State.CORRUPTED_DATA)
-            }
-            val password = jsonObject.get("password")?.asString
-            val username = jsonObject.get("username")?.asString
+            val password = registerBody.password
+            val username = registerBody.username
 
             if (!isUserNameValid(username)) {
                 throw RegisterFailedException(State.ILLEGAL_USERNAME)
@@ -36,7 +25,6 @@ class RegisterHandler : AuthenticationController() {
             if (!isPasswordValid(password)) {
                 throw RegisterFailedException(State.ILLEGAL_PASSWORD)
             }
-            logger.info("Received register JSON: $body")
 
             if (userService.findByUsername(username ?: "").isNotEmpty()) {
                 throw RegisterFailedException(State.USER_ALREADY_EXISTS)
@@ -49,6 +37,9 @@ class RegisterHandler : AuthenticationController() {
             user = userService.saveImmediately(user)
             var generatedToken = AuthToken(user)
             generatedToken = tokenService.saveImmediately(generatedToken)
+
+            request.session.setAttribute("uuid", user.uuid.toString())
+            request.session.setAttribute("token", generatedToken.token)
 
             return jsonObjectOf(
                 "success" to true,
