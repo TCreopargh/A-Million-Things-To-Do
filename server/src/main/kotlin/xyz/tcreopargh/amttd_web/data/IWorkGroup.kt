@@ -6,7 +6,7 @@ import java.util.*
 /**
  * @author TCreopargh
  */
-sealed interface IWorkGroup : Serializable {
+interface IWorkGroup : Serializable {
     val groupId: UUID
     val name: String
     val timeCreated: Calendar
