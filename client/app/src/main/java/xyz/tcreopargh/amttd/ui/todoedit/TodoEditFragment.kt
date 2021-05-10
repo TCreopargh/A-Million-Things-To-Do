@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.todo.Status
+import xyz.tcreopargh.amttd.data.interactive.TodoStatus
 import xyz.tcreopargh.amttd.data.todo.Task
 import xyz.tcreopargh.amttd.data.todo.TodoEntry
 import xyz.tcreopargh.amttd.util.format
@@ -54,7 +54,7 @@ class TodoEditFragment : Fragment() {
             deadline = Calendar.getInstance().apply {
                 set(Calendar.MONTH, get(Calendar.MONTH) + 1)
             },
-            status = Status.IN_PROGRESS
+            status = TodoStatus.IN_PROGRESS
         )
     }
 

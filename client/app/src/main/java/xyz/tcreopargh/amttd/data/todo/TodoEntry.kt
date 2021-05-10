@@ -1,7 +1,8 @@
 package xyz.tcreopargh.amttd.data.todo
 
 import xyz.tcreopargh.amttd.data.interactive.IUser
-import xyz.tcreopargh.amttd.data.todo.action.IAction
+import xyz.tcreopargh.amttd.data.interactive.TodoStatus
+import xyz.tcreopargh.amttd.data.interactive.action.IAction
 import java.util.*
 import java.util.stream.Collectors
 import kotlin.math.absoluteValue
@@ -14,7 +15,7 @@ data class TodoEntry(
     var title: String,
     var description: String = "",
     var tasks: MutableList<Task> = mutableListOf(Task(title)),
-    var status: Status = Status.NOT_STARTED,
+    var status: TodoStatus = TodoStatus.NOT_STARTED,
     var actionHistory: MutableList<IAction> = mutableListOf(),
     val uuid: UUID = UUID.randomUUID(),
     val timeCreated: Calendar = Calendar.getInstance(),

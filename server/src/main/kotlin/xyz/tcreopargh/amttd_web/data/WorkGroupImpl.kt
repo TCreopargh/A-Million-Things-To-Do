@@ -9,10 +9,9 @@ data class WorkGroupImpl(
     override var usersInGroup: MutableList<UserImpl> = mutableListOf()
 ) : IWorkGroup {
     constructor(workGroup: IWorkGroup) : this(
-        workGroup.groupId,
-        workGroup.name,
-        workGroup.timeCreated,
-        workGroup.usersInGroup.map { UserImpl(it) }.toMutableList()
+        groupId = workGroup.groupId,
+        name = workGroup.name,
+        timeCreated = workGroup.timeCreated,
+        usersInGroup = workGroup.usersInGroup.map { UserImpl(it) }.toMutableList()
     )
 }
-

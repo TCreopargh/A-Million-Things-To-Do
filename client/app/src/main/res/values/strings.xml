@@ -60,4 +60,5 @@
     <string name="expand">Expand</string>
     <string name="login_token_failed">Failed to login with token, please log in manually.</string>
     <string name="unknown_error">Unknown Error</string>
+    <string name="unknown_action">Unknown Action</string>
 </resources>

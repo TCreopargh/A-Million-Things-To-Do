@@ -1,4 +1,4 @@
-package xyz.tcreopargh.amttd.data.todo
+package xyz.tcreopargh.amttd.data.interactive
 
 import android.text.SpannableString
 import androidx.annotation.ColorInt
@@ -9,7 +9,7 @@ import xyz.tcreopargh.amttd.util.setColor
 /**
  * @author TCreopargh
  */
-enum class Status(@ColorInt val color: Int, val sortOrder: Int) {
+enum class TodoStatus(@ColorInt val color: Int, val sortOrder: Int) {
     NOT_STARTED(0xf44336, 2),
     IN_PLAN(0x3f51b5, 1),
     IN_PROGRESS(0x2196f3, 0),

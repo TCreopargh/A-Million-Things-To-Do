@@ -1,9 +1,10 @@
-package xyz.tcreopargh.amttd.data.todo.action
+package xyz.tcreopargh.amttd.data.interactive.action
 
 import android.text.Spannable
 import android.text.SpannableString
 import xyz.tcreopargh.amttd.data.interactive.IUser
-import xyz.tcreopargh.amttd.data.todo.Status
+import xyz.tcreopargh.amttd.data.interactive.TodoStatus
+import xyz.tcreopargh.amttd.data.interactive.UserImpl
 import xyz.tcreopargh.amttd.util.plus
 import java.util.*
 
@@ -11,16 +12,17 @@ import java.util.*
  * @author TCreopargh
  */
 class ActionStatusChanged(
-    override val user: IUser,
+    override val user: UserImpl,
     override val timeCreated: Calendar,
-    val statusFrom: Status,
-    val statusTo: Status
+    override val fromStatus: TodoStatus,
+    override val toStatus: TodoStatus
 ) : IAction {
     override fun getActionText(): Spannable {
         return SpannableString("changed status from ") +
-                statusFrom.getColoredString() +
+                fromStatus.getColoredString() +
                 SpannableString(" to ") +
-                statusTo.getColoredString()
+                toStatus.getColoredString()
 
     }
+    override val actionType: ActionType = ActionType.STATUS_CHANGED
 }

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.todo.Status
+import xyz.tcreopargh.amttd.data.interactive.TodoStatus
 import xyz.tcreopargh.amttd.data.todo.Task
 import xyz.tcreopargh.amttd.data.todo.TodoEntry
 
@@ -62,7 +62,7 @@ class TodoViewFragment : Fragment() {
                     Task("123", true),
                     Task("123", true)
                 ),
-                status = Status.COMPLETED
+                status = TodoStatus.COMPLETED
             )
         )
 
@@ -76,7 +76,7 @@ class TodoViewFragment : Fragment() {
                     Task("123", true),
                     Task("123")
                 ),
-                status = Status.ON_HOLD
+                status = TodoStatus.ON_HOLD
             )
         )
 
@@ -89,7 +89,7 @@ class TodoViewFragment : Fragment() {
                     Task("123"),
                     Task("123", true)
                 ),
-                status = Status.IN_PROGRESS
+                status = TodoStatus.IN_PROGRESS
             )
         )
     }
