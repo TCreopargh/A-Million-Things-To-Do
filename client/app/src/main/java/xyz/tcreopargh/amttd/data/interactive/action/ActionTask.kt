@@ -3,7 +3,9 @@ package xyz.tcreopargh.amttd.data.interactive.action
 import android.text.Spannable
 import android.text.SpannableString
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.interactive.*
+import xyz.tcreopargh.amttd.data.interactive.ITask
+import xyz.tcreopargh.amttd.data.interactive.TaskImpl
+import xyz.tcreopargh.amttd.data.interactive.UserImpl
 import xyz.tcreopargh.amttd.util.i18n
 import java.util.*
 

@@ -5,11 +5,12 @@ import androidx.annotation.ColorInt
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.util.i18n
 import xyz.tcreopargh.amttd.util.setColor
+import java.io.Serializable
 
 /**
  * @author TCreopargh
  */
-enum class TodoStatus(@ColorInt val color: Int, val sortOrder: Int) {
+enum class TodoStatus(@ColorInt val color: Int, val sortOrder: Int) : Serializable {
     NOT_STARTED(0xf44336, 2),
     IN_PLAN(0x3f51b5, 1),
     IN_PROGRESS(0x2196f3, 0),

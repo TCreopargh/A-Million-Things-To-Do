@@ -1,9 +1,11 @@
 package xyz.tcreopargh.amttd_web.data
 
+import java.io.Serializable
+
 /**
  * @author TCreopargh
  */
-enum class TodoStatus(val color: Int, val sortOrder: Int) {
+enum class TodoStatus(val color: Int, val sortOrder: Int) : Serializable {
     NOT_STARTED(0xf44336, 2),
     IN_PLAN(0x3f51b5, 1),
     IN_PROGRESS(0x2196f3, 0),

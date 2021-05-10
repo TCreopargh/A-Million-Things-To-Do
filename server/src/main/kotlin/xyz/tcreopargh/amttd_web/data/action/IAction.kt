@@ -3,13 +3,14 @@ package xyz.tcreopargh.amttd_web.data.action
 import xyz.tcreopargh.amttd_web.data.ITask
 import xyz.tcreopargh.amttd_web.data.IUser
 import xyz.tcreopargh.amttd_web.data.TodoStatus
+import java.io.Serializable
 import java.util.*
 
 /**
  * @author TCreopargh
  * Actions are operations that are done to a TodoEntry.
  */
-interface IAction {
+interface IAction : Serializable {
     /**
      * The user who initiated the action
      */

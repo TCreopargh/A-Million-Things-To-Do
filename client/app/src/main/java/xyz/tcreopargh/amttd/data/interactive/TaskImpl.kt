@@ -1,6 +1,5 @@
 package xyz.tcreopargh.amttd.data.interactive
 
-import xyz.tcreopargh.amttd.data.interactive.ITask
 import java.util.*
 
 /**

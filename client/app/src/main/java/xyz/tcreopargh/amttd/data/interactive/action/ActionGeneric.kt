@@ -3,7 +3,9 @@ package xyz.tcreopargh.amttd.data.interactive.action
 import android.text.Spannable
 import android.text.SpannableString
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.interactive.*
+import xyz.tcreopargh.amttd.data.interactive.TaskImpl
+import xyz.tcreopargh.amttd.data.interactive.TodoStatus
+import xyz.tcreopargh.amttd.data.interactive.UserImpl
 import xyz.tcreopargh.amttd.util.i18n
 import java.util.*
 
@@ -30,7 +32,7 @@ data class ActionGeneric(
         stringExtra = action.stringExtra,
         fromStatus = action.fromStatus,
         toStatus = action.toStatus,
-        task = action.task?.run {TaskImpl(this)}
+        task = action.task?.run { TaskImpl(this) }
     )
 
     val action: IAction

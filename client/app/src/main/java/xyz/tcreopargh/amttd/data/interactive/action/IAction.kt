@@ -7,13 +7,14 @@ import xyz.tcreopargh.amttd.data.interactive.ITask
 import xyz.tcreopargh.amttd.data.interactive.IUser
 import xyz.tcreopargh.amttd.data.interactive.TodoStatus
 import xyz.tcreopargh.amttd.util.setColor
+import java.io.Serializable
 import java.util.*
 
 /**
  * @author TCreopargh
  * Actions are operations that are done to a TodoEntry.
  */
-interface IAction {
+interface IAction : Serializable {
     /**
      * The user who initiated the action
      */

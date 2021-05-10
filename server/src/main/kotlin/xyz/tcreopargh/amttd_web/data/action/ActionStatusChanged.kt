@@ -1,10 +1,7 @@
 package xyz.tcreopargh.amttd_web.data.action
 
-import xyz.tcreopargh.amttd_web.data.IUser
 import xyz.tcreopargh.amttd_web.data.TodoStatus
 import xyz.tcreopargh.amttd_web.data.UserImpl
-import xyz.tcreopargh.amttd_web.data.action.ActionType
-import xyz.tcreopargh.amttd_web.data.action.IAction
 import java.util.*
 
 /**

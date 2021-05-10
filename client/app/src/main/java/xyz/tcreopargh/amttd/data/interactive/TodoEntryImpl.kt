@@ -1,7 +1,6 @@
 package xyz.tcreopargh.amttd.data.interactive
 
 import xyz.tcreopargh.amttd.data.interactive.action.ActionGeneric
-import xyz.tcreopargh.amttd.data.interactive.action.IAction
 import java.util.*
 
 /**

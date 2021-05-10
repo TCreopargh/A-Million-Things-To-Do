@@ -1,11 +1,11 @@
 package xyz.tcreopargh.amttd_web.data.action
 
-import com.google.gson.reflect.TypeToken
+import java.io.Serializable
 
 /**
  * @author TCreopargh
  */
-enum class ActionType {
+enum class ActionType : Serializable {
     COMMENT,
     STATUS_CHANGED,
     TASK_COMPLETED,
