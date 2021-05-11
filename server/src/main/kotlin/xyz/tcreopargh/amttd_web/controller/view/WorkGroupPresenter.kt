@@ -1,6 +1,7 @@
 package xyz.tcreopargh.amttd_web.controller.view
 
 import com.google.gson.reflect.TypeToken
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 class WorkGroupPresenter : ControllerBase() {
 
-    @RequestMapping("/workgroups", method = [RequestMethod.POST])
+    @RequestMapping("/workgroups", method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun resolveWorkGroups(request: HttpServletRequest, @RequestBody body: WorkGroupViewBody): String {
         var workGroups: Set<EntityWorkGroup> = setOf()
         body.uuid?.let {

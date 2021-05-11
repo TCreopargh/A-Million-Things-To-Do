@@ -18,7 +18,8 @@ interface IAction : Serializable {
     /**
      * The user who initiated the action
      */
-    val user: IUser
+    val actionId: UUID
+    val user: IUser?
     val timeCreated: Calendar
     val actionType: ActionType
 
@@ -35,7 +36,7 @@ interface IAction : Serializable {
         get() = null
 
     fun getUserNameText(): Spannable {
-        return SpannableString(user.username).setColor(Color.parseColor("#2196f3"))
+        return SpannableString(user?.username ?: "").setColor(Color.parseColor("#2196f3"))
     }
 
     fun getDisplayText(): Spannable {
