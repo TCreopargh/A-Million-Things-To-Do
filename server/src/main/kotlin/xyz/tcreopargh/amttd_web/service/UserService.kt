@@ -13,6 +13,7 @@ import java.util.*
 class UserService {
     @Autowired
     private lateinit var userRepository: UserRepository
+
     fun getAllUsers() = userRepository.findAll()
     fun save(user: EntityUser) = userRepository.save(user)
     fun saveImmediately(user: EntityUser) = userRepository.saveAndFlush(user)

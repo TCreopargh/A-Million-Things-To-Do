@@ -1,6 +1,7 @@
 package xyz.tcreopargh.amttd.ui.todo
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +9,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.gson.reflect.TypeToken
+import okhttp3.Request
+import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.interactive.TodoStatus
-import xyz.tcreopargh.amttd.data.todo.Task
-import xyz.tcreopargh.amttd.data.todo.TodoEntry
+import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
+import xyz.tcreopargh.amttd.data.interactive.TodoEntryImpl
+import xyz.tcreopargh.amttd.util.*
+import java.util.*
 
 class TodoViewFragment : Fragment() {
 
@@ -22,6 +28,8 @@ class TodoViewFragment : Fragment() {
 
     private lateinit var viewModel: TodoViewViewModel
 
+    private var groupId: UUID? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,69 +37,51 @@ class TodoViewFragment : Fragment() {
         val view = inflater.inflate(R.layout.todo_view_fragment, container, false)
         val todoRecyclerView = view.findViewById<RecyclerView>(R.id.todoRecyclerView)
 
-        val adapter = TodoViewAdapter(viewModel.entries, activity)
+        val todoSwipeContainer = view.findViewById<SwipeRefreshLayout>(R.id.todoSwipeContainer)
+        val adapter = TodoViewAdapter(viewModel.entries.value ?: listOf(), activity)
+        todoSwipeContainer.setOnRefreshListener { initializeItems() }
         todoRecyclerView.adapter = adapter
         todoRecyclerView.layoutManager = LinearLayoutManager(context)
+        viewModel.entries.observe(viewLifecycleOwner) {
+            adapter.todoList = it ?: mutableListOf()
+            adapter.notifyDataSetChanged()
+            todoSwipeContainer.isRefreshing = false
+        }
+
+        val mainActivity = activity as? MainActivity
+        mainActivity?.viewModel?.loginRepository?.observe(mainActivity) {
+            initializeItems()
+        }
         return view
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        groupId = arguments?.get("groupId") as? UUID
         viewModel = ViewModelProvider(this).get(TodoViewViewModel::class.java)
         initializeItems()
     }
 
-    // TODO: Replace with actual data
     private fun initializeItems() {
-        viewModel.entries.value?.add(
-            TodoEntry(
-                (activity as? MainActivity)?.loggedInUser!!,
-                "Wash clothes",
-                "123456"
-            )
-        )
-
-        viewModel.entries.value?.add(
-            TodoEntry(
-                (activity as? MainActivity)?.loggedInUser!!,
-                "Do homework",
-                "123456",
-                tasks = mutableListOf(
-                    Task("123", true),
-                    Task("123", true),
-                    Task("123", true),
-                    Task("123", true)
-                ),
-                status = TodoStatus.COMPLETED
-            )
-        )
-
-        viewModel.entries.value?.add(
-            TodoEntry(
-                (activity as? MainActivity)?.loggedInUser!!,
-                "Buy groceries",
-                "123456",
-                tasks = mutableListOf(
-                    Task("123"),
-                    Task("123", true),
-                    Task("123")
-                ),
-                status = TodoStatus.ON_HOLD
-            )
-        )
-
-        viewModel.entries.value?.add(
-            TodoEntry(
-                (activity as? MainActivity)?.loggedInUser!!,
-                "Complete essay",
-                "123456",
-                tasks = mutableListOf(
-                    Task("123"),
-                    Task("123", true)
-                ),
-                status = TodoStatus.IN_PROGRESS
-            )
-        )
+        Thread {
+            val uuid = groupId ?: return@Thread
+            val request = Request.Builder()
+                .post(
+                    jsonObjectOf(
+                        "groupId" to uuid
+                    ).toRequestBody()
+                ).url(rootUrl.withPath("/todo"))
+                .build()
+            val response = AMTTD.okHttpClient.newCall(request).execute()
+            val body = response.body?.string()
+            val entries: List<ITodoEntry> = try {
+                gson.fromJson(body, object : TypeToken<List<TodoEntryImpl>>() {}.type)
+            } catch (e: RuntimeException) {
+                Log.e(AMTTD.logTag, e.stackTraceToString())
+                listOf()
+            }
+            viewModel.postEntry(entries.toMutableList())
+        }.start()
     }
 
 }

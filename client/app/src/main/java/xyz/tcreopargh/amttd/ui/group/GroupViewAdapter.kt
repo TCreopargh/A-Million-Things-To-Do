@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
@@ -40,8 +41,11 @@ class GroupViewAdapter(
             groupTimeText.text = workGroup.timeCreated.format()
             groupCard.setOnClickListener {
                 val fragmentManager = activity?.supportFragmentManager
+                val targetFragment = TodoViewFragment.newInstance().apply {
+                    arguments = bundleOf("groupId" to workGroup.groupId)
+                }
                 fragmentManager?.beginTransaction()?.apply {
-                    replace(R.id.main_fragment_parent, TodoViewFragment::class.java, null)
+                    replace(R.id.main_fragment_parent, targetFragment, null)
                     setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     addToBackStack(null)
                     commit()

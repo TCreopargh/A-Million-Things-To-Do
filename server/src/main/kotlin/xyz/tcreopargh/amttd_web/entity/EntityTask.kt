@@ -1,6 +1,8 @@
 package xyz.tcreopargh.amttd_web.entity
 
 import org.hibernate.annotations.Type
+import xyz.tcreopargh.amttd_web.annotation.ExcludeToString
+import xyz.tcreopargh.amttd_web.annotation.ExcludeToStringProcessor
 import xyz.tcreopargh.amttd_web.data.ITask
 import java.util.*
 import javax.persistence.*
@@ -23,5 +25,10 @@ data class EntityTask(
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "entry_id", nullable = false)
+    @ExcludeToString
     var parent: EntityTodoEntry? = null
-) : ITask
+) : ITask {
+    override fun toString(): String {
+        return ExcludeToStringProcessor.getToString(this)
+    }
+}

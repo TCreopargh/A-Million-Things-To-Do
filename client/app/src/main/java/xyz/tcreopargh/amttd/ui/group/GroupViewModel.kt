@@ -18,11 +18,11 @@ class GroupViewModel : ViewModel() {
 
     fun findGroupById(uuid: UUID): IWorkGroup? = groups.value?.find { it.groupId == uuid }
 
-    fun setValue(value: MutableList<IWorkGroup>) {
+    fun setGroup(value: MutableList<IWorkGroup>) {
         _groups.value = value
     }
 
-    fun postValue(value: MutableList<IWorkGroup>) {
+    fun postGroup(value: MutableList<IWorkGroup>) {
         _groups.postValue(value)
     }
 }

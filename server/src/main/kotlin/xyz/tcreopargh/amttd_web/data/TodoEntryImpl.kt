@@ -13,7 +13,7 @@ data class TodoEntryImpl(
     override var description: String = "",
     override var status: TodoStatus = TodoStatus.NOT_STARTED,
     override val timeCreated: Calendar = Calendar.getInstance(),
-    override var deadline: Calendar = Calendar.getInstance(),
+    override var deadline: Calendar? = null,
     override var tasks: List<TaskImpl> = listOf(),
     override var actionHistory: List<ActionGeneric> = listOf()
 ) : ITodoEntry {

@@ -1,6 +1,7 @@
 package xyz.tcreopargh.amttd.ui.group
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +41,6 @@ class GroupViewFragment : Fragment() {
         groupRecyclerView.layoutManager = LinearLayoutManager(context)
         groupSwipeContainer.setOnRefreshListener { initializeItems() }
         viewModel.groups.observe(viewLifecycleOwner) {
-            println(it.joinToString { WorkGroupImpl(it).toString() })
             adapter.workGroups = it ?: mutableListOf()
             adapter.notifyDataSetChanged()
             groupSwipeContainer.isRefreshing = false
@@ -62,7 +62,6 @@ class GroupViewFragment : Fragment() {
     }
 
 
-    //TODO: Replace with actual data
     private fun initializeItems() {
         Thread {
             val uuid = (activity as? MainActivity)?.loggedInUser?.uuid ?: return@Thread
@@ -75,9 +74,13 @@ class GroupViewFragment : Fragment() {
                 .build()
             val response = AMTTD.okHttpClient.newCall(request).execute()
             val body = response.body?.string()
-            val workGroups: List<IWorkGroup> =
+            val workGroups: List<IWorkGroup> = try {
                 gson.fromJson(body, object : TypeToken<List<WorkGroupImpl>>() {}.type)
-            viewModel.postValue(workGroups.toMutableList())
+            } catch (e: RuntimeException) {
+                Log.e(AMTTD.logTag, e.stackTraceToString())
+                listOf()
+            }
+            viewModel.postGroup(workGroups.toMutableList())
         }.start()
     }
 

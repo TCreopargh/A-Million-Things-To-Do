@@ -1,6 +1,7 @@
 package xyz.tcreopargh.amttd.ui.todoedit
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +11,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import xyz.tcreopargh.amttd.MainActivity
+import com.google.gson.reflect.TypeToken
+import okhttp3.Request
+import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.interactive.TodoStatus
-import xyz.tcreopargh.amttd.data.todo.Task
-import xyz.tcreopargh.amttd.data.todo.TodoEntry
-import xyz.tcreopargh.amttd.util.format
+import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
+import xyz.tcreopargh.amttd.data.interactive.TodoEntryImpl
+import xyz.tcreopargh.amttd.util.*
 import java.util.*
 
 class TodoEditFragment : Fragment() {
@@ -26,43 +28,50 @@ class TodoEditFragment : Fragment() {
 
     private lateinit var viewModel: TodoEditViewModel
 
+    private var entryId: UUID? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.todo_edit_fragment, container, false)
-        initView(view)
+        viewModel.entry.observe(viewLifecycleOwner) { initView(view, it) }
         return view
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(TodoEditViewModel::class.java)
+        entryId = arguments?.get("entryId") as? UUID
         initializeItems()
     }
 
-    // TODO: Replace with actual data
     private fun initializeItems() {
-        viewModel.entry.value = TodoEntry(
-            (activity as? MainActivity)?.loggedInUser!!,
-            "Complete essay",
-            "Get your essay about the research done!",
-            tasks = mutableListOf(
-                Task("123"),
-                Task("456", true)
-            ),
-            deadline = Calendar.getInstance().apply {
-                set(Calendar.MONTH, get(Calendar.MONTH) + 1)
-            },
-            status = TodoStatus.IN_PROGRESS
-        )
+
+        Thread {
+            val uuid = entryId ?: return@Thread
+            val request = Request.Builder()
+                .post(
+                    jsonObjectOf(
+                        "entryId" to uuid
+                    ).toRequestBody()
+                ).url(rootUrl.withPath("/todo-entry"))
+                .build()
+            val response = AMTTD.okHttpClient.newCall(request).execute()
+            val body = response.body?.string()
+            val entry: ITodoEntry? = try {
+                gson.fromJson(body, object : TypeToken<TodoEntryImpl>() {}.type)
+            } catch (e: RuntimeException) {
+                Log.e(AMTTD.logTag, e.stackTraceToString())
+                null
+            }
+            viewModel.entry.postValue(entry)
+        }.start()
     }
 
-    private fun initView(viewRoot: View) {
-        val entry = viewModel.entry.value
+    private fun initView(viewRoot: View, entry: ITodoEntry?) {
         if (entry == null) {
             Toast.makeText(context, R.string.unknown_error, Toast.LENGTH_SHORT).show()
-            activity?.onBackPressed()
             return
         }
         viewRoot.apply {

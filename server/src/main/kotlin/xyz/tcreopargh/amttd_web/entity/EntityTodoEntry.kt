@@ -1,6 +1,8 @@
 package xyz.tcreopargh.amttd_web.entity
 
 import org.hibernate.annotations.Type
+import xyz.tcreopargh.amttd_web.annotation.ExcludeToString
+import xyz.tcreopargh.amttd_web.annotation.ExcludeToStringProcessor
 import xyz.tcreopargh.amttd_web.data.ITodoEntry
 import xyz.tcreopargh.amttd_web.data.TodoStatus
 import java.util.*
@@ -37,13 +39,21 @@ data class EntityTodoEntry(
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
-    override var deadline: Calendar = Calendar.getInstance(),
+    override var deadline: Calendar? = null,
 
     @OneToMany(targetEntity = EntityTask::class, mappedBy = "parent")
     override var tasks: List<EntityTask> = listOf(),
 
     @OneToMany(targetEntity = EntityAction::class, mappedBy = "parent")
-    override var actionHistory: List<EntityAction> = listOf()
+    override var actionHistory: List<EntityAction> = listOf(),
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "group_id", nullable = false)
+    @ExcludeToString
+    var parent: EntityWorkGroup? = null
 
 ) : ITodoEntry {
+    override fun toString(): String {
+        return ExcludeToStringProcessor.getToString(this)
+    }
 }

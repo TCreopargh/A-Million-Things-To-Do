@@ -1,6 +1,8 @@
 package xyz.tcreopargh.amttd_web.entity
 
 import org.hibernate.annotations.Type
+import xyz.tcreopargh.amttd_web.annotation.ExcludeToString
+import xyz.tcreopargh.amttd_web.annotation.ExcludeToStringProcessor
 import xyz.tcreopargh.amttd_web.data.TodoStatus
 import xyz.tcreopargh.amttd_web.data.action.ActionType
 import xyz.tcreopargh.amttd_web.data.action.IAction
@@ -47,5 +49,10 @@ data class EntityAction(
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "entry_id", nullable = false)
+    @ExcludeToString
     var parent: EntityTodoEntry? = null
+
+    override fun toString(): String {
+        return ExcludeToStringProcessor.getToString(this)
+    }
 }
