@@ -32,7 +32,7 @@ data class EntityUser(
     @ManyToMany
     @JoinTable(
         name = "user_in_work_group",
-        joinColumns = [JoinColumn(name = "uuid")],
+        joinColumns = [JoinColumn(name = "user_uuid")],
         inverseJoinColumns = [JoinColumn(name = "groupId")]
     )
     var joinedWorkGroups: Set<EntityWorkGroup> = setOf()
