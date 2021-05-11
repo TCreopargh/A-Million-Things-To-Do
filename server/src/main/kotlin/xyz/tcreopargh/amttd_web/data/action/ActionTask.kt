@@ -14,7 +14,8 @@ interface IActionTask : IAction {
 }
 
 class ActionTaskCompleted(
-    override val user: UserImpl,
+    override val actionId: UUID,
+    override val user: UserImpl?,
     override val timeCreated: Calendar,
     override val task: TaskImpl
 ) :
@@ -24,7 +25,8 @@ class ActionTaskCompleted(
 }
 
 class ActionTaskUncompleted(
-    override val user: UserImpl,
+    override val actionId: UUID,
+    override val user: UserImpl?,
     override val timeCreated: Calendar,
     override val task: TaskImpl
 ) :

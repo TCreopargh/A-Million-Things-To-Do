@@ -15,7 +15,7 @@ data class TodoEntryImpl(
     override val timeCreated: Calendar = Calendar.getInstance(),
     override var deadline: Calendar = Calendar.getInstance(),
     override var tasks: List<TaskImpl> = listOf(),
-    override var actionHistory: List<ActionGeneric> = listOf(),
+    override var actionHistory: List<ActionGeneric> = listOf()
 ) : ITodoEntry {
     constructor(todoEntry: ITodoEntry) : this(
         todoEntry.entryId,

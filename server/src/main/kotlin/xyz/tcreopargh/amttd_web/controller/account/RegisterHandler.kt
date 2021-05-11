@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.binding.RegisterBody
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
-import xyz.tcreopargh.amttd_web.entity.AuthToken
+import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException.State
@@ -39,7 +39,7 @@ class RegisterHandler : ControllerBase() {
                 password = password
             )
             user = userService.saveImmediately(user)
-            var generatedToken = AuthToken(user)
+            var generatedToken = EntityAuthToken(user)
             generatedToken = tokenService.saveImmediately(generatedToken)
 
             request.session.setAttribute("uuid", user.uuid.toString())

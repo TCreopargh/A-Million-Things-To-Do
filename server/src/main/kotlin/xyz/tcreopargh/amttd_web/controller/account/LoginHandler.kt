@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.binding.LoginBody
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
-import xyz.tcreopargh.amttd_web.entity.AuthToken
+import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException.State
@@ -62,7 +62,7 @@ class LoginHandler : ControllerBase() {
                 }
                 val users: List<EntityUser> = userService.findByUsername(username ?: "")
                 val user = users.getOrNull(0)
-                var generatedToken = AuthToken(user)
+                var generatedToken = EntityAuthToken(user)
                 generatedToken = tokenService.saveImmediately(generatedToken)
                 if (user?.password == password && user?.name == username) {
                     jsonResponse = jsonObjectOf(

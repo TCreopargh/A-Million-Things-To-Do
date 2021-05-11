@@ -10,7 +10,8 @@ import java.util.*
  * action type for serialization.
  */
 data class ActionGeneric(
-    override val user: UserImpl,
+    override val actionId: UUID,
+    override val user: UserImpl?,
     override val timeCreated: Calendar,
     override val actionType: ActionType,
     override var stringExtra: String?,
@@ -20,7 +21,8 @@ data class ActionGeneric(
 ) : IAction {
 
     constructor(action: IAction) : this(
-        user = UserImpl(action.user),
+        actionId = action.actionId,
+        user = action.user?.let { UserImpl(it) },
         timeCreated = action.timeCreated,
         actionType = action.actionType,
         stringExtra = action.stringExtra,
@@ -32,22 +34,26 @@ data class ActionGeneric(
     val action: IAction
         get() = when (actionType) {
             ActionType.COMMENT          -> ActionComment(
+                actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,
                 comment = stringExtra ?: ""
             )
             ActionType.STATUS_CHANGED   -> ActionStatusChanged(
+                actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,
                 fromStatus = fromStatus ?: TodoStatus.NOT_STARTED,
                 toStatus = toStatus ?: TodoStatus.NOT_STARTED
             )
             ActionType.TASK_COMPLETED   -> ActionTaskCompleted(
+                actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,
                 task = task ?: TaskImpl()
             )
             ActionType.TASK_UNCOMPLETED -> ActionTaskCompleted(
+                actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,
                 task = task ?: TaskImpl()

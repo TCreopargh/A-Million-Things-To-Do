@@ -23,7 +23,7 @@ data class EntityUser(
         columnDefinition = "varchar(64)"
     )
     @Type(type = "uuid-char")
-    override val uuid: UUID = UUID.randomUUID(),
+    override var uuid: UUID = UUID.randomUUID(),
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)

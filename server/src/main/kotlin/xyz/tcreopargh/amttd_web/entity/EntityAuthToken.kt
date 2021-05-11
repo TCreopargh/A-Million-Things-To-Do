@@ -7,7 +7,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "auth_token", indexes = [Index(name = "user_index", columnList = "user_uuid")])
-data class AuthToken(
+data class EntityAuthToken(
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_uuid", columnDefinition = "varchar(64)", updatable = false)
@@ -33,7 +33,7 @@ data class AuthToken(
 
     fun isValid() = !isExpired()
 
-    override fun equals(other: Any?): Boolean = this.token == (other as? AuthToken)?.token
+    override fun equals(other: Any?): Boolean = this.token == (other as? EntityAuthToken)?.token
 
     override fun hashCode(): Int = token.hashCode()
 }

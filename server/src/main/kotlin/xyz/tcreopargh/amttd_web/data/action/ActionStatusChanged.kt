@@ -8,7 +8,8 @@ import java.util.*
  * @author TCreopargh
  */
 class ActionStatusChanged(
-    override val user: UserImpl,
+    override val actionId: UUID,
+    override val user: UserImpl?,
     override val timeCreated: Calendar,
     override val fromStatus: TodoStatus,
     override val toStatus: TodoStatus

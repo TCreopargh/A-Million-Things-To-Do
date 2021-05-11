@@ -14,7 +14,8 @@ interface IAction : Serializable {
     /**
      * The user who initiated the action
      */
-    val user: IUser
+    val actionId: UUID
+    val user: IUser?
     val timeCreated: Calendar
     val actionType: ActionType
 
