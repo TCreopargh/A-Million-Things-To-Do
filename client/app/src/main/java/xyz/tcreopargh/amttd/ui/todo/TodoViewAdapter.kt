@@ -54,7 +54,11 @@ class TodoViewAdapter(
                     arguments = bundleOf("entryId" to item.entryId)
                 }
                 fragmentManager?.beginTransaction()?.apply {
-                    replace(R.id.main_fragment_parent, targetFragment, null)
+                    replace(
+                        R.id.main_fragment_parent,
+                        targetFragment,
+                        targetFragment::class.simpleName
+                    )
                     setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     addToBackStack(null)
                     commit()

@@ -12,7 +12,6 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.todo_view_fragment.*
 import xyz.tcreopargh.amttd.ActivityManager
 import xyz.tcreopargh.amttd.BaseActivity
 import xyz.tcreopargh.amttd.R

@@ -17,7 +17,6 @@ import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
-import xyz.tcreopargh.amttd.data.interactive.IWorkGroup
 import xyz.tcreopargh.amttd.data.interactive.TodoEntryImpl
 import xyz.tcreopargh.amttd.util.*
 import java.io.IOException

@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -22,6 +23,8 @@ import xyz.tcreopargh.amttd.data.exception.LoginFailedException
 import xyz.tcreopargh.amttd.data.login.LoginResult
 import xyz.tcreopargh.amttd.ui.group.GroupViewFragment
 import xyz.tcreopargh.amttd.ui.login.LoginActivity
+import xyz.tcreopargh.amttd.ui.todo.TodoViewFragment
+import xyz.tcreopargh.amttd.ui.todoedit.TodoEditFragment
 import xyz.tcreopargh.amttd.user.LocalUser
 import xyz.tcreopargh.amttd.util.CODE_LOGIN
 import xyz.tcreopargh.amttd.util.PACKAGE_NAME_DOT
@@ -59,7 +62,12 @@ class MainActivity : BaseActivity() {
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            val currentFragment = getCurrentlyDisplayedFragment()
+            Snackbar.make(
+                view,
+                currentFragment?.javaClass?.kotlin?.simpleName ?: "null",
+                Snackbar.LENGTH_LONG
+            )
                 .setAction("Action", null).show()
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -108,11 +116,28 @@ class MainActivity : BaseActivity() {
 
     private fun selectGroup() {
         val fragmentManager = supportFragmentManager
+        val targetFragment = GroupViewFragment.newInstance()
         fragmentManager.beginTransaction()
-            .replace(R.id.main_fragment_parent, GroupViewFragment::class.java, null)
+            .replace(
+                R.id.main_fragment_parent,
+                targetFragment,
+                targetFragment::class.simpleName
+            )
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit()
         navView.menu.findItem(R.id.nav_group_view).isChecked = true
+    }
+
+    fun getCurrentlyDisplayedFragment(): Fragment? {
+        val todoEdit =
+            supportFragmentManager.findFragmentByTag(TodoEditFragment::class.simpleName) as? TodoEditFragment
+        val todoView =
+            supportFragmentManager.findFragmentByTag(TodoViewFragment::class.simpleName) as? TodoViewFragment
+        val groupView =
+            supportFragmentManager.findFragmentByTag(GroupViewFragment::class.simpleName) as? GroupViewFragment
+        return todoEdit?.takeIf { it.isVisible }
+            ?: todoView?.takeIf { it.isVisible }
+            ?: groupView?.takeIf { it.isVisible }
     }
 
     @SuppressLint("ApplySharedPref")

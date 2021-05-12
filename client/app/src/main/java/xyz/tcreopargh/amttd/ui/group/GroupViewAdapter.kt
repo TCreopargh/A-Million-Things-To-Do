@@ -45,7 +45,11 @@ class GroupViewAdapter(
                     arguments = bundleOf("groupId" to workGroup.groupId)
                 }
                 fragmentManager?.beginTransaction()?.apply {
-                    replace(R.id.main_fragment_parent, targetFragment, null)
+                    replace(
+                        R.id.main_fragment_parent,
+                        targetFragment,
+                        targetFragment::class.simpleName
+                    )
                     setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     addToBackStack(null)
                     commit()
