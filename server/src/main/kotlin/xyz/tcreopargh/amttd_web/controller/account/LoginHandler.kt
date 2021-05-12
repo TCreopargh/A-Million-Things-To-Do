@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import xyz.tcreopargh.amttd_web.binding.LoginBody
+import xyz.tcreopargh.amttd_web.bean.LoginBody
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
@@ -24,9 +24,14 @@ class LoginHandler : ControllerBase() {
         val jsonResponse: JsonObject
         try {
             val password = loginBody.password
-            val username = loginBody.username
+            val email = loginBody.email?.lowercase()
             val token = loginBody.token
             val uuid = loginBody.uuid
+
+            if (!((password != null && email != null) || (token != null && uuid != null))) {
+                throw LoginFailedException(State.FIELD_MISSING)
+            }
+
             if (token != null) {
                 //Token is present, attempt login with token
                 val tokenFound = tokenService.findByToken(token)
@@ -38,37 +43,39 @@ class LoginHandler : ControllerBase() {
                     tokenService.remove(tokenFound)
                     throw LoginFailedException(State.INVALID_TOKEN)
                 } else {
-                    val tokenUser = tokenFound.user
-                    if (tokenUser?.uuid == uuid) {
+                    val tokenUser = tokenFound.user ?: throw LoginFailedException(State.USER_NOT_FOUND)
+                    if (tokenUser.uuid == uuid) {
                         jsonResponse = jsonObjectOf(
                             "success" to true,
-                            "username" to (tokenUser?.name ?: ""),
+                            "email" to tokenUser.email,
+                            "username" to (tokenUser.name ?: ""),
                             "uuid" to uuid.toString(),
                             "token" to token
                         )
                     } else {
-                        logger.info("Token does not match the current user!  Token: $token  Expected UUID: ${tokenUser?.uuid}  Actual UUID: $uuid")
+                        logger.info("Token does not match the current user!  Token: $token  Expected UUID: ${tokenUser.uuid}  Actual UUID: $uuid")
                         throw LoginFailedException(State.INVALID_TOKEN)
                     }
                 }
 
             } else {
 
-                if (!isUserNameValid(username)) {
-                    throw LoginFailedException(State.ILLEGAL_USERNAME)
+                if (!isEmailValid(email)) {
+                    throw LoginFailedException(State.ILLEGAL_EMAIL)
                 }
                 if (!isPasswordValid(password)) {
                     throw LoginFailedException(State.ILLEGAL_PASSWORD)
                 }
-                val users: List<EntityUser> = userService.findByUsername(username ?: "")
-                val user = users.getOrNull(0)
+                val users: List<EntityUser> = userService.findByEmail(email ?: "")
+                val user = users.getOrNull(0) ?: throw LoginFailedException(State.USER_NOT_FOUND)
                 var generatedToken = EntityAuthToken(user)
                 generatedToken = tokenService.saveImmediately(generatedToken)
-                if (user?.password == password && user?.name == username) {
+                if (user.password == password && user.email == email) {
                     jsonResponse = jsonObjectOf(
                         "success" to true,
-                        "username" to (user?.name ?: ""),
-                        "uuid" to user?.uuid.toString(),
+                        "email" to user.email,
+                        "username" to (user.name ?: ""),
+                        "uuid" to user.uuid.toString(),
                         "token" to generatedToken.token
                     )
                 } else {

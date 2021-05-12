@@ -1,4 +1,4 @@
-package xyz.tcreopargh.amttd_web.binding
+package xyz.tcreopargh.amttd_web.bean
 
 import java.util.*
 

@@ -9,5 +9,6 @@ import java.util.*
  */
 interface IUser : Serializable {
     val username: String
+    val email: String
     val uuid: UUID
 }

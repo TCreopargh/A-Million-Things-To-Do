@@ -11,37 +11,54 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context=".ui.login.LoginActivity">
 
-    <EditText
-            android:id="@+id/username"
+    <com.google.android.material.textfield.TextInputLayout
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="96dp"
             android:layout_marginEnd="24dp"
-            android:autofillHints="@string/prompt_username"
-            android:hint="@string/prompt_username"
-            android:inputType="textEmailAddress"
-            android:selectAllOnFocus="true"
+            android:id="@+id/emailLayout"
+            app:boxBackgroundMode="outline"
+            app:boxBackgroundColor="@android:color/transparent">
+
+        <EditText
+                android:id="@+id/email"
+                android:autofillHints="@string/prompt_email"
+                android:hint="@string/prompt_email"
+                android:inputType="textEmailAddress"
+                android:selectAllOnFocus="true"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-            android:id="@+id/password"
+            app:layout_constraintTop_toBottomOf="@+id/emailLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
+            android:id="@+id/passwordLayout"
+            app:passwordToggleEnabled="true"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
-            android:autofillHints="@string/prompt_password"
-            android:hint="@string/prompt_password"
-            android:imeActionLabel="@string/action_sign_in_short"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username" />
+            app:boxBackgroundMode="outline"
+            app:boxBackgroundColor="@android:color/transparent">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password"
+                android:autofillHints="@string/prompt_password"
+                android:hint="@string/prompt_password"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:selectAllOnFocus="true"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
             android:id="@+id/login"
@@ -57,7 +74,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password"
+            app:layout_constraintTop_toBottomOf="@+id/passwordLayout"
             app:layout_constraintVertical_bias="0.2"
             app:shapeAppearanceOverlay="@style/PillShaped" />
 
@@ -90,8 +107,8 @@
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="64dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/password"
-            app:layout_constraintStart_toStartOf="@+id/password"
+            app:layout_constraintEnd_toEndOf="@+id/passwordLayout"
+            app:layout_constraintStart_toStartOf="@+id/passwordLayout"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.3" />
 
@@ -102,7 +119,7 @@
             android:id="@+id/loginTitle"
             android:textColor="@color/primary"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/username"
+            app:layout_constraintBottom_toTopOf="@+id/email"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="24dp"
             android:layout_marginBottom="8dp"

@@ -19,6 +19,7 @@ class UserService {
     fun saveImmediately(user: EntityUser) = userRepository.saveAndFlush(user)
     fun saveAll(users: List<EntityUser>) = userRepository.saveAll(users)
     fun findByUsername(username: String) = userRepository.findByName(username)
+    fun findByEmail(email: String) = userRepository.findByEmailAddress(email)
     fun findById(uuid: UUID) = userRepository.findByIdOrNull(uuid)
 
     @Transactional

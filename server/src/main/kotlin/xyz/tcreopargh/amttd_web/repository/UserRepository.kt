@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 interface UserRepository : JpaRepository<EntityUser, UUID> {
     fun findByName(name: String): List<EntityUser>
+    fun findByEmailAddress(email: String): List<EntityUser>
 }

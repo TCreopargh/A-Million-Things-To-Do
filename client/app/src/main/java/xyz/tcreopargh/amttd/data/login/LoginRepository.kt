@@ -28,11 +28,6 @@ class LoginRepository(val dataSource: LoginDataSource, var loggedInUser: LocalUs
         loggedInUser = null
     }
 
-    fun logout() {
-        loggedInUser = null
-        dataSource.logout()
-    }
-
     fun login(username: String, password: String): LoginResult<LocalUser> {
         val result = dataSource.login(username, password)
         if (result is LoginResult.Success) {
@@ -42,8 +37,8 @@ class LoginRepository(val dataSource: LoginDataSource, var loggedInUser: LocalUs
         return result
     }
 
-    fun register(username: String, password: String): LoginResult<LocalUser> {
-        val result = dataSource.register(username, password)
+    fun register(email: String, password: String, username: String): LoginResult<LocalUser> {
+        val result = dataSource.register(email, password, username)
         if (result is LoginResult.Success) {
             this.loggedInUser = result.data
         }

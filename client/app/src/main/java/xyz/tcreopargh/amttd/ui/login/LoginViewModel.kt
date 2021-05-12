@@ -36,9 +36,9 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModelBase() {
         }.start()
     }
 
-    fun register(username: String, password: String) {
+    fun register(email: String, password: String, username: String) {
         Thread {
-            when (val result = loginRepository.register(username, password)) {
+            when (val result = loginRepository.register(email, password, username)) {
                 is LoginResult.Success ->
                     _loginResult.postValue(
                         AuthResult(
@@ -58,9 +58,9 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModelBase() {
         }.start()
     }
 
-    fun loginDataChanged(username: String, password: String) {
-        if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
+    fun loginDataChanged(email: String, password: String) {
+        if (!isEmailValid(email)) {
+            _loginForm.value = LoginFormState(emailError = R.string.invalid_email)
         } else if (!isPasswordValid(password)) {
             _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
         } else {
@@ -68,11 +68,29 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModelBase() {
         }
     }
 
-    private fun isUserNameValid(username: String): Boolean {
-        return username.matches(Regex("^([\\u4e00-\\u9fa5]{2,3})|([A-Za-z0-9_]{3,32})|([a-zA-Z0-9_\\u4e00-\\u9fa5]{3,32})\$"))
+    fun usernameChanged(email: String, password: String, username: String) {
+        if (!isEmailValid(email)) {
+            _loginForm.value = LoginFormState(emailError = R.string.invalid_email)
+        } else if (!isPasswordValid(password)) {
+            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
+        } else if (!isUserNameValid(username)) {
+            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
+        } else {
+            _loginForm.value = LoginFormState(isDataValid = true)
+        }
     }
 
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length in 6..1024
+    companion object {
+        fun isEmailValid(email: String?): Boolean {
+            return email?.matches("^\\S+@\\S+\\.\\S+\$".toRegex()) == true
+        }
+
+        fun isUserNameValid(username: String?): Boolean {
+            return username?.matches(Regex("^([\\u4e00-\\u9fa5]{2,3})|([A-Za-z0-9_ ]{3,32})|([a-zA-Z0-9_ \\u4e00-\\u9fa5]{3,32})\$")) == true && username.trim() == username
+        }
+
+        fun isPasswordValid(password: String): Boolean {
+            return password.length in 6..1024
+        }
     }
 }

@@ -12,11 +12,13 @@ import java.util.*
 class LocalUser(
     override var username: String,
     override val uuid: UUID,
+    override var email: String,
     val authToken: String?
 ) : IUser, Serializable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         UUID.fromString(parcel.readString()),
+        parcel.readString() ?: "",
         parcel.readString()
     )
 

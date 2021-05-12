@@ -1,9 +1,9 @@
-package xyz.tcreopargh.amttd_web.binding
+package xyz.tcreopargh.amttd_web.bean
 
 import java.util.*
 
 data class LoginBody(
-    var username: String? = null,
+    var email: String? = null,
     var password: String? = null,
     var token: String? = null,
     var uuid: UUID? = null

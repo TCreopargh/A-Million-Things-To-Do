@@ -6,6 +6,8 @@ package xyz.tcreopargh.amttd.data.exception
 sealed class AuthenticationException(val state: State = State.UNKNOWN) :
     IllegalArgumentException("Authentication Failed! ${state.defaultMessage}") {
     enum class State(val defaultMessage: String) {
+        FIELD_MISSING("You must fill in all of the required fields."),
+        ILLEGAL_EMAIL("Illegal Email"),
         ILLEGAL_USERNAME("Illegal Username"),
         ILLEGAL_PASSWORD("Illegal Password"),
         INVALID_TOKEN("Invalid Token"),
@@ -21,7 +23,7 @@ class LoginFailedException(state: State = State.UNKNOWN) : AuthenticationExcepti
     constructor(reason: String) : this(
         try {
             State.valueOf(reason)
-        } catch (_: IllegalArgumentException) {
+        } catch (_: java.lang.IllegalArgumentException) {
             State.UNKNOWN
         }
     )
@@ -31,7 +33,7 @@ class RegisterFailedException(state: State = State.UNKNOWN) : AuthenticationExce
     constructor(reason: String) : this(
         try {
             State.valueOf(reason)
-        } catch (_: IllegalArgumentException) {
+        } catch (_: java.lang.IllegalArgumentException) {
             State.UNKNOWN
         }
     )

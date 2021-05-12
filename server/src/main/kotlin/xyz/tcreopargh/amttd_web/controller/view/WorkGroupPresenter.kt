@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import xyz.tcreopargh.amttd_web.binding.WorkGroupViewBody
+import xyz.tcreopargh.amttd_web.bean.WorkGroupViewBody
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.data.WorkGroupImpl
 import xyz.tcreopargh.amttd_web.entity.EntityWorkGroup

@@ -20,12 +20,12 @@ import java.util.*
  */
 class LoginDataSource {
 
-    fun login(username: String, password: String): LoginResult<LocalUser> {
+    fun login(email: String, password: String): LoginResult<LocalUser> {
         // TODO: acquire UUID and authToken from server
         val loginRequest = Request.Builder()
             .post(
                 jsonObjectOf(
-                    "username" to username,
+                    "email" to email,
                     "password" to password
                 ).toRequestBody()
             ).url(rootUrl.withPath("/login"))
@@ -33,12 +33,13 @@ class LoginDataSource {
         return sendRequest(loginRequest)
     }
 
-    fun register(username: String, password: String): LoginResult<LocalUser> {
+    fun register(email: String, password: String, username: String): LoginResult<LocalUser> {
         val registerRequest = Request.Builder()
             .post(
                 jsonObjectOf(
-                    "username" to username,
-                    "password" to password
+                    "email" to email,
+                    "password" to password,
+                    "username" to username
                 ).toRequestBody()
             ).url(rootUrl.withPath("/register"))
             .build()
@@ -68,11 +69,13 @@ class LoginDataSource {
                     ?: throw IOException("Invalid JSON!")
             if (jsonObject.get("success")?.asBoolean == true) {
                 val username = jsonObject.get("username")?.asString
+                val email = jsonObject.get("email")?.asString
                 val uuid = UUID.fromString(jsonObject.get("uuid").asString)
                 val authToken = jsonObject.get("token")?.asString
-                if (username != null && uuid != null) {
+                if (username != null && uuid != null && email != null) {
                     val user = LocalUser(
                         username = username,
+                        email = email,
                         uuid = uuid,
                         authToken = authToken
                     )
@@ -92,7 +95,4 @@ class LoginDataSource {
         }
     }
 
-    fun logout() {
-        // TODO: revoke authentication
-    }
 }

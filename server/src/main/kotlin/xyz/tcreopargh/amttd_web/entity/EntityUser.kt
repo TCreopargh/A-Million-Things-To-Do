@@ -9,8 +9,10 @@ import javax.persistence.*
 @Table(name = "user")
 data class EntityUser(
 
-    @Column(unique = true)
     var name: String? = null,
+
+    @Column(unique = true)
+    var emailAddress: String? = null,
 
     var password: String? = null,
 
@@ -37,8 +39,11 @@ data class EntityUser(
     )
     var joinedWorkGroups: Set<EntityWorkGroup> = setOf()
 ) : IEntity, IUser {
-    @Transient
-    override var username: String = name.toString()
+    override val username: String
+        get() = name.toString()
+    override val email: String
+        get() = emailAddress.toString()
+
     override fun equals(other: Any?): Boolean = this.uuid == (other as? EntityUser)?.uuid
     override fun hashCode(): Int = uuid.hashCode()
 }

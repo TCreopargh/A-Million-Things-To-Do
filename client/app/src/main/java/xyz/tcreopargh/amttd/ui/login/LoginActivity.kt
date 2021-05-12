@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
+import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -11,14 +13,14 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.lifecycle.ViewModelProvider
 import xyz.tcreopargh.amttd.ActivityManager
 import xyz.tcreopargh.amttd.BaseActivity
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.util.PACKAGE_NAME_DOT
-import xyz.tcreopargh.amttd.util.afterTextChanged
-import xyz.tcreopargh.amttd.util.i18n
+import xyz.tcreopargh.amttd.util.*
 import java.util.*
+
 
 /**
  * @author TCreopargh
@@ -27,16 +29,23 @@ class LoginActivity : BaseActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
 
+    private var usernameText: EditText? = null
+
+    private lateinit var loading: ProgressBar
+    private lateinit var email: EditText
+    private lateinit var password: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_login)
 
-        val username = findViewById<EditText>(R.id.username)
-        val password = findViewById<EditText>(R.id.password)
+        email = findViewById<EditText>(R.id.email)
+        password = findViewById<EditText>(R.id.password)
+        loading = findViewById<ProgressBar>(R.id.loading)
+
         val login = findViewById<Button>(R.id.login)
         val register = findViewById<Button>(R.id.register)
-        val loading = findViewById<ProgressBar>(R.id.loading)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
@@ -48,8 +57,11 @@ class LoginActivity : BaseActivity() {
             login.isEnabled = loginState.isDataValid
             register.isEnabled = loginState.isDataValid
 
+            if (loginState.emailError != null) {
+                email.error = getString(loginState.emailError)
+            }
             if (loginState.usernameError != null) {
-                username.error = getString(loginState.usernameError)
+                usernameText?.error = getString(loginState.usernameError)
             }
             if (loginState.passwordError != null) {
                 password.error = getString(loginState.passwordError)
@@ -88,9 +100,9 @@ class LoginActivity : BaseActivity() {
             }
         }
 
-        username.afterTextChanged {
+        email.afterTextChanged {
             loginViewModel.loginDataChanged(
-                username.text.toString(),
+                email.text.toString(),
                 password.text.toString()
             )
         }
@@ -98,7 +110,7 @@ class LoginActivity : BaseActivity() {
         password.apply {
             afterTextChanged {
                 loginViewModel.loginDataChanged(
-                    username.text.toString(),
+                    email.text.toString(),
                     password.text.toString()
                 )
             }
@@ -107,7 +119,7 @@ class LoginActivity : BaseActivity() {
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
                         loginViewModel.login(
-                            username.text.toString(),
+                            email.text.toString(),
                             password.text.toString()
                         )
                 }
@@ -116,13 +128,69 @@ class LoginActivity : BaseActivity() {
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                loginViewModel.login(email.text.toString(), password.text.toString())
             }
             register.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                loginViewModel.register(username.text.toString(), password.text.toString())
+                showSetUsernameDialog()
             }
         }
+    }
+
+    private fun showSetUsernameDialog() {
+        AlertDialog.Builder(this@LoginActivity).apply {
+            usernameText =
+                EditText(this@LoginActivity, null, 0, R.style.Widget_AppCompat_EditText).apply {
+                    afterTextChanged {
+                        loginViewModel.usernameChanged(
+                            email.text.toString(),
+                            password.text.toString(),
+                            it
+                        )
+                    }
+                    hint = getString(R.string.prompt_username)
+                    setAutofillHints(getString(R.string.prompt_username))
+                    inputType = InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+                    text = SpannableStringBuilder(
+                        (
+                                email.text.toString().split("@").getOrNull(0)
+                                    ?: random.nextString(
+                                        random.nextInt(
+                                            8,
+                                            15
+                                        )
+                                    )).replace("[^a-zA-Z0-9_]".toRegex(), " ")
+                    )
+                    val params = LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                    )
+                    params.setMargins(32, 8, 32, 8)
+                    layoutParams = params
+                }
+            val layout = LinearLayoutCompat(this@LoginActivity).apply {
+                orientation = LinearLayoutCompat.VERTICAL
+                addView(usernameText)
+            }
+            setView(layout)
+            setTitle(R.string.set_username)
+            setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+            setPositiveButton(R.string.action_register) { dialog, _ ->
+                loading.visibility = View.VISIBLE
+                loginViewModel.register(
+                    email.text.toString(),
+                    password.text.toString(),
+                    usernameText?.text.toString()
+                )
+                dialog.cancel()
+            }
+            setOnDismissListener {
+                loginViewModel.loginDataChanged(
+                    email.text.toString(),
+                    password.text.toString()
+                )
+                usernameText = null
+            }
+        }.create().show()
     }
 
     private var lastBackPressed: Long = 0
