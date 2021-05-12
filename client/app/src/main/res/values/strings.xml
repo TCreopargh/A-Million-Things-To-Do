@@ -62,4 +62,6 @@
     <string name="unknown_error">Unknown Error</string>
     <string name="unknown_action">Unknown Action</string>
     <string name="error_occured">\"An error has occurred! \"</string>
+    <string name="group_title_label">Title</string>
+    <string name="group_title">Title</string>
 </resources>

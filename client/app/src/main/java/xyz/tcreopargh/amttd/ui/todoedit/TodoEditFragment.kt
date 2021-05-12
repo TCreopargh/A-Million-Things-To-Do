@@ -19,11 +19,12 @@ import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
 import xyz.tcreopargh.amttd.data.interactive.TodoEntryImpl
+import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.*
 import java.io.IOException
 import java.util.*
 
-class TodoEditFragment : Fragment() {
+class TodoEditFragment : FragmentOnMainActivityBase() {
 
     companion object {
         fun newInstance() = TodoEditFragment()

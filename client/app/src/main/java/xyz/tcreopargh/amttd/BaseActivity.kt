@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 /**
  * @author TCreopargh
  */
-open class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ActivityManager.addActivity(this)

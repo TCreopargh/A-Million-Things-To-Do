@@ -19,6 +19,7 @@ import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.interactive.IWorkGroup
 import xyz.tcreopargh.amttd.data.interactive.WorkGroupImpl
+import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.*
 import java.io.IOException
 import java.util.*
@@ -26,7 +27,7 @@ import java.util.*
 /**
  * @author TCreopargh
  */
-class GroupViewFragment : Fragment() {
+class GroupViewFragment : FragmentOnMainActivityBase() {
 
     companion object {
         fun newInstance() = GroupViewFragment()

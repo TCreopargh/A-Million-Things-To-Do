@@ -20,9 +20,9 @@ data class EntityWorkGroup(
         columnDefinition = "varchar(128)"
     )
     @Type(type = "uuid-char")
-    override val groupId: UUID = UUID.randomUUID(),
+    override var groupId: UUID = UUID.randomUUID(),
 
-    val groupName: String = "",
+    var groupName: String = "",
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)

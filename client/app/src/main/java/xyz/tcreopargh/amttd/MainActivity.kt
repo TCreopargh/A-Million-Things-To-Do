@@ -19,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 import xyz.tcreopargh.amttd.data.exception.LoginFailedException
 import xyz.tcreopargh.amttd.data.login.LoginResult
 import xyz.tcreopargh.amttd.ui.group.GroupViewFragment
@@ -48,6 +49,8 @@ class MainActivity : BaseActivity() {
 
     private var exception: Exception? = null
 
+    lateinit var fab: FloatingActionButton
+
     val loggedInUser
         get() = viewModel.getUser()
 
@@ -60,9 +63,17 @@ class MainActivity : BaseActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
+        fab = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
             val currentFragment = getCurrentlyDisplayedFragment()
+            when (currentFragment) {
+                is TodoEditFragment  -> {
+                }
+                is TodoViewFragment  -> {
+                }
+                is GroupViewFragment -> {
+                }
+            }
             Snackbar.make(
                 view,
                 currentFragment?.javaClass?.kotlin?.simpleName ?: "null",
@@ -128,7 +139,7 @@ class MainActivity : BaseActivity() {
         navView.menu.findItem(R.id.nav_group_view).isChecked = true
     }
 
-    fun getCurrentlyDisplayedFragment(): Fragment? {
+    private fun getCurrentlyDisplayedFragment(): Fragment? {
         val todoEdit =
             supportFragmentManager.findFragmentByTag(TodoEditFragment::class.simpleName) as? TodoEditFragment
         val todoView =
@@ -173,6 +184,28 @@ class MainActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    fun onFragmentChanged() {
+        when (getCurrentlyDisplayedFragment()) {
+            is TodoEditFragment  -> {
+                fab.setImageResource(R.drawable.ic_baseline_add_comment_24)
+            }
+            is TodoViewFragment  -> {
+                fab.setImageResource(R.drawable.ic_baseline_add_24)
+            }
+            is GroupViewFragment -> {
+                fab.setImageResource(R.drawable.ic_baseline_add_24)
+            }
+        }
+    }
+
+    fun onFragmentStart(fragment: Fragment) {
+        onFragmentChanged()
+    }
+
+    fun onFragmentStop(fragment: Fragment) {
+        onFragmentChanged()
     }
 
     private fun cacheUserLoginInfo() {
@@ -275,6 +308,19 @@ class MainActivity : BaseActivity() {
                 }
             }
             activity?.mainProgressBar?.visibility = View.GONE
+        }
+    }
+
+    override fun onBackPressed() {
+        if (getCurrentlyDisplayedFragment() is GroupViewFragment) {
+            if (System.currentTimeMillis() - lastBackPressed <= 3000) {
+                ActivityManager.finishAll()
+            } else {
+                Toast.makeText(this, R.string.press_back_again, Toast.LENGTH_SHORT).show()
+                lastBackPressed = System.currentTimeMillis()
+            }
+        } else {
+            super.onBackPressed()
         }
     }
 
