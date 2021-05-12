@@ -22,6 +22,7 @@ import xyz.tcreopargh.amttd.AMTTD
 import java.net.URL
 import java.text.DateFormat
 import java.util.*
+import kotlin.random.Random
 
 
 const val PACKAGE_NAME = "xyz.tcreopargh.amttd"
@@ -36,6 +37,17 @@ fun Calendar.format() = DateFormat.getDateInstance(
     DateFormat.MEDIUM,
     AMTTD.context.resources.configuration.locales.get(0)
 ).format(this.time)
+
+fun Random.nextString(
+    length: Int,
+    dictionary: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+): String {
+    return StringBuilder().apply {
+        repeat(length) {
+            append(dictionary.random())
+        }
+    }.toString()
+}
 
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {

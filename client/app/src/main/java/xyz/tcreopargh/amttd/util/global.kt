@@ -3,6 +3,7 @@ package xyz.tcreopargh.amttd.util
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.net.URL
+import kotlin.random.Random
 
 /**
  * @author TCreopargh
@@ -14,3 +15,6 @@ import java.net.URL
 val rootUrl = URL("http://10.0.2.2:8080")
 
 val JSON: MediaType? = "application/json; charset=utf-8".toMediaTypeOrNull()
+
+val random: Random = Random.Default
+
