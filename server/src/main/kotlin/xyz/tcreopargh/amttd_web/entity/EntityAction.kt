@@ -45,7 +45,7 @@ data class EntityAction(
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id", nullable = false)
     override var task: EntityTask? = null
-) : IAction {
+) : IAction, IEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "entry_id", nullable = false)

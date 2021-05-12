@@ -52,7 +52,7 @@ data class EntityTodoEntry(
     @ExcludeToString
     var parent: EntityWorkGroup? = null
 
-) : ITodoEntry {
+) : ITodoEntry, IEntity {
     override fun toString(): String {
         return ExcludeToStringProcessor.getToString(this)
     }

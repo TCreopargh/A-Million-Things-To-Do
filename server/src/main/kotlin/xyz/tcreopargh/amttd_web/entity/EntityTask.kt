@@ -27,7 +27,7 @@ data class EntityTask(
     @JoinColumn(name = "entry_id", nullable = false)
     @ExcludeToString
     var parent: EntityTodoEntry? = null
-) : ITask {
+) : ITask, IEntity {
     override fun toString(): String {
         return ExcludeToStringProcessor.getToString(this)
     }
