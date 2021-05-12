@@ -4,9 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
+import xyz.tcreopargh.amttd.ui.ViewModelBase
 import java.util.*
 
-class TodoViewViewModel : ViewModel() {
+class TodoViewViewModel : ViewModelBase() {
     private val _entries = MutableLiveData<MutableList<ITodoEntry>>().apply {
         value = mutableListOf()
     }

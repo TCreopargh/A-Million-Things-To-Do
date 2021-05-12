@@ -4,12 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import xyz.tcreopargh.amttd.data.interactive.IWorkGroup
+import xyz.tcreopargh.amttd.ui.ViewModelBase
 import java.util.*
 
 /**
  * @author TCreopargh
  */
-class GroupViewModel : ViewModel() {
+class GroupViewModel : ViewModelBase() {
 
     private val _groups = MutableLiveData<MutableList<IWorkGroup>>().apply {
         value = mutableListOf()

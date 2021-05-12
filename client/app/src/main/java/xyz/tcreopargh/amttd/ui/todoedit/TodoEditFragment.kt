@@ -11,13 +11,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.todo_view_fragment.*
 import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
 import xyz.tcreopargh.amttd.data.interactive.TodoEntryImpl
 import xyz.tcreopargh.amttd.util.*
+import java.io.IOException
 import java.util.*
 
 class TodoEditFragment : Fragment() {
@@ -28,6 +31,8 @@ class TodoEditFragment : Fragment() {
 
     private lateinit var viewModel: TodoEditViewModel
 
+    private lateinit var todoEditSwipeContainer: SwipeRefreshLayout
+
     private var entryId: UUID? = null
 
     override fun onCreateView(
@@ -35,7 +40,29 @@ class TodoEditFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.todo_edit_fragment, container, false)
-        viewModel.entry.observe(viewLifecycleOwner) { initView(view, it) }
+        viewModel.entry.observe(viewLifecycleOwner) {
+            initView(view, it)
+            todoEditSwipeContainer.isRefreshing = false
+        }
+
+        todoEditSwipeContainer = view.findViewById(R.id.todoEditSwipeContainer)
+
+        todoEditSwipeContainer.setOnRefreshListener {
+            initializeItems()
+        }
+
+        viewModel.exception.observe(viewLifecycleOwner) {
+            it?.run {
+                Toast.makeText(
+                    context,
+                    getString(R.string.error_occured) + it.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+                todoSwipeContainer.isRefreshing = false
+            }
+        }
+        initializeItems()
+
         return view
     }
 
@@ -43,26 +70,32 @@ class TodoEditFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(TodoEditViewModel::class.java)
         entryId = arguments?.get("entryId") as? UUID
-        initializeItems()
     }
 
     private fun initializeItems() {
-
+        todoEditSwipeContainer.isRefreshing = true
         Thread {
-            val uuid = entryId ?: return@Thread
-            val request = Request.Builder()
-                .post(
-                    jsonObjectOf(
-                        "entryId" to uuid
-                    ).toRequestBody()
-                ).url(rootUrl.withPath("/todo-entry"))
-                .build()
-            val response = AMTTD.okHttpClient.newCall(request).execute()
-            val body = response.body?.string()
             val entry: ITodoEntry? = try {
-                gson.fromJson(body, object : TypeToken<TodoEntryImpl>() {}.type)
-            } catch (e: RuntimeException) {
+                val uuid = entryId ?: return@Thread
+                val request = Request.Builder()
+                    .post(
+                        jsonObjectOf(
+                            "entryId" to uuid
+                        ).toRequestBody()
+                    ).url(rootUrl.withPath("/todo-entry"))
+                    .build()
+                val response = AMTTD.okHttpClient.newCall(request).execute()
+                val body = response.body?.string()
+                // Don't simplify this
+                val result: ITodoEntry = try {
+                    gson.fromJson(body, object : TypeToken<TodoEntryImpl>() {}.type)
+                } catch (e: RuntimeException) {
+                    throw IOException(e)
+                }
+                result
+            } catch (e: IOException) {
                 Log.e(AMTTD.logTag, e.stackTraceToString())
+                viewModel.exception.postValue(e)
                 null
             }
             viewModel.entry.postValue(entry)
