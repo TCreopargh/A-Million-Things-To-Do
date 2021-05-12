@@ -28,6 +28,10 @@ import java.util.*
  */
 class GroupViewFragment : Fragment() {
 
+    companion object {
+        fun newInstance() = GroupViewFragment()
+    }
+
     private lateinit var viewModel: GroupViewModel
 
     private lateinit var groupSwipeContainer: SwipeRefreshLayout

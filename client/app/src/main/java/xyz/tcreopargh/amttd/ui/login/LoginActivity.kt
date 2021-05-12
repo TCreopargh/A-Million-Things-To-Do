@@ -11,8 +11,8 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.synthetic.main.todo_view_fragment.*
 import xyz.tcreopargh.amttd.ActivityManager
 import xyz.tcreopargh.amttd.BaseActivity
 import xyz.tcreopargh.amttd.R
@@ -42,7 +42,7 @@ class LoginActivity : BaseActivity() {
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
 
-        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
+        loginViewModel.loginFormState.observe(this@LoginActivity) Observer@{
             val loginState = it ?: return@Observer
 
             // disable login button unless both username / password is valid
@@ -55,9 +55,9 @@ class LoginActivity : BaseActivity() {
             if (loginState.passwordError != null) {
                 password.error = getString(loginState.passwordError)
             }
-        })
+        }
 
-        loginViewModel.loginResult.observe(this@LoginActivity, Observer {
+        loginViewModel.loginResult.observe(this@LoginActivity) Observer@{
             val loginResult = it ?: return@Observer
 
             loading.visibility = View.GONE
@@ -77,7 +77,17 @@ class LoginActivity : BaseActivity() {
                 setResult(RESULT_OK, backIntent)
                 finish()
             }
-        })
+        }
+
+        loginViewModel.exception.observe(this@LoginActivity) {
+            it?.run {
+                Toast.makeText(
+                    this@LoginActivity,
+                    getString(R.string.error_occured) + it.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
