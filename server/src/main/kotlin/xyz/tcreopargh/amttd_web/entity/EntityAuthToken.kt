@@ -14,7 +14,7 @@ data class EntityAuthToken(
     var user: EntityUser? = null,
 
     @Id
-    @Column(name = "token", columnDefinition = "VARCHAR(64", nullable = false, updatable = false)
+    @Column(name = "token", columnDefinition = "VARCHAR(64)", nullable = false, updatable = false)
     var token: String = generateToken(),
 
     @Basic
