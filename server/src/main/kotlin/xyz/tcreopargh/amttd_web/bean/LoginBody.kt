@@ -7,4 +7,4 @@ data class LoginBody(
     var password: String? = null,
     var token: String? = null,
     var uuid: UUID? = null
-)
+) : IRequestBody

@@ -6,12 +6,17 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "user")
+@Table(
+    name = "user", indexes = [
+        Index(name = "id_index", columnList = "user_uuid", unique = true),
+        Index(name = "email_index", columnList = "email_address", unique = true)
+    ]
+)
 data class EntityUser(
 
     var name: String? = null,
 
-    @Column(unique = true)
+    @Column(unique = true, columnDefinition = "varchar(80)", name = "email_address")
     var emailAddress: String? = null,
 
     var password: String? = null,

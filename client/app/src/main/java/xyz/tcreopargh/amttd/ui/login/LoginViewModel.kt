@@ -73,7 +73,7 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModelBase() {
             _loginForm.value = LoginFormState(emailError = R.string.invalid_email)
         } else if (!isPasswordValid(password)) {
             _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
-        } else if (!isUserNameValid(username)) {
+        } else if (!isUsernameValid(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
         } else {
             _loginForm.value = LoginFormState(isDataValid = true)
@@ -82,15 +82,15 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModelBase() {
 
     companion object {
         fun isEmailValid(email: String?): Boolean {
-            return email?.matches("^\\S+@\\S+\\.\\S+\$".toRegex()) == true
+            return email?.matches("^\\S+@\\S+\\.\\S+\$".toRegex()) == true && email.length < 80
         }
 
-        fun isUserNameValid(username: String?): Boolean {
-            return username?.matches(Regex("^([\\u4e00-\\u9fa5]{2,3})|([A-Za-z0-9_ ]{3,32})|([a-zA-Z0-9_ \\u4e00-\\u9fa5]{3,32})\$")) == true && username.trim() == username
+        fun isUsernameValid(username: String?): Boolean {
+            return username?.matches(Regex("^([\\u4e00-\\u9fa5]{2,3})|([A-Za-z0-9_ ]{3,32})|([a-zA-Z0-9_ \\u4e00-\\u9fa5]{3,32})\$")) == true && username.trim() == username && username.length < 64
         }
 
-        fun isPasswordValid(password: String): Boolean {
-            return password.length in 6..1024
+        fun isPasswordValid(password: String?): Boolean {
+            return password?.length in 6..128
         }
     }
 }

@@ -29,6 +29,9 @@ class RegisterHandler : ControllerBase() {
             if (!isEmailValid(email)) {
                 throw RegisterFailedException(State.ILLEGAL_EMAIL)
             }
+            if (!isUsernameValid(username)) {
+                throw RegisterFailedException(State.ILLEGAL_USERNAME)
+            }
             if (!isPasswordValid(password)) {
                 throw RegisterFailedException(State.ILLEGAL_PASSWORD)
             }
