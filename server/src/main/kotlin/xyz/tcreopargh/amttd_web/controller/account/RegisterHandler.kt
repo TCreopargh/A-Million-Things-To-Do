@@ -71,7 +71,7 @@ class RegisterHandler : ControllerBase() {
         } catch (e: AuthenticationException) {
             return jsonObjectOf(
                 "success" to false,
-                "reason" to e.state.name
+                "reason" to e.state.toString()
             ).toString()
         }
     }
