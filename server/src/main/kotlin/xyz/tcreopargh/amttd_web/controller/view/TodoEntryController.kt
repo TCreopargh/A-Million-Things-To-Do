@@ -32,9 +32,9 @@ class TodoEntryController : ControllerBase() {
                 }
                 val ret = entry?.let { TodoEntryImpl(it) }
                     ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
-                TodoEntryActionResponse(success = true, entry = ret)
+                TodoEntryActionResponse(operation = CrudType.READ, success = true, entry = ret)
             } catch (e: Exception) {
-                TodoEntryActionResponse(success = false, error = AmttdException.ErrorCode.getFromException(e).value)
+                TodoEntryActionResponse(operation = CrudType.READ, success = false, error = AmttdException.ErrorCode.getFromException(e).value)
             }
             // TODO: Implement other actions
             else          -> TodoEntryActionResponse(
