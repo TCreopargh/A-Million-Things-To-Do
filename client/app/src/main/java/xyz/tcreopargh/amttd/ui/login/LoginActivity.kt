@@ -12,12 +12,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.lifecycle.ViewModelProvider
 import xyz.tcreopargh.amttd.ActivityManager
 import xyz.tcreopargh.amttd.BaseActivity
 import xyz.tcreopargh.amttd.R
+import xyz.tcreopargh.amttd.data.exception.AmttdException
 import xyz.tcreopargh.amttd.util.*
 import java.util.*
 
@@ -72,8 +72,8 @@ class LoginActivity : BaseActivity() {
             val loginResult = it ?: return@Observer
 
             loading.visibility = View.GONE
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error, loginResult.errorString)
+            if (loginResult.errorCode != null) {
+                showLoginFailed(loginResult.errorCode, loginResult.isRegister)
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
@@ -94,7 +94,7 @@ class LoginActivity : BaseActivity() {
             it?.run {
                 Toast.makeText(
                     this@LoginActivity,
-                    getString(R.string.error_occured) + it.message,
+                    getString(R.string.error_occured) + it.getLocalizedString(this@LoginActivity),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -215,10 +215,10 @@ class LoginActivity : BaseActivity() {
         ).show()
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int, errorMsg: String?) {
+    private fun showLoginFailed(errorCode: Int, isRegister: Boolean) {
         AlertDialog.Builder(this)
-            .setTitle(errorString)
-            .setMessage(errorMsg ?: i18n(R.string.login_failed_unknown_error))
+            .setTitle(if (isRegister) R.string.register_failed else R.string.login_failed)
+            .setMessage(AmttdException.getFromErrorCode(errorCode).getLocalizedString(this))
             .setPositiveButton(R.string.confirm, null)
             .show()
     }

@@ -7,12 +7,12 @@ package xyz.tcreopargh.amttd.data.login
 sealed class LoginResult<out T : Any> {
 
     data class Success<out T : Any>(val data: T) : LoginResult<T>()
-    data class Error(val exception: Exception) : LoginResult<Nothing>()
+    data class Error(val errorCode: Int) : LoginResult<Nothing>()
 
     override fun toString(): String {
         return when (this) {
             is Success<*> -> "Success[data=$data]"
-            is Error      -> "Error[exception=$exception]"
+            is Error      -> "Error[errorCode=$errorCode]"
         }
     }
 }

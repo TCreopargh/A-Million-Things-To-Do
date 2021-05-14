@@ -6,7 +6,7 @@ import xyz.tcreopargh.amttd.MainActivity
 /**
  * @author TCreopargh
  */
-abstract class FragmentOnMainActivityBase: Fragment() {
+abstract class FragmentOnMainActivityBase : Fragment() {
 
     override fun onStart() {
         super.onStart()

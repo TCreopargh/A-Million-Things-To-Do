@@ -28,8 +28,7 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModelBase() {
                 is LoginResult.Error   ->
                     _loginResult.postValue(
                         AuthResult(
-                            error = R.string.login_failed,
-                            errorString = (result as? LoginResult.Error)?.exception?.message
+                            errorCode = result.errorCode,
                         )
                     )
             }
@@ -49,8 +48,7 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModelBase() {
                 is LoginResult.Error   ->
                     _loginResult.postValue(
                         AuthResult(
-                            error = R.string.register_failed,
-                            errorString = (result as? LoginResult.Error)?.exception?.message,
+                            errorCode = result.errorCode,
                             isRegister = true
                         )
                     )
