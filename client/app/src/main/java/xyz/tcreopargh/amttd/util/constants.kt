@@ -3,7 +3,6 @@ package xyz.tcreopargh.amttd.util
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.net.URL
-import kotlin.random.Random
 
 /**
  * @author TCreopargh

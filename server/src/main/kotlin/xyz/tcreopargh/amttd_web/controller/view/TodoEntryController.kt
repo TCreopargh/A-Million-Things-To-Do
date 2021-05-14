@@ -10,6 +10,7 @@ import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.data.CrudType
 import xyz.tcreopargh.amttd_web.data.TodoEntryImpl
 import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
+import xyz.tcreopargh.amttd_web.exception.AmttdException
 import javax.servlet.http.HttpServletRequest
 
 @RestController
@@ -29,13 +30,17 @@ class TodoEntryController : ControllerBase() {
                 body.todoEntry?.entryId?.let {
                     entry = todoEntryService.findByIdOrNull(it)
                 }
-                val ret = entry?.let { TodoEntryImpl(it) } ?: throw RuntimeException("Todo entry not found!")
+                val ret = entry?.let { TodoEntryImpl(it) }
+                    ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                 TodoEntryActionResponse(success = true, entry = ret)
-            } catch (e: RuntimeException) {
-                TodoEntryActionResponse(success = false, error = e)
+            } catch (e: Exception) {
+                TodoEntryActionResponse(success = false, error = AmttdException.ErrorCode.getFromException(e).value)
             }
             // TODO: Implement other actions
-            else          -> TodoEntryActionResponse(success = false, error = RuntimeException("Invalid action type"))
+            else          -> TodoEntryActionResponse(
+                success = false,
+                error = AmttdException(AmttdException.ErrorCode.ACTION_NOT_SUPPORTED).errorCodeValue
+            )
         }
     }
 }

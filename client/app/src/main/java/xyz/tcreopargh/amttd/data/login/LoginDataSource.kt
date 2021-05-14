@@ -7,13 +7,12 @@ import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.data.bean.request.LoginRequest
 import xyz.tcreopargh.amttd.data.bean.request.RegisterRequest
 import xyz.tcreopargh.amttd.data.bean.response.LoginResponse
-import xyz.tcreopargh.amttd.data.exception.LoginFailedException
+import xyz.tcreopargh.amttd.data.exception.AmttdException
 import xyz.tcreopargh.amttd.user.LocalUser
 import xyz.tcreopargh.amttd.util.gson
 import xyz.tcreopargh.amttd.util.rootUrl
 import xyz.tcreopargh.amttd.util.toJsonRequest
 import xyz.tcreopargh.amttd.util.withPath
-import java.io.IOException
 import java.util.*
 
 
@@ -58,14 +57,11 @@ class LoginDataSource {
     private fun sendRequest(request: Request): LoginResult<LocalUser> {
         try {
             val response = AMTTD.okHttpClient.newCall(request).execute()
-            val body = try {
-                gson.fromJson<LoginResponse>(
-                    response.body?.string(),
-                    object : TypeToken<LoginResponse>() {}.type
-                )
-            } catch (e: RuntimeException) {
-                throw IOException(e)
-            }
+            val body = gson.fromJson<LoginResponse>(
+                response.body?.string(),
+                object : TypeToken<LoginResponse>() {}.type
+            )
+
             if (body.success == true) {
                 val username = body.username
                 val email = body.email
@@ -80,17 +76,14 @@ class LoginDataSource {
                     )
                     return LoginResult.Success(user)
                 } else {
-                    throw IllegalArgumentException("Invalid JSON arguments!")
+                    throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
                 }
             } else {
-                throw LoginFailedException(body.reason ?: "null")
+                throw AmttdException.getFromErrorCode(body.error)
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             Log.e(AMTTD.logTag, "Login Error: ", e)
-            return LoginResult.Error(e)
-        } catch (e: IllegalArgumentException) {
-            Log.e(AMTTD.logTag, "Login Error: ", e)
-            return LoginResult.Error(e)
+            return LoginResult.Error(AmttdException.getFromException(e).errorCodeValue)
         }
     }
 

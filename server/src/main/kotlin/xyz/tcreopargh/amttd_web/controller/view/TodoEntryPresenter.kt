@@ -9,6 +9,7 @@ import xyz.tcreopargh.amttd_web.bean.response.TodoEntryViewResponse
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.data.TodoEntryImpl
 import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
+import xyz.tcreopargh.amttd_web.exception.AmttdException
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 
@@ -30,10 +31,10 @@ class TodoEntryPresenter : ControllerBase() {
             }
             val list = entries.stream().filter { it != null }.map {
                 TodoEntryImpl(it)
-            }.collect(Collectors.toList()) ?: throw RuntimeException("Work group with the id not found")
+            }.collect(Collectors.toList()) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
             TodoEntryViewResponse(success = true, entries = list)
-        } catch (e: java.lang.RuntimeException) {
-            TodoEntryViewResponse(success = false, error = e)
+        } catch (e: Exception) {
+            TodoEntryViewResponse(success = false, error = AmttdException.ErrorCode.getFromException(e).value)
         }
     }
 }

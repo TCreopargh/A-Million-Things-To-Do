@@ -7,5 +7,5 @@ data class TodoEntryActionResponse(
     var operation: CrudType? = null,
     override var success: Boolean? = false,
     var entry: TodoEntryImpl? = null,
-    override var error: Exception? = null
+    override var error: Int? = null
 ) : IResponseBody

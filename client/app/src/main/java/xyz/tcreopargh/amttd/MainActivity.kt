@@ -20,7 +20,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
-import xyz.tcreopargh.amttd.data.exception.LoginFailedException
+import xyz.tcreopargh.amttd.data.exception.AmttdException
 import xyz.tcreopargh.amttd.data.login.LoginResult
 import xyz.tcreopargh.amttd.ui.group.GroupViewFragment
 import xyz.tcreopargh.amttd.ui.login.LoginActivity
@@ -49,7 +49,7 @@ class MainActivity : BaseActivity() {
 
     private var exception: Exception? = null
 
-    lateinit var fab: FloatingActionButton
+    private lateinit var fab: FloatingActionButton
 
     val loggedInUser
         get() = viewModel.getUser()
@@ -186,7 +186,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    fun onFragmentChanged() {
+    private fun onFragmentChanged() {
         when (getCurrentlyDisplayedFragment()) {
             is TodoEditFragment  -> {
                 fab.setImageResource(R.drawable.ic_baseline_add_comment_24)
@@ -254,7 +254,7 @@ class MainActivity : BaseActivity() {
                     })
                 }
                 is LoginResult.Error   -> {
-                    exception = result.exception
+                    exception = AmttdException.getFromErrorCode(result.errorCode)
                     Log.w(AMTTD.logTag, "Login with token failed with exception: ", exception)
                     handler.sendMessage(Message().apply {
                         what = LOGIN_FAILED
@@ -293,17 +293,12 @@ class MainActivity : BaseActivity() {
                     val loginIntent = Intent(activity, LoginActivity::class.java)
                     activity?.startActivityForResult(loginIntent, ResultCode.CODE_LOGIN.code)
                     if (activity?.exception != null) {
-                        if (activity?.exception is LoginFailedException) {
-                            Toast.makeText(activity, R.string.token_expired, Toast.LENGTH_SHORT)
-                                .show()
-                        } else {
-                            Toast.makeText(
-                                activity,
-                                R.string.login_token_failed,
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
-                        }
+                        Toast.makeText(
+                            activity,
+                            AmttdException.getFromException(activity?.exception)
+                                .getLocalizedString(activity),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }

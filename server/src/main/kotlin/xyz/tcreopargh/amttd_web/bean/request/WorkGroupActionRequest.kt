@@ -1,6 +1,5 @@
 package xyz.tcreopargh.amttd_web.bean.request
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import xyz.tcreopargh.amttd_web.data.CrudType
 import xyz.tcreopargh.amttd_web.data.WorkGroupImpl
 

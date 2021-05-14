@@ -4,5 +4,5 @@ import java.io.Serializable
 
 interface IResponseBody : Serializable {
     var success: Boolean?
-    var error: Exception?
+    var error: Int?
 }

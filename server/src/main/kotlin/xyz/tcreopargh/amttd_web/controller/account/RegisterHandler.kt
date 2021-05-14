@@ -9,9 +9,8 @@ import xyz.tcreopargh.amttd_web.bean.response.LoginResponse
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
-import xyz.tcreopargh.amttd_web.exception.AuthenticationException
-import xyz.tcreopargh.amttd_web.exception.AuthenticationException.State
-import xyz.tcreopargh.amttd_web.exception.RegisterFailedException
+import xyz.tcreopargh.amttd_web.exception.AmttdException
+import xyz.tcreopargh.amttd_web.exception.AmttdException.ErrorCode
 import xyz.tcreopargh.amttd_web.util.nextString
 import xyz.tcreopargh.amttd_web.util.random
 import javax.servlet.http.HttpServletRequest
@@ -30,21 +29,21 @@ class RegisterHandler : ControllerBase() {
             var username = registerBody.username
 
             if (!isEmailValid(email)) {
-                throw RegisterFailedException(State.ILLEGAL_EMAIL)
+                throw AmttdException(ErrorCode.ILLEGAL_EMAIL)
             }
             if (!isUsernameValid(username)) {
-                throw RegisterFailedException(State.ILLEGAL_USERNAME)
+                throw AmttdException(ErrorCode.ILLEGAL_USERNAME)
             }
             if (!isPasswordValid(password)) {
-                throw RegisterFailedException(State.ILLEGAL_PASSWORD)
+                throw AmttdException(ErrorCode.ILLEGAL_PASSWORD)
             }
 
             if (userService.findByEmail(email ?: "").isNotEmpty()) {
-                throw RegisterFailedException(State.USER_ALREADY_EXISTS)
+                throw AmttdException(ErrorCode.USER_ALREADY_EXISTS)
             }
 
             if (email == null || password == null) {
-                throw RegisterFailedException(State.FIELD_MISSING)
+                throw AmttdException(ErrorCode.FIELD_MISSING)
             }
 
             if (username == null) {
@@ -71,11 +70,10 @@ class RegisterHandler : ControllerBase() {
                 uuid = user.uuid,
                 token = generatedToken.token
             )
-        } catch (e: AuthenticationException) {
+        } catch (e: AmttdException) {
             return LoginResponse(
                 success = false,
-                reason = e.state.toString(),
-                error = e
+                error = e.errorCodeValue
             )
         }
     }

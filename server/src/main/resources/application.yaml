@@ -13,7 +13,6 @@ spring:
     url: jdbc:mysql://db.tcreopargh.xyz:3306/amttd?allowPublicKeyRetrieval=true&useSSL=true
     username: root
   jpa:
-    show-sql: true
     database-platform: org.hibernate.dialect.MySQL5Dialect
     generate-ddl: true
     hibernate:

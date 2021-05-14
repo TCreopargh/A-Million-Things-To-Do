@@ -8,6 +8,5 @@ data class LoginResponse(
     var username: String? = null,
     var uuid: UUID? = null,
     var token: String? = null,
-    var reason: String? = null,
-    override var error: Exception? = null
+    override var error: Int? = null
 ) : IResponseBody

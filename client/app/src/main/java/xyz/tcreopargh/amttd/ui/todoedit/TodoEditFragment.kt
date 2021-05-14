@@ -18,12 +18,12 @@ import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.bean.request.TodoEntryActionRequest
 import xyz.tcreopargh.amttd.data.bean.response.TodoEntryActionResponse
+import xyz.tcreopargh.amttd.data.exception.AmttdException
 import xyz.tcreopargh.amttd.data.interactive.CrudType
 import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
 import xyz.tcreopargh.amttd.data.interactive.TodoEntryImpl
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.*
-import java.lang.RuntimeException
 import java.util.*
 
 class TodoEditFragment : FragmentOnMainActivityBase() {
@@ -58,7 +58,7 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
             it?.run {
                 Toast.makeText(
                     context,
-                    getString(R.string.error_occured) + it.message,
+                    getString(R.string.error_occured) + it.getLocalizedString(context),
                     Toast.LENGTH_SHORT
                 ).show()
                 todoSwipeContainer.isRefreshing = false
@@ -93,13 +93,13 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                 // Don't simplify this
                 val result: TodoEntryActionResponse =
                     gson.fromJson(body, object : TypeToken<TodoEntryActionResponse>() {}.type)
-                if(result.success != true) {
-                    throw RuntimeException("Invalid JSON")
+                if (result.success != true) {
+                    throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
                 }
                 result.entry
             } catch (e: Exception) {
                 Log.e(AMTTD.logTag, e.stackTraceToString())
-                viewModel.exception.postValue(e)
+                viewModel.exception.postValue(AmttdException.getFromException(e))
                 null
             }
             viewModel.entry.postValue(entry)

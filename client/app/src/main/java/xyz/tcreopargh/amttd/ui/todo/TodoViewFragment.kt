@@ -16,6 +16,7 @@ import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.bean.response.TodoEntryViewResponse
+import xyz.tcreopargh.amttd.data.exception.AmttdException
 import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.*
@@ -55,7 +56,7 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
             it?.run {
                 Toast.makeText(
                     context,
-                    getString(R.string.error_occured) + it.message,
+                    getString(R.string.error_occured) + it.getLocalizedString(context),
                     Toast.LENGTH_SHORT
                 ).show()
                 todoSwipeContainer.isRefreshing = false
@@ -94,12 +95,12 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
                 val result: TodoEntryViewResponse =
                     gson.fromJson(body, object : TypeToken<TodoEntryViewResponse>() {}.type)
                 if (result.success != true) {
-                    throw result.error ?: RuntimeException("Invalid JSON")
+                    throw AmttdException.getFromErrorCode(result.error)
                 }
-                result.entries ?: throw RuntimeException("Invalid data")
+                result.entries ?: throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
             } catch (e: Exception) {
                 Log.e(AMTTD.logTag, e.stackTraceToString())
-                viewModel.exception.postValue(e)
+                viewModel.exception.postValue(AmttdException.getFromException(e))
                 listOf()
             }
             viewModel.postEntry(entries.toMutableList())

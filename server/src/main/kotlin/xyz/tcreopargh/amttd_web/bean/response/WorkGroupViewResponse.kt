@@ -5,5 +5,5 @@ import xyz.tcreopargh.amttd_web.data.WorkGroupImpl
 data class WorkGroupViewResponse(
     override var success: Boolean? = false,
     var workGroups: List<WorkGroupImpl>? = listOf(),
-    override var error: Exception? = null
+    override var error: Int? = null
 ) : IResponseBody

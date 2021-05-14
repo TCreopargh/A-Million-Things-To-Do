@@ -18,10 +18,10 @@ import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.data.bean.request.WorkGroupViewRequest
 import xyz.tcreopargh.amttd.data.bean.response.WorkGroupViewResponse
+import xyz.tcreopargh.amttd.data.exception.AmttdException
 import xyz.tcreopargh.amttd.data.interactive.IWorkGroup
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.*
-import java.lang.RuntimeException
 import java.util.*
 
 /**
@@ -59,7 +59,7 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
             it?.run {
                 Toast.makeText(
                     context,
-                    getString(R.string.error_occured) + it.message,
+                    getString(R.string.error_occured) + it.getLocalizedString(context),
                     Toast.LENGTH_SHORT
                 ).show()
                 groupSwipeContainer.isRefreshing = false
@@ -98,13 +98,13 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                 // Don't simplify this
                 val result: WorkGroupViewResponse =
                     gson.fromJson(body, object : TypeToken<WorkGroupViewResponse>() {}.type)
-                if(result.success != true) {
-                    throw result.error ?: RuntimeException("Invalid JSON")
+                if (result.success != true) {
+                    throw AmttdException.getFromErrorCode(result.error)
                 }
                 result.workGroups ?: throw RuntimeException("Invalid data")
             } catch (e: Exception) {
                 Log.e(AMTTD.logTag, e.stackTraceToString())
-                viewModel.exception.postValue(e)
+                viewModel.exception.postValue(AmttdException.getFromException(e))
                 listOf()
             }
             viewModel.postGroup(workGroups.toMutableList())
