@@ -2,7 +2,7 @@ package xyz.tcreopargh.amttd.user
 
 import android.os.Parcel
 import android.os.Parcelable
-import xyz.tcreopargh.amttd.data.interactive.IUser
+import xyz.tcreopargh.amttd.common.data.IUser
 import java.io.Serializable
 import java.util.*
 

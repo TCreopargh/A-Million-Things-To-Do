@@ -4,10 +4,10 @@ import android.util.Log
 import com.google.gson.reflect.TypeToken
 import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
-import xyz.tcreopargh.amttd.data.bean.request.LoginRequest
-import xyz.tcreopargh.amttd.data.bean.request.RegisterRequest
-import xyz.tcreopargh.amttd.data.bean.response.LoginResponse
-import xyz.tcreopargh.amttd.data.exception.AmttdException
+import xyz.tcreopargh.amttd.common.bean.request.LoginRequest
+import xyz.tcreopargh.amttd.common.bean.request.RegisterRequest
+import xyz.tcreopargh.amttd.common.bean.response.LoginResponse
+import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.user.LocalUser
 import xyz.tcreopargh.amttd.util.gson
 import xyz.tcreopargh.amttd.util.rootUrl

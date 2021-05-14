@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import xyz.tcreopargh.amttd.ActivityManager
 import xyz.tcreopargh.amttd.BaseActivity
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.exception.AmttdException
+import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.util.*
 import java.util.*
 

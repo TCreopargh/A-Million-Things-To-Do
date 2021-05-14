@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
+import xyz.tcreopargh.amttd.common.data.ITodoEntry
 import xyz.tcreopargh.amttd.ui.todoedit.TodoEditFragment
 import xyz.tcreopargh.amttd.util.format
 

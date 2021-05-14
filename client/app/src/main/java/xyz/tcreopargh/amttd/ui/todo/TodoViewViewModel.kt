@@ -2,7 +2,7 @@ package xyz.tcreopargh.amttd.ui.todo
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
+import xyz.tcreopargh.amttd.common.data.ITodoEntry
 import xyz.tcreopargh.amttd.ui.ViewModelBase
 import java.util.*
 

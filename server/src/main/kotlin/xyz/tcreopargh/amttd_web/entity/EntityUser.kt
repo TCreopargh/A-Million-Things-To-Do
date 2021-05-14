@@ -1,7 +1,7 @@
 package xyz.tcreopargh.amttd_web.entity
 
 import org.hibernate.annotations.Type
-import xyz.tcreopargh.amttd_web.data.IUser
+import xyz.tcreopargh.amttd_web.common.data.IUser
 import java.util.*
 import javax.persistence.*
 

@@ -3,13 +3,14 @@ package xyz.tcreopargh.amttd_web.controller.view
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import xyz.tcreopargh.amttd_web.bean.request.TodoEntryViewRequest
-import xyz.tcreopargh.amttd_web.bean.response.TodoEntryViewResponse
+import xyz.tcreopargh.amttd_web.common.bean.request.TodoEntryViewRequest
+import xyz.tcreopargh.amttd_web.common.bean.response.TodoEntryViewResponse
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
-import xyz.tcreopargh.amttd_web.data.TodoEntryImpl
+import xyz.tcreopargh.amttd_web.common.data.TodoEntryImpl
 import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
-import xyz.tcreopargh.amttd_web.exception.AmttdException
+import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 
@@ -20,6 +21,7 @@ class TodoEntryPresenter : ControllerBase() {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
+    @ResponseBody
     fun resolveByWorkGroup(
         request: HttpServletRequest,
         @RequestBody body: TodoEntryViewRequest

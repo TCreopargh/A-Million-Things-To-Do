@@ -8,7 +8,6 @@ import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.repository.UserRepository
 import java.util.*
 
-
 @Service
 class UserService {
     @Autowired

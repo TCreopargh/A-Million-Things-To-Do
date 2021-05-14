@@ -3,8 +3,8 @@ package xyz.tcreopargh.amttd_web.entity
 import org.hibernate.annotations.Type
 import xyz.tcreopargh.amttd_web.annotation.ExcludeToString
 import xyz.tcreopargh.amttd_web.annotation.ExcludeToStringProcessor
-import xyz.tcreopargh.amttd_web.data.ITodoEntry
-import xyz.tcreopargh.amttd_web.data.TodoStatus
+import xyz.tcreopargh.amttd_web.common.data.ITodoEntry
+import xyz.tcreopargh.amttd_web.common.data.TodoStatus
 import java.util.*
 import javax.persistence.*
 

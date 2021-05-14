@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.interactive.IWorkGroup
+import xyz.tcreopargh.amttd.common.data.IWorkGroup
 import xyz.tcreopargh.amttd.ui.todo.TodoViewFragment
 import xyz.tcreopargh.amttd.util.format
 

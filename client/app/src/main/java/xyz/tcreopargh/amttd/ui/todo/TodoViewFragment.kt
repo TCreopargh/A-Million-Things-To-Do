@@ -15,9 +15,9 @@ import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.data.bean.response.TodoEntryViewResponse
-import xyz.tcreopargh.amttd.data.exception.AmttdException
-import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
+import xyz.tcreopargh.amttd.common.bean.response.TodoEntryViewResponse
+import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.common.data.ITodoEntry
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.*
 import java.util.*

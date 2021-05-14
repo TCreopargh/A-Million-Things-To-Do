@@ -20,7 +20,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
-import xyz.tcreopargh.amttd.data.exception.AmttdException
+import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.data.login.LoginResult
 import xyz.tcreopargh.amttd.ui.group.GroupViewFragment
 import xyz.tcreopargh.amttd.ui.login.LoginActivity
