@@ -27,8 +27,8 @@ import xyz.tcreopargh.amttd.ui.login.LoginActivity
 import xyz.tcreopargh.amttd.ui.todo.TodoViewFragment
 import xyz.tcreopargh.amttd.ui.todoedit.TodoEditFragment
 import xyz.tcreopargh.amttd.user.LocalUser
-import xyz.tcreopargh.amttd.util.CODE_LOGIN
 import xyz.tcreopargh.amttd.util.PACKAGE_NAME_DOT
+import xyz.tcreopargh.amttd.util.ResultCode
 import xyz.tcreopargh.amttd.util.doRestart
 import java.lang.ref.WeakReference
 import java.util.*
@@ -174,7 +174,7 @@ class MainActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-                CODE_LOGIN -> {
+                ResultCode.CODE_LOGIN.code -> {
                     viewModel.setUser(
                         data?.getSerializableExtra(PACKAGE_NAME_DOT + "User") as? LocalUser
                     )
@@ -291,7 +291,7 @@ class MainActivity : BaseActivity() {
                 }
                 LOGIN_FAILED  -> {
                     val loginIntent = Intent(activity, LoginActivity::class.java)
-                    activity?.startActivityForResult(loginIntent, CODE_LOGIN)
+                    activity?.startActivityForResult(loginIntent, ResultCode.CODE_LOGIN.code)
                     if (activity?.exception != null) {
                         if (activity?.exception is LoginFailedException) {
                             Toast.makeText(activity, R.string.token_expired, Toast.LENGTH_SHORT)

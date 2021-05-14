@@ -1,4 +1,4 @@
-package xyz.tcreopargh.amttd_web.bean
+package xyz.tcreopargh.amttd.data.bean.request
 
 import java.io.Serializable
 

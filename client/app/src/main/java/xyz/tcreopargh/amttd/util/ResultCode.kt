@@ -3,4 +3,6 @@
  */
 package xyz.tcreopargh.amttd.util
 
-const val CODE_LOGIN = 10001
+enum class ResultCode(val code: Int) {
+    CODE_LOGIN(10001);
+}

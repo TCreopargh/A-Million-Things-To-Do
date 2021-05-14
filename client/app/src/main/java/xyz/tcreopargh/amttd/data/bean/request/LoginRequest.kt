@@ -1,8 +1,9 @@
-package xyz.tcreopargh.amttd_web.bean
+package xyz.tcreopargh.amttd.data.bean.request
 
+import xyz.tcreopargh.amttd.data.bean.request.IRequestBody
 import java.util.*
 
-data class LoginBody(
+data class LoginRequest(
     var email: String? = null,
     var password: String? = null,
     var token: String? = null,

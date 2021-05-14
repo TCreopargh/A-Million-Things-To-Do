@@ -1,11 +1,9 @@
-package xyz.tcreopargh.amttd_web.bean
+package xyz.tcreopargh.amttd.data.bean.request
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import xyz.tcreopargh.amttd_web.data.CrudType
-import xyz.tcreopargh.amttd_web.data.TodoEntryImpl
+import xyz.tcreopargh.amttd.data.interactive.CrudType
+import xyz.tcreopargh.amttd.data.interactive.TodoEntryImpl
 
-data class TodoEntryActionBody(
-    @JsonProperty(required = true)
+data class TodoEntryActionRequest(
     var operation: CrudType? = null,
 
     /**

@@ -2,11 +2,8 @@ package xyz.tcreopargh.amttd_web.controller.account
 
 import com.google.gson.JsonObject
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RestController
-import xyz.tcreopargh.amttd_web.bean.LoginBody
+import org.springframework.web.bind.annotation.*
+import xyz.tcreopargh.amttd_web.bean.request.LoginRequest
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
@@ -19,8 +16,8 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 class LoginHandler : ControllerBase() {
-    @RequestMapping("/login", method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun resolveLogin(request: HttpServletRequest, @RequestBody loginBody: LoginBody): String {
+    @PostMapping("/login", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun resolveLogin(request: HttpServletRequest, @RequestBody loginBody: LoginRequest): String {
         val jsonResponse: JsonObject
         try {
             val password = loginBody.password

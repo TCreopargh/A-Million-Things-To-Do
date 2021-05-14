@@ -1,25 +1,20 @@
+/**
+ * @author TCreopargh
+ */
+@file:Suppress("unused")
+
 package xyz.tcreopargh.amttd_web.util
 
-import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import xyz.tcreopargh.amttd_web.AMTTD
+import com.google.gson.reflect.TypeToken
 import java.io.PrintWriter
 import java.io.Reader
+import java.util.*
 import kotlin.random.Random
 
-val random: Random = Random.Default
-
-val logger: Logger by lazy {
-    return@lazy LoggerFactory.getLogger(AMTTD::class.java)
-}
-
 fun generateToken() = random.nextString(64)
-
-val gson: Gson = Gson()
 
 fun Random.nextString(
     length: Int,
@@ -32,6 +27,14 @@ fun Random.nextString(
     }.toString()
 }
 
+fun <T> T.toJson(): JsonElement {
+    return gson.toJsonTree(this, object : TypeToken<T>() {}.type)
+}
+
+fun <T> T.toJsonString(): String {
+    return gson.toJson(this, object : TypeToken<T>() {}.type)
+}
+
 fun JsonObject.map(vararg args: Pair<String, Any>) {
     for (pair in args) {
         when (pair.second) {
@@ -39,8 +42,10 @@ fun JsonObject.map(vararg args: Pair<String, Any>) {
             is String      -> addProperty(pair.first, pair.second as String)
             is Number      -> addProperty(pair.first, pair.second as Number)
             is Char        -> addProperty(pair.first, pair.second as Char)
+            is Enum<*>     -> addProperty(pair.first, pair.second.toString())
+            is UUID        -> addProperty(pair.first, pair.second.toString())
             is JsonElement -> add(pair.first, pair.second as JsonElement)
-            else           -> addProperty(pair.first, pair.second.toString())
+            else           -> add(pair.first, pair.second.toJson())
         }
     }
 }
@@ -59,8 +64,10 @@ fun jsonArrayOf(vararg args: Any): JsonArray {
                 is String      -> this.add(element)
                 is Number      -> this.add(element)
                 is Char        -> this.add(element)
+                is Enum<*>     -> this.add(element.toString())
+                is UUID        -> this.add(element.toString())
                 is JsonElement -> this.add(element)
-                else           -> this.add(element.toString())
+                else           -> this.add(element.toJson())
             }
         }
     }

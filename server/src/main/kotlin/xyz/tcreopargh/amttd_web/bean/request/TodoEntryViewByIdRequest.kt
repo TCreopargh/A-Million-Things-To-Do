@@ -1,9 +1,9 @@
-package xyz.tcreopargh.amttd_web.bean
+package xyz.tcreopargh.amttd_web.bean.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 
-data class TodoEntryByIdViewBody(
+data class TodoEntryViewByIdRequest(
     @JsonProperty(required = true)
     var entryId: UUID? = null
 ) : IRequestBody

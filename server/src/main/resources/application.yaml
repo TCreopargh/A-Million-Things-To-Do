@@ -9,8 +9,8 @@ spring:
       test-while-idle: true
       validation-query: SELECT 1
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: 2147483647
-    url: jdbc:mysql://localhost:3306/amttd
+    password: IKNe8LljHCHPl4Dx
+    url: jdbc:mysql://8.141.52.59:3306/amttd?allowPublicKeyRetrieval=true&useSSL=false
     username: root
   jpa:
     show-sql: true

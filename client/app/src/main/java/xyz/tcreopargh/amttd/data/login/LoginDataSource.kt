@@ -5,12 +5,11 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
+import xyz.tcreopargh.amttd.data.bean.request.LoginRequest
+import xyz.tcreopargh.amttd.data.bean.request.RegisterRequest
 import xyz.tcreopargh.amttd.data.exception.LoginFailedException
 import xyz.tcreopargh.amttd.user.LocalUser
-import xyz.tcreopargh.amttd.util.jsonObjectOf
-import xyz.tcreopargh.amttd.util.rootUrl
-import xyz.tcreopargh.amttd.util.toRequestBody
-import xyz.tcreopargh.amttd.util.withPath
+import xyz.tcreopargh.amttd.util.*
 import java.io.IOException
 import java.util.*
 
@@ -24,10 +23,7 @@ class LoginDataSource {
         // TODO: acquire UUID and authToken from server
         val loginRequest = Request.Builder()
             .post(
-                jsonObjectOf(
-                    "email" to email,
-                    "password" to password
-                ).toRequestBody()
+                LoginRequest(email = email, password = password).toJsonRequest()
             ).url(rootUrl.withPath("/login"))
             .build()
         return sendRequest(loginRequest)
@@ -36,11 +32,11 @@ class LoginDataSource {
     fun register(email: String, password: String, username: String): LoginResult<LocalUser> {
         val registerRequest = Request.Builder()
             .post(
-                jsonObjectOf(
-                    "email" to email,
-                    "password" to password,
-                    "username" to username
-                ).toRequestBody()
+                RegisterRequest(
+                    email = email,
+                    password = password,
+                    username = username
+                ).toJsonRequest()
             ).url(rootUrl.withPath("/register"))
             .build()
         return sendRequest(registerRequest)
@@ -50,10 +46,7 @@ class LoginDataSource {
     fun loginWithAuthToken(uuid: UUID, authToken: String): LoginResult<LocalUser> {
         val loginRequest = Request.Builder()
             .post(
-                jsonObjectOf(
-                    "uuid" to uuid,
-                    "token" to authToken
-                ).toRequestBody()
+                LoginRequest(uuid = uuid, token = authToken).toJsonRequest()
             ).url(rootUrl.withPath("/login"))
             .build()
         return sendRequest(loginRequest)

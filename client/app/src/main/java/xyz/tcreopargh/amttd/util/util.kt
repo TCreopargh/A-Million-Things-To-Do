@@ -1,6 +1,9 @@
 /**
  * @author TCreopargh
  */
+
+@file:Suppress("unused")
+
 package xyz.tcreopargh.amttd.util
 
 import android.app.Activity
@@ -10,10 +13,10 @@ import android.text.style.ForegroundColorSpan
 import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
-import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.google.gson.reflect.TypeToken
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
@@ -27,8 +30,6 @@ import kotlin.random.Random
 
 const val PACKAGE_NAME = "xyz.tcreopargh.amttd"
 const val PACKAGE_NAME_DOT = "$PACKAGE_NAME."
-
-val gson: Gson = Gson()
 
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.
@@ -74,6 +75,18 @@ fun SpannableString.setColor(@ColorInt color: Int): SpannableString = apply {
     )
 }
 
+fun <T> T.toJsonRequest(): RequestBody {
+    return gson.toJson(this, object : TypeToken<T>() {}.type).toRequestBody(mediaTypeJson)
+}
+
+fun <T> T.toJson(): JsonElement {
+    return gson.toJsonTree(this, object : TypeToken<T>() {}.type)
+}
+
+fun <T> T.toJsonString(): String {
+    return gson.toJson(this, object : TypeToken<T>() {}.type)
+}
+
 fun JsonObject.map(vararg args: Pair<String, Any>) {
     for (pair in args) {
         when (pair.second) {
@@ -81,8 +94,10 @@ fun JsonObject.map(vararg args: Pair<String, Any>) {
             is String      -> addProperty(pair.first, pair.second as String)
             is Number      -> addProperty(pair.first, pair.second as Number)
             is Char        -> addProperty(pair.first, pair.second as Char)
+            is Enum<*>     -> addProperty(pair.first, pair.second.toString())
+            is UUID        -> addProperty(pair.first, pair.second.toString())
             is JsonElement -> add(pair.first, pair.second as JsonElement)
-            else           -> addProperty(pair.first, pair.second.toString())
+            else           -> add(pair.first, pair.second.toJson())
         }
     }
 }
@@ -101,15 +116,17 @@ fun jsonArrayOf(vararg args: Any): JsonArray {
                 is String      -> this.add(element)
                 is Number      -> this.add(element)
                 is Char        -> this.add(element)
+                is Enum<*>     -> this.add(element.toString())
+                is UUID        -> this.add(element.toString())
                 is JsonElement -> this.add(element)
-                else           -> this.add(element.toString())
+                else           -> this.add(element.toJson())
             }
         }
     }
 }
 
-fun JsonObject.toResponseBody(): ResponseBody = this.toString().toResponseBody(JSON)
-fun JsonObject.toRequestBody(): RequestBody = this.toString().toRequestBody(JSON)
+fun JsonObject.toResponseBody(): ResponseBody = this.toString().toResponseBody(mediaTypeJson)
+fun JsonObject.toRequestBody(): RequestBody = this.toString().toRequestBody(mediaTypeJson)
 
 fun i18n(@StringRes resId: Int) = AMTTD.i18n(resId)
 fun i18n(@StringRes resId: Int, vararg objects: Any?) = AMTTD.i18n(resId, *objects)
