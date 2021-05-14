@@ -1,23 +1,29 @@
 package xyz.tcreopargh.amttd_web.controller.account
 
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.bean.request.RegisterRequest
+import xyz.tcreopargh.amttd_web.bean.response.LoginResponse
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException
 import xyz.tcreopargh.amttd_web.exception.AuthenticationException.State
 import xyz.tcreopargh.amttd_web.exception.RegisterFailedException
-import xyz.tcreopargh.amttd_web.util.jsonObjectOf
 import xyz.tcreopargh.amttd_web.util.nextString
 import xyz.tcreopargh.amttd_web.util.random
 import javax.servlet.http.HttpServletRequest
 
 @RestController
 class RegisterHandler : ControllerBase() {
-    @PostMapping("/register", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun resolveRegister(request: HttpServletRequest, @RequestBody registerBody: RegisterRequest): String {
+    @PostMapping(
+        "/register",
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun resolveRegister(request: HttpServletRequest, @RequestBody registerBody: RegisterRequest): LoginResponse {
         try {
             val password = registerBody.password
             val email = registerBody.email?.lowercase()
@@ -58,18 +64,19 @@ class RegisterHandler : ControllerBase() {
             request.session.setAttribute("uuid", user.uuid.toString())
             request.session.setAttribute("token", generatedToken.token)
 
-            return jsonObjectOf(
-                "success" to true,
-                "email" to user.email,
-                "username" to (user.name ?: ""),
-                "uuid" to user.uuid,
-                "token" to generatedToken.token
-            ).toString()
+            return LoginResponse(
+                success = true,
+                email = "user.email",
+                username = user.name,
+                uuid = user.uuid,
+                token = generatedToken.token
+            )
         } catch (e: AuthenticationException) {
-            return jsonObjectOf(
-                "success" to false,
-                "reason" to e.state.toString()
-            ).toString()
+            return LoginResponse(
+                success = false,
+                reason = e.state.toString(),
+                error = e
+            )
         }
     }
 }

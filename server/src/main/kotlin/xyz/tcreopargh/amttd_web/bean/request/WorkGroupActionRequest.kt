@@ -5,7 +5,6 @@ import xyz.tcreopargh.amttd_web.data.CrudType
 import xyz.tcreopargh.amttd_web.data.WorkGroupImpl
 
 data class WorkGroupActionRequest(
-    @JsonProperty(required = true)
     var operation: CrudType? = null,
 
     /**

@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.reflect.TypeToken
@@ -17,11 +16,14 @@ import kotlinx.android.synthetic.main.todo_view_fragment.*
 import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.R
+import xyz.tcreopargh.amttd.data.bean.request.TodoEntryActionRequest
+import xyz.tcreopargh.amttd.data.bean.response.TodoEntryActionResponse
+import xyz.tcreopargh.amttd.data.interactive.CrudType
 import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
 import xyz.tcreopargh.amttd.data.interactive.TodoEntryImpl
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.*
-import java.io.IOException
+import java.lang.RuntimeException
 import java.util.*
 
 class TodoEditFragment : FragmentOnMainActivityBase() {
@@ -80,21 +82,22 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                 val uuid = entryId ?: return@Thread
                 val request = Request.Builder()
                     .post(
-                        jsonObjectOf(
-                            "entryId" to uuid
-                        ).toRequestBody()
+                        TodoEntryActionRequest(
+                            CrudType.READ,
+                            TodoEntryImpl(entryId = uuid)
+                        ).toJsonRequest()
                     ).url(rootUrl.withPath("/todo-entry"))
                     .build()
                 val response = AMTTD.okHttpClient.newCall(request).execute()
                 val body = response.body?.string()
                 // Don't simplify this
-                val result: ITodoEntry = try {
-                    gson.fromJson(body, object : TypeToken<TodoEntryImpl>() {}.type)
-                } catch (e: RuntimeException) {
-                    throw IOException(e)
+                val result: TodoEntryActionResponse =
+                    gson.fromJson(body, object : TypeToken<TodoEntryActionResponse>() {}.type)
+                if(result.success != true) {
+                    throw RuntimeException("Invalid JSON")
                 }
-                result
-            } catch (e: IOException) {
+                result.entry
+            } catch (e: Exception) {
                 Log.e(AMTTD.logTag, e.stackTraceToString())
                 viewModel.exception.postValue(e)
                 null

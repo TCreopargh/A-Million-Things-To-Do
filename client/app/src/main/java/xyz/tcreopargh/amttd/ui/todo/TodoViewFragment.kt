@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,11 +15,10 @@ import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
+import xyz.tcreopargh.amttd.data.bean.response.TodoEntryViewResponse
 import xyz.tcreopargh.amttd.data.interactive.ITodoEntry
-import xyz.tcreopargh.amttd.data.interactive.TodoEntryImpl
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.*
-import java.io.IOException
 import java.util.*
 
 class TodoViewFragment : FragmentOnMainActivityBase() {
@@ -93,13 +91,13 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
                 val response = AMTTD.okHttpClient.newCall(request).execute()
                 val body = response.body?.string()
                 // Don't simplify this
-                val result: List<ITodoEntry> = try {
-                    gson.fromJson(body, object : TypeToken<List<TodoEntryImpl>>() {}.type)
-                } catch (e: RuntimeException) {
-                    throw IOException(e)
+                val result: TodoEntryViewResponse =
+                    gson.fromJson(body, object : TypeToken<TodoEntryViewResponse>() {}.type)
+                if (result.success != true) {
+                    throw result.error ?: RuntimeException("Invalid JSON")
                 }
-                result
-            } catch (e: IOException) {
+                result.entries ?: throw RuntimeException("Invalid data")
+            } catch (e: Exception) {
                 Log.e(AMTTD.logTag, e.stackTraceToString())
                 viewModel.exception.postValue(e)
                 listOf()

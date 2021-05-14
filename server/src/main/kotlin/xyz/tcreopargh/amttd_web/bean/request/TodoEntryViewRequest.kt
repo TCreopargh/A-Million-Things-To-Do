@@ -4,6 +4,5 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 
 data class TodoEntryViewRequest(
-    @JsonProperty(required = true)
     var groupId: UUID? = null
 ) : IRequestBody

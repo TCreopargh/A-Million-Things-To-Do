@@ -1,15 +1,18 @@
 package xyz.tcreopargh.amttd.data.login
 
 import android.util.Log
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
+import com.google.gson.reflect.TypeToken
 import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.data.bean.request.LoginRequest
 import xyz.tcreopargh.amttd.data.bean.request.RegisterRequest
+import xyz.tcreopargh.amttd.data.bean.response.LoginResponse
 import xyz.tcreopargh.amttd.data.exception.LoginFailedException
 import xyz.tcreopargh.amttd.user.LocalUser
-import xyz.tcreopargh.amttd.util.*
+import xyz.tcreopargh.amttd.util.gson
+import xyz.tcreopargh.amttd.util.rootUrl
+import xyz.tcreopargh.amttd.util.toJsonRequest
+import xyz.tcreopargh.amttd.util.withPath
 import java.io.IOException
 import java.util.*
 
@@ -55,16 +58,19 @@ class LoginDataSource {
     private fun sendRequest(request: Request): LoginResult<LocalUser> {
         try {
             val response = AMTTD.okHttpClient.newCall(request).execute()
-            val body = response.body?.string()
-            Log.i(AMTTD.logTag, "Received response body from login: $body")
-            val jsonObject: JsonObject =
-                JsonParser.parseString(body) as? JsonObject
-                    ?: throw IOException("Invalid JSON!")
-            if (jsonObject.get("success")?.asBoolean == true) {
-                val username = jsonObject.get("username")?.asString
-                val email = jsonObject.get("email")?.asString
-                val uuid = UUID.fromString(jsonObject.get("uuid").asString)
-                val authToken = jsonObject.get("token")?.asString
+            val body = try {
+                gson.fromJson<LoginResponse>(
+                    response.body?.string(),
+                    object : TypeToken<LoginResponse>() {}.type
+                )
+            } catch (e: RuntimeException) {
+                throw IOException(e)
+            }
+            if (body.success == true) {
+                val username = body.username
+                val email = body.email
+                val uuid = body.uuid
+                val authToken = body.token
                 if (username != null && uuid != null && email != null) {
                     val user = LocalUser(
                         username = username,
@@ -77,7 +83,7 @@ class LoginDataSource {
                     throw IllegalArgumentException("Invalid JSON arguments!")
                 }
             } else {
-                throw LoginFailedException(jsonObject.get("reason").asString)
+                throw LoginFailedException(body.reason ?: "null")
             }
         } catch (e: IOException) {
             Log.e(AMTTD.logTag, "Login Error: ", e)

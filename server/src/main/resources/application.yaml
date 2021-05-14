@@ -18,6 +18,10 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
+  mvc:
+    converters:
+      preferred-json-mapper: gson
 logging:
   level:
     root: INFO
+

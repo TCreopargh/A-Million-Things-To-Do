@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,11 +16,12 @@ import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
+import xyz.tcreopargh.amttd.data.bean.request.WorkGroupViewRequest
+import xyz.tcreopargh.amttd.data.bean.response.WorkGroupViewResponse
 import xyz.tcreopargh.amttd.data.interactive.IWorkGroup
-import xyz.tcreopargh.amttd.data.interactive.WorkGroupImpl
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.*
-import java.io.IOException
+import java.lang.RuntimeException
 import java.util.*
 
 /**
@@ -89,21 +89,20 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                 val uuid = (activity as? MainActivity)?.loggedInUser?.uuid ?: return@Thread
                 val request = Request.Builder()
                     .post(
-                        jsonObjectOf(
-                            "uuid" to uuid
-                        ).toRequestBody()
+                        WorkGroupViewRequest(uuid).toJsonRequest()
                     ).url(rootUrl.withPath("/workgroups"))
                     .build()
                 val response = AMTTD.okHttpClient.newCall(request).execute()
                 val body = response.body?.string()
+                Log.i(AMTTD.logTag, body ?: "")
                 // Don't simplify this
-                val result: List<IWorkGroup> = try {
-                    gson.fromJson(body, object : TypeToken<List<WorkGroupImpl>>() {}.type)
-                } catch (e: RuntimeException) {
-                    throw IOException(e)
+                val result: WorkGroupViewResponse =
+                    gson.fromJson(body, object : TypeToken<WorkGroupViewResponse>() {}.type)
+                if(result.success != true) {
+                    throw result.error ?: RuntimeException("Invalid JSON")
                 }
-                result
-            } catch (e: IOException) {
+                result.workGroups ?: throw RuntimeException("Invalid data")
+            } catch (e: Exception) {
                 Log.e(AMTTD.logTag, e.stackTraceToString())
                 viewModel.exception.postValue(e)
                 listOf()

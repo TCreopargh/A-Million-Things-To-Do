@@ -5,7 +5,6 @@ import xyz.tcreopargh.amttd_web.data.CrudType
 import xyz.tcreopargh.amttd_web.data.TodoEntryImpl
 
 data class TodoEntryActionRequest(
-    @JsonProperty(required = true)
     var operation: CrudType? = null,
 
     /**
