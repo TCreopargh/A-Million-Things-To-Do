@@ -10,7 +10,7 @@ spring:
       validation-query: SELECT 1
     driver-class-name: com.mysql.cj.jdbc.Driver
     password: IKNe8LljHCHPl4Dx
-    url: jdbc:mysql://8.141.52.59:3306/amttd?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://db.tcreopargh.xyz:3306/amttd?allowPublicKeyRetrieval=true&useSSL=true
     username: root
   jpa:
     show-sql: true
