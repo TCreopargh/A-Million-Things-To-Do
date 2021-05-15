@@ -6,6 +6,10 @@ import xyz.tcreopargh.amttd_web.service.TokenService
 import xyz.tcreopargh.amttd_web.service.UserService
 import xyz.tcreopargh.amttd_web.service.WorkGroupService
 
+/**
+ * Base class for controllers
+ * Inject service layer here
+ */
 abstract class ControllerBase {
     @Autowired
     lateinit var userService: UserService
