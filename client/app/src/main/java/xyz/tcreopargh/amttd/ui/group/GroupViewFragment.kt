@@ -1,10 +1,13 @@
 package xyz.tcreopargh.amttd.ui.group
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,8 +21,8 @@ import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.common.bean.request.WorkGroupViewRequest
 import xyz.tcreopargh.amttd.common.bean.response.WorkGroupViewResponse
-import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.common.data.IWorkGroup
+import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.*
 import java.util.*
@@ -33,7 +36,7 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
         fun newInstance() = GroupViewFragment()
     }
 
-    private lateinit var viewModel: GroupViewModel
+    lateinit var viewModel: GroupViewModel
 
     private lateinit var groupSwipeContainer: SwipeRefreshLayout
 
@@ -45,7 +48,7 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
         val view = inflater.inflate(R.layout.group_view_fragment, container, false)
         val groupRecyclerView = view.findViewById<RecyclerView>(R.id.groupRecyclerView)
         groupSwipeContainer = view.findViewById(R.id.groupSwipeContainer)
-        val adapter = GroupViewAdapter(viewModel.groups.value ?: mutableListOf(), activity)
+        val adapter = GroupViewAdapter(viewModel.groups.value ?: mutableListOf(), this)
         groupRecyclerView.adapter = adapter
         groupRecyclerView.layoutManager = LinearLayoutManager(context)
         groupSwipeContainer.setOnRefreshListener { initializeItems() }
@@ -63,6 +66,20 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                     Toast.LENGTH_SHORT
                 ).show()
                 groupSwipeContainer.isRefreshing = false
+            }
+        }
+
+        viewModel.groupToEdit.observe(viewLifecycleOwner) {
+            it?.run {
+                AlertDialog.Builder(context).apply {
+                    @SuppressLint("InflateParams")
+                    val viewRoot = layoutInflater.inflate(R.layout.group_edit_layout, null)
+                    val titleText = viewRoot.findViewById<EditText>(R.id.groupEditTitleText)
+                    titleText.setText(it.name)
+                    setView(viewRoot)
+                    setPositiveButton(R.string.confirm) { dialog, _ -> dialog.cancel() }
+                    setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+                }.create().show()
             }
         }
 
@@ -94,7 +111,6 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                     .build()
                 val response = AMTTD.okHttpClient.newCall(request).execute()
                 val body = response.body?.string()
-                Log.i(AMTTD.logTag, body ?: "")
                 // Don't simplify this
                 val result: WorkGroupViewResponse =
                     gson.fromJson(body, object : TypeToken<WorkGroupViewResponse>() {}.type)

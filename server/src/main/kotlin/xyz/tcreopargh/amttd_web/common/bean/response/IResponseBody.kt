@@ -8,6 +8,6 @@ import java.io.Serializable
  * sure you check for the error on client.
  */
 interface IResponseBody : Serializable {
-    var success: Boolean?
-    var error: Int?
+    val success: Boolean?
+    val error: Int?
 }

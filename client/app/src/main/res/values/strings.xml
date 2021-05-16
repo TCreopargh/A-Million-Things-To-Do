@@ -28,7 +28,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="edit">Edit</string>
     <string name="error_code_message">Error code %s - %s</string>
-    <string name="error_occured">\"An error has occurred! \"</string>
+    <string name="error_occured">An error has occurred! </string>
     <string name="exception_not_available">Error is not specified by server</string>
     <string name="expand">Expand</string>
     <string name="failed_to_create_entity">Failed To Create Entity</string>
@@ -127,4 +127,5 @@
     <string name="user_count">User Count</string>
     <string name="user_not_found">User Not Found</string>
     <string name="welcome">"Welcome !"</string>
+    <string name="edit_work_group">Edit Work Group</string>
 </resources>

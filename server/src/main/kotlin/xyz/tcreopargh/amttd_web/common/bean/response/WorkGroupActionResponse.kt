@@ -1,11 +1,11 @@
 package xyz.tcreopargh.amttd_web.common.bean.response
 
 import xyz.tcreopargh.amttd_web.common.data.CrudType
-import xyz.tcreopargh.amttd_web.common.data.TodoEntryImpl
+import xyz.tcreopargh.amttd_web.common.data.WorkGroupImpl
 
-data class TodoEntryActionResponse(
+data class WorkGroupActionResponse(
     override var operation: CrudType? = null,
     override var success: Boolean? = false,
-    var entry: TodoEntryImpl? = null,
+    var workGroup: WorkGroupImpl? = null,
     override var error: Int? = null
 ) : IActionResponse

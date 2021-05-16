@@ -185,7 +185,7 @@
                         android:src="@drawable/ic_baseline_edit_24"
                         android:clickable="true"
                         android:tint="@color/primary"
-                        android:background="?android:selectableItemBackground" />
+                        android:background="?android:selectableItemBackgroundBorderless" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -227,7 +227,7 @@
                         android:contentDescription="@string/edit"
                         android:src="@drawable/ic_baseline_edit_24"
                         android:tint="@color/primary"
-                        android:background="?android:selectableItemBackground" />
+                        android:background="?android:selectableItemBackgroundBorderless" />
             </RelativeLayout>
 
             <Button

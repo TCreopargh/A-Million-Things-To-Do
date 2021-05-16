@@ -1,4 +1,4 @@
-package xyz.tcreopargh.amttd_web.controller.view
+package xyz.tcreopargh.amttd_web.controller.crud
 
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PostMapping
@@ -41,7 +41,7 @@ class TodoEntryController : ControllerBase() {
             // TODO: Implement other actions
             else          -> TodoEntryActionResponse(
                 success = false,
-                error = AmttdException(AmttdException.ErrorCode.ACTION_NOT_SUPPORTED).errorCodeValue
+                error = AmttdException.ErrorCode.ACTION_NOT_SUPPORTED.value
             )
         }
     }

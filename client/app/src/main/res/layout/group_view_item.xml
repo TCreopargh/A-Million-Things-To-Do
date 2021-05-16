@@ -12,74 +12,91 @@
         app:cardBackgroundColor="@android:color/transparent"
         android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:orientation="horizontal">
 
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/groupNameText"
-                android:text="@string/loading"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="16dp"
-                android:textSize="30sp" />
-
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:id="@+id/groupViewDivider"
-                android:background="@color/divider"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_below="@+id/groupNameText" />
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_gravity="center_vertical"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_below="@+id/groupViewDivider"
-                android:id="@+id/groupViewBottomLayout"
+        <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content">
 
-            <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:id="@+id/groupViewPersonIcon"
-                    android:src="@drawable/ic_baseline_person_outline_24"
-                    android:layout_gravity="center_vertical"
-                    app:tint="@color/grey"
-                    android:contentDescription="@string/user_count" />
-
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:id="@+id/groupUserCountText"
-                    android:text="@string/loading" />
+                    android:id="@+id/groupNameText"
+                    android:text="@string/loading"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="16dp"
+                    android:textSize="30sp" />
 
-            <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:id="@+id/groupViewTimeIcon"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_baseline_access_time_24"
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:id="@+id/groupViewDivider"
+                    android:background="@color/divider"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_below="@+id/groupNameText" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
                     android:layout_gravity="center_vertical"
-                    app:tint="@color/grey"
-                    android:contentDescription="@string/user_count" />
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_below="@+id/groupViewDivider"
+                    android:id="@+id/groupViewBottomLayout"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:id="@+id/groupTimeText"
-                    android:text="@string/loading" />
-        </LinearLayout>
-    </RelativeLayout>
+                <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:id="@+id/groupViewPersonIcon"
+                        android:src="@drawable/ic_baseline_person_outline_24"
+                        android:layout_gravity="center_vertical"
+                        app:tint="@color/grey"
+                        android:contentDescription="@string/user_count" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:id="@+id/groupUserCountText"
+                        android:text="@string/loading" />
+
+                <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:id="@+id/groupViewTimeIcon"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/ic_baseline_access_time_24"
+                        android:layout_gravity="center_vertical"
+                        app:tint="@color/grey"
+                        android:contentDescription="@string/user_count" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:id="@+id/groupTimeText"
+                        android:text="@string/loading" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <ImageButton
+                android:id="@+id/workGroupEditButton"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_baseline_edit_24"
+                android:tint="@color/primary"
+                android:contentDescription="@string/edit_work_group" />
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
