@@ -45,5 +45,4 @@ data class EntityWorkGroup(
     override fun toString(): String {
         return ExcludeToStringProcessor.getToString(this)
     }
-
 }

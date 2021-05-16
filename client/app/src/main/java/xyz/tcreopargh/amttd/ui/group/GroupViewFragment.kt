@@ -19,9 +19,13 @@ import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
+import xyz.tcreopargh.amttd.common.bean.request.WorkGroupActionRequest
 import xyz.tcreopargh.amttd.common.bean.request.WorkGroupViewRequest
+import xyz.tcreopargh.amttd.common.bean.response.WorkGroupActionResponse
 import xyz.tcreopargh.amttd.common.bean.response.WorkGroupViewResponse
+import xyz.tcreopargh.amttd.common.data.CrudType
 import xyz.tcreopargh.amttd.common.data.IWorkGroup
+import xyz.tcreopargh.amttd.common.data.WorkGroupImpl
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.*
@@ -57,6 +61,12 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
             adapter.notifyDataSetChanged()
             groupSwipeContainer.isRefreshing = false
         }
+        viewModel.dirty.observe(viewLifecycleOwner) {
+            if (it) {
+                initializeItems()
+                viewModel.dirty.value = false
+            }
+        }
 
         viewModel.exception.observe(viewLifecycleOwner) {
             it?.run {
@@ -77,9 +87,45 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                     val titleText = viewRoot.findViewById<EditText>(R.id.groupEditTitleText)
                     titleText.setText(it.name)
                     setView(viewRoot)
-                    setPositiveButton(R.string.confirm) { dialog, _ -> dialog.cancel() }
+                    setPositiveButton(R.string.confirm) { dialog, _ ->
+                        Thread {
+                            try {
+                                val uuid = it.groupId
+                                val request = Request.Builder()
+                                    .post(
+                                        WorkGroupActionRequest(
+                                            CrudType.UPDATE,
+                                            WorkGroupImpl(it).apply {
+                                                name = titleText.text.toString()
+                                            }
+                                        ).toJsonRequest()
+                                    ).url(rootUrl.withPath("/workgroup"))
+                                    .build()
+                                val response = AMTTD.okHttpClient.newCall(request).execute()
+                                val body = response.body?.string()
+                                // Don't simplify this
+                                val result: WorkGroupActionResponse =
+                                    gson.fromJson(
+                                        body,
+                                        object : TypeToken<WorkGroupActionResponse>() {}.type
+                                    )
+                                if (result.success != true) {
+                                    throw AmttdException.getFromErrorCode(result.error)
+                                }
+                                result.workGroup ?: throw RuntimeException("Invalid data")
+                            } catch (e: Exception) {
+                                Log.e(AMTTD.logTag, e.stackTraceToString())
+                                viewModel.exception.postValue(AmttdException.getFromException(e))
+                            }
+                            // Make sure the server side is done processing
+                            Thread.sleep(500)
+                            viewModel.dirty.postValue(true)
+                        }.start()
+                        dialog.cancel()
+                    }
                     setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
                 }.create().show()
+                viewModel.groupToEdit.value = null
             }
         }
 

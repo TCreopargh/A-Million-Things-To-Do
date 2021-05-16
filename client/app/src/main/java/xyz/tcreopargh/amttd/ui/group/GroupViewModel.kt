@@ -20,6 +20,10 @@ class GroupViewModel : ViewModelBase() {
         value = null
     }
 
+    val dirty = MutableLiveData<Boolean>().apply {
+        value = false
+    }
+
     fun findGroupById(uuid: UUID): IWorkGroup? = groups.value?.find { it.groupId == uuid }
 
     fun setGroup(value: MutableList<IWorkGroup>) {

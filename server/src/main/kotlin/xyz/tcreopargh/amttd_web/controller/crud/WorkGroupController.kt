@@ -27,19 +27,31 @@ class WorkGroupController : ControllerBase() {
         body: WorkGroupActionRequest
     ): WorkGroupActionResponse {
         return try {
+            val id =
+                body.workGroup?.groupId ?: throw AmttdException(AmttdException.ErrorCode.JSON_MISSING_FIELD)
+            val workGroup = workGroupService.findByIdOrNull(id)
+                ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
             when (body.operation) {
                 CrudType.READ -> {
-                    val id =
-                        body.workGroup?.groupId ?: throw AmttdException(AmttdException.ErrorCode.JSON_MISSING_FIELD)
-                    val workGroup = workGroupService.findByIdOrNull(id)
-                        ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                     WorkGroupActionResponse(
                         operation = body.operation,
                         success = true,
                         workGroup = WorkGroupImpl(workGroup)
                     )
                 }
-                else          -> throw AmttdException(AmttdException.ErrorCode.ACTION_NOT_SUPPORTED)
+                CrudType.UPDATE -> {
+
+                    WorkGroupActionResponse(
+                        operation = body.operation,
+                        success = true,
+                        workGroup = WorkGroupImpl(workGroupService.saveImmediately(
+                            workGroup.apply {
+                                groupName = body.workGroup?.name ?: groupName
+                            }
+                        ))
+                    )
+                }
+                else -> throw AmttdException(AmttdException.ErrorCode.ACTION_NOT_SUPPORTED)
             }
         } catch (e: AmttdException) {
             WorkGroupActionResponse(
