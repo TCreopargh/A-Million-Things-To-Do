@@ -60,6 +60,7 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
                     Toast.LENGTH_SHORT
                 ).show()
                 todoSwipeContainer.isRefreshing = false
+                viewModel.exception.value = null
             }
         }
 
