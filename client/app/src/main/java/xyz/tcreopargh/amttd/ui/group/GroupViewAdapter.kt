@@ -16,7 +16,6 @@ import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.common.bean.request.WorkGroupActionRequest
-import xyz.tcreopargh.amttd.common.bean.request.WorkGroupViewRequest
 import xyz.tcreopargh.amttd.common.bean.response.WorkGroupActionResponse
 import xyz.tcreopargh.amttd.common.data.CrudType
 import xyz.tcreopargh.amttd.common.data.IWorkGroup
@@ -94,7 +93,7 @@ class GroupViewAdapter(
                         if (result.success != true) {
                             throw AmttdException.getFromErrorCode(result.error)
                         }
-                        result.workGroup ?: throw RuntimeException("Invalid data")
+                        result.entity ?: throw RuntimeException("Invalid data")
                     } catch (e: Exception) {
                         Log.e(AMTTD.logTag, e.stackTraceToString())
                         viewModel?.exception?.postValue(AmttdException.getFromException(e))

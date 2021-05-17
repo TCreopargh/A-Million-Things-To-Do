@@ -51,6 +51,7 @@ class AmttdException(val errorCode: ErrorCode, val nestedException: Exception? =
         INDEX_OUT_OF_BOUNDS(30004),
         NULL_POINTER_EXCEPTION(30005),
         UNSUPPORTED_OPERATION(30006),
+        ILLEGAL_ARGUMENTS(30007),
 
         // Server related
         SERVICE_ERROR(40000),

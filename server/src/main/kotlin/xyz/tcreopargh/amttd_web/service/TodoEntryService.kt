@@ -17,4 +17,5 @@ class TodoEntryService {
     fun saveImmediately(entry: EntityTodoEntry) = repository.saveAndFlush(entry)
     fun findById(uuid: UUID) = repository.findById(uuid)
     fun findByIdOrNull(uuid: UUID) = repository.findByIdOrNull(uuid)
+    fun delete(uuid: UUID) = repository.deleteById(uuid)
 }

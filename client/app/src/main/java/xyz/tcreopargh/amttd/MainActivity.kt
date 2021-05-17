@@ -17,7 +17,6 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import xyz.tcreopargh.amttd.common.exception.AmttdException
@@ -65,21 +64,15 @@ class MainActivity : BaseActivity() {
 
         fab = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
-            val currentFragment = getCurrentlyDisplayedFragment()
-            when (currentFragment) {
+            when (val currentFragment = getCurrentlyDisplayedFragment()) {
                 is TodoEditFragment  -> {
                 }
                 is TodoViewFragment  -> {
                 }
                 is GroupViewFragment -> {
+                    currentFragment.addWorkGroup()
                 }
             }
-            Snackbar.make(
-                view,
-                currentFragment?.javaClass?.kotlin?.simpleName ?: "null",
-                Snackbar.LENGTH_LONG
-            )
-                .setAction("Action", null).show()
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)

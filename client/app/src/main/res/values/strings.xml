@@ -27,7 +27,7 @@
     <string name="default_task_count">0 / 0</string>
     <string name="dismiss">Dismiss</string>
     <string name="edit">Edit</string>
-    <string name="error_code_message">Error code %s - %s</string>
+    <string name="error_code_message">Error code %s - %s%s</string>
     <string name="error_occured">An error has occurred! </string>
     <string name="exception_not_available">Error is not specified by server</string>
     <string name="expand">Expand</string>
@@ -128,4 +128,7 @@
     <string name="user_not_found">User Not Found</string>
     <string name="welcome">"Welcome !"</string>
     <string name="edit_work_group">Edit Work Group</string>
+    <string name="illegal_arguments">Illegal Arguments</string>
+    <string name="delete">Delete</string>
+    <string name="remove">remove</string>
 </resources>

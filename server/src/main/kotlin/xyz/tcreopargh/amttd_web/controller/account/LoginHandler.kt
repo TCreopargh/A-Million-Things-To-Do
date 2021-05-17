@@ -91,6 +91,7 @@ class LoginHandler : ControllerBase() {
             }
             return response
         } catch (e: AmttdException) {
+            logger.error("Authentication error! ", e)
             return LoginResponse(
                 success = false,
                 error = e.errorCodeValue

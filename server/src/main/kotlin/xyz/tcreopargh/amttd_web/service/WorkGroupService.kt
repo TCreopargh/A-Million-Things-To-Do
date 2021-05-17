@@ -19,4 +19,5 @@ class WorkGroupService {
     fun findAllByUser(user: EntityUser) = repository.findAllByUsers(user)
     fun findById(uuid: UUID) = repository.findById(uuid)
     fun findByIdOrNull(uuid: UUID) = repository.findByIdOrNull(uuid)
+    fun delete(uuid: UUID) = repository.deleteById(uuid)
 }

@@ -76,6 +76,7 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                     Toast.LENGTH_SHORT
                 ).show()
                 groupSwipeContainer.isRefreshing = false
+                viewModel.exception.value = null
             }
         }
 
@@ -88,39 +89,47 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                     titleText.setText(it.name)
                     setView(viewRoot)
                     setPositiveButton(R.string.confirm) { dialog, _ ->
-                        Thread {
-                            try {
-                                val uuid = it.groupId
-                                val request = Request.Builder()
-                                    .post(
-                                        WorkGroupActionRequest(
-                                            CrudType.UPDATE,
-                                            WorkGroupImpl(it).apply {
-                                                name = titleText.text.toString()
-                                            }
-                                        ).toJsonRequest()
-                                    ).url(rootUrl.withPath("/workgroup"))
-                                    .build()
-                                val response = AMTTD.okHttpClient.newCall(request).execute()
-                                val body = response.body?.string()
-                                // Don't simplify this
-                                val result: WorkGroupActionResponse =
-                                    gson.fromJson(
-                                        body,
-                                        object : TypeToken<WorkGroupActionResponse>() {}.type
-                                    )
-                                if (result.success != true) {
-                                    throw AmttdException.getFromErrorCode(result.error)
-                                }
-                                result.workGroup ?: throw RuntimeException("Invalid data")
-                            } catch (e: Exception) {
-                                Log.e(AMTTD.logTag, e.stackTraceToString())
+                        object : CrudTask<WorkGroupImpl, WorkGroupActionRequest, WorkGroupActionResponse>(
+                            request = WorkGroupActionRequest(
+                                operation = CrudType.UPDATE,
+                                entity = WorkGroupImpl(it).apply {
+                                    name = titleText.text.toString()
+                                },
+                                userId = (activity as? MainActivity)?.loggedInUser?.uuid
+                            ),
+                            path = "/workgroup",
+                            responseType = object : TypeToken<WorkGroupActionResponse>() {}.type
+                        ) {
+                            override fun onSuccess(entity: WorkGroupImpl?) {
+                                Thread.sleep(200)
+                                viewModel.dirty.postValue(true)
+                            }
+
+                            override fun onFailure(e: Exception) {
                                 viewModel.exception.postValue(AmttdException.getFromException(e))
                             }
-                            // Make sure the server side is done processing
-                            Thread.sleep(500)
-                            viewModel.dirty.postValue(true)
-                        }.start()
+                        }.execute()
+                        dialog.cancel()
+                    }
+                    setNeutralButton(R.string.remove) { dialog, _ ->
+                        object : CrudTask<WorkGroupImpl, WorkGroupActionRequest, WorkGroupActionResponse>(
+                            request = WorkGroupActionRequest(
+                                operation = CrudType.DELETE,
+                                entity = WorkGroupImpl(it),
+                                userId = (activity as? MainActivity)?.loggedInUser?.uuid
+                            ),
+                            path = "/workgroup",
+                            responseType = object : TypeToken<WorkGroupActionResponse>() {}.type
+                        ) {
+                            override fun onSuccess(entity: WorkGroupImpl?) {
+                                Thread.sleep(200)
+                                viewModel.dirty.postValue(true)
+                            }
+
+                            override fun onFailure(e: Exception) {
+                                viewModel.exception.postValue(AmttdException.getFromException(e))
+                            }
+                        }.execute()
                         dialog.cancel()
                     }
                     setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
@@ -144,6 +153,39 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
         setHasOptionsMenu(true)
     }
 
+    fun addWorkGroup() {
+        AlertDialog.Builder(context).apply {
+            @SuppressLint("InflateParams")
+            val viewRoot = layoutInflater.inflate(R.layout.group_edit_layout, null)
+            val titleText = viewRoot.findViewById<EditText>(R.id.groupEditTitleText)
+            titleText.setText("")
+            setView(viewRoot)
+            setPositiveButton(R.string.confirm) { dialog, _ ->
+                object : CrudTask<WorkGroupImpl, WorkGroupActionRequest, WorkGroupActionResponse>(
+                    request = WorkGroupActionRequest(
+                        operation = CrudType.CREATE,
+                        entity = WorkGroupImpl().apply {
+                            name = titleText.text.toString()
+                        },
+                        userId = (activity as? MainActivity)?.loggedInUser?.uuid
+                    ),
+                    path = "/workgroup",
+                    responseType = object : TypeToken<WorkGroupActionResponse>() {}.type
+                ) {
+                    override fun onSuccess(entity: WorkGroupImpl?) {
+                        Thread.sleep(500)
+                        viewModel.dirty.postValue(true)
+                    }
+
+                    override fun onFailure(e: Exception) {
+                        viewModel.exception.postValue(AmttdException.getFromException(e))
+                    }
+                }.execute()
+                dialog.cancel()
+            }
+            setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+        }.create().show()
+    }
 
     private fun initializeItems() {
         groupSwipeContainer.isRefreshing = true

@@ -51,6 +51,7 @@ class AmttdException(val errorCode: ErrorCode, val nestedException: Exception? =
         INDEX_OUT_OF_BOUNDS(30004, R.string.index_out_of_bounds),
         NULL_POINTER_EXCEPTION(30005, R.string.null_pointer_exception),
         UNSUPPORTED_OPERATION(30006, R.string.unsupported_operation),
+        ILLEGAL_ARGUMENTS(30007, R.string.illegal_arguments),
 
         // Server related
         SERVICE_ERROR(40000, R.string.service_error),
@@ -149,7 +150,7 @@ class AmttdException(val errorCode: ErrorCode, val nestedException: Exception? =
     fun getLocalizedString(context: Context?): String {
         if (context == null) return ""
         return context.getString(R.string.error_code_message, errorCode.value.toString(),
-            errorCode.localizedString?.let { context.getString(it) } ?: errorCode.toString())
+            errorCode.localizedString?.let { context.getString(it) } ?: errorCode.toString(), nestedException?.let {" " + nestedException.message})
     }
 
     val errorCodeValue: Int

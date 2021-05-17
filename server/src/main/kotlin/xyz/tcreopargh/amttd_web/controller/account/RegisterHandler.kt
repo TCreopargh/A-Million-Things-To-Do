@@ -12,6 +12,7 @@ import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException.ErrorCode
+import xyz.tcreopargh.amttd_web.util.logger
 import xyz.tcreopargh.amttd_web.util.nextString
 import xyz.tcreopargh.amttd_web.util.random
 import javax.servlet.http.HttpServletRequest
@@ -73,6 +74,7 @@ class RegisterHandler : ControllerBase() {
                 token = generatedToken.token
             )
         } catch (e: AmttdException) {
+            logger.error("Authentication error! ", e)
             return LoginResponse(
                 success = false,
                 error = e.errorCodeValue
