@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.common.bean.request.WorkGroupViewRequest
 import xyz.tcreopargh.amttd_web.common.bean.response.WorkGroupViewResponse
-import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.common.data.WorkGroupImpl
-import xyz.tcreopargh.amttd_web.entity.EntityWorkGroup
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
+import xyz.tcreopargh.amttd_web.controller.ControllerBase
+import xyz.tcreopargh.amttd_web.entity.EntityWorkGroup
 import xyz.tcreopargh.amttd_web.util.logger
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest

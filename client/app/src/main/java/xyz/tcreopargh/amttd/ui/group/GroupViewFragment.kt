@@ -89,17 +89,18 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                     titleText.setText(it.name)
                     setView(viewRoot)
                     setPositiveButton(R.string.confirm) { dialog, _ ->
-                        object : CrudTask<WorkGroupImpl, WorkGroupActionRequest, WorkGroupActionResponse>(
-                            request = WorkGroupActionRequest(
-                                operation = CrudType.UPDATE,
-                                entity = WorkGroupImpl(it).apply {
-                                    name = titleText.text.toString()
-                                },
-                                userId = (activity as? MainActivity)?.loggedInUser?.uuid
-                            ),
-                            path = "/workgroup",
-                            responseType = object : TypeToken<WorkGroupActionResponse>() {}.type
-                        ) {
+                        object :
+                            CrudTask<WorkGroupImpl, WorkGroupActionRequest, WorkGroupActionResponse>(
+                                request = WorkGroupActionRequest(
+                                    operation = CrudType.UPDATE,
+                                    entity = WorkGroupImpl(it).apply {
+                                        name = titleText.text.toString()
+                                    },
+                                    userId = (activity as? MainActivity)?.loggedInUser?.uuid
+                                ),
+                                path = "/workgroup",
+                                responseType = object : TypeToken<WorkGroupActionResponse>() {}.type
+                            ) {
                             override fun onSuccess(entity: WorkGroupImpl?) {
                                 Thread.sleep(200)
                                 viewModel.dirty.postValue(true)
@@ -112,15 +113,16 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                         dialog.cancel()
                     }
                     setNeutralButton(R.string.remove) { dialog, _ ->
-                        object : CrudTask<WorkGroupImpl, WorkGroupActionRequest, WorkGroupActionResponse>(
-                            request = WorkGroupActionRequest(
-                                operation = CrudType.DELETE,
-                                entity = WorkGroupImpl(it),
-                                userId = (activity as? MainActivity)?.loggedInUser?.uuid
-                            ),
-                            path = "/workgroup",
-                            responseType = object : TypeToken<WorkGroupActionResponse>() {}.type
-                        ) {
+                        object :
+                            CrudTask<WorkGroupImpl, WorkGroupActionRequest, WorkGroupActionResponse>(
+                                request = WorkGroupActionRequest(
+                                    operation = CrudType.DELETE,
+                                    entity = WorkGroupImpl(it),
+                                    userId = (activity as? MainActivity)?.loggedInUser?.uuid
+                                ),
+                                path = "/workgroup",
+                                responseType = object : TypeToken<WorkGroupActionResponse>() {}.type
+                            ) {
                             override fun onSuccess(entity: WorkGroupImpl?) {
                                 Thread.sleep(200)
                                 viewModel.dirty.postValue(true)

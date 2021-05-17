@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.common.bean.request.RegisterRequest
 import xyz.tcreopargh.amttd_web.common.bean.response.LoginResponse
+import xyz.tcreopargh.amttd_web.common.exception.AmttdException
+import xyz.tcreopargh.amttd_web.common.exception.AmttdException.ErrorCode
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException.ErrorCode
 import xyz.tcreopargh.amttd_web.util.logger
 import xyz.tcreopargh.amttd_web.util.nextString
 import xyz.tcreopargh.amttd_web.util.random

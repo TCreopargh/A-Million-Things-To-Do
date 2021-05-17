@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.common.bean.request.TodoEntryViewRequest
 import xyz.tcreopargh.amttd_web.common.bean.response.TodoEntryViewResponse
-import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.common.data.TodoEntryImpl
-import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
+import xyz.tcreopargh.amttd_web.controller.ControllerBase
+import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 
