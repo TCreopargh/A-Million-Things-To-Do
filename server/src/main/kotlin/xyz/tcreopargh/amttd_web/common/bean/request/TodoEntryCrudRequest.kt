@@ -4,7 +4,7 @@ import xyz.tcreopargh.amttd_web.common.data.CrudType
 import xyz.tcreopargh.amttd_web.common.data.TodoEntryImpl
 import java.util.*
 
-data class TodoEntryActionRequest(
+data class TodoEntryCrudRequest(
     override var operation: CrudType? = null,
 
     /**
@@ -14,4 +14,4 @@ data class TodoEntryActionRequest(
      */
     override var entity: TodoEntryImpl? = null,
     var userId: UUID? = null
-) : IActionRequest<TodoEntryImpl>
+) : ICrudRequest<TodoEntryImpl>

@@ -5,7 +5,7 @@ import xyz.tcreopargh.amttd_web.common.data.CrudType
 /**
  * @author TCreopargh
  */
-interface IActionRequest<T> : IRequestBody {
+interface ICrudRequest<T> : IRequestBody {
     val operation: CrudType?
     val entity: T?
 }

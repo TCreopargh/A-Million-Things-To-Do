@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import xyz.tcreopargh.amttd_web.common.bean.request.WorkGroupActionRequest
-import xyz.tcreopargh.amttd_web.common.bean.response.WorkGroupActionResponse
+import xyz.tcreopargh.amttd_web.common.bean.request.WorkGroupCrudRequest
+import xyz.tcreopargh.amttd_web.common.bean.response.WorkGroupCrudResponse
 import xyz.tcreopargh.amttd_web.common.data.CrudType
 import xyz.tcreopargh.amttd_web.common.data.WorkGroupImpl
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
@@ -26,8 +26,8 @@ class WorkGroupController : ControllerBase() {
     fun resolveAction(
         request: HttpServletRequest,
         @RequestBody
-        body: WorkGroupActionRequest
-    ): WorkGroupActionResponse {
+        body: WorkGroupCrudRequest
+    ): WorkGroupCrudResponse {
         return try {
             val id =
                 body.entity?.groupId ?: throw AmttdException(AmttdException.ErrorCode.JSON_MISSING_FIELD)
@@ -37,7 +37,7 @@ class WorkGroupController : ControllerBase() {
             } else EntityWorkGroup()
             when (body.operation) {
                 CrudType.READ -> {
-                    WorkGroupActionResponse(
+                    WorkGroupCrudResponse(
                         operation = body.operation,
                         success = true,
                         entity = WorkGroupImpl(workGroup)
@@ -45,7 +45,7 @@ class WorkGroupController : ControllerBase() {
                 }
                 CrudType.UPDATE -> {
 
-                    WorkGroupActionResponse(
+                    WorkGroupCrudResponse(
                         operation = body.operation,
                         success = true,
                         entity = WorkGroupImpl(workGroupService.saveImmediately(
@@ -66,7 +66,7 @@ class WorkGroupController : ControllerBase() {
                     val obj = WorkGroupImpl(entity)
                     user.joinedWorkGroups = user.joinedWorkGroups + entity
                     userService.saveImmediately(user)
-                    WorkGroupActionResponse(
+                    WorkGroupCrudResponse(
                         operation = body.operation,
                         success = true,
                         entity = obj
@@ -74,7 +74,7 @@ class WorkGroupController : ControllerBase() {
                 }
                 CrudType.DELETE -> {
                     workGroupService.delete(id)
-                    WorkGroupActionResponse(
+                    WorkGroupCrudResponse(
                         operation = body.operation,
                         success = true
                     )
@@ -83,7 +83,7 @@ class WorkGroupController : ControllerBase() {
             }
         } catch (e: AmttdException) {
             logger.error("Error in work group crud: ", e)
-            WorkGroupActionResponse(
+            WorkGroupCrudResponse(
                 operation = body.operation,
                 success = false,
                 error = e.errorCodeValue
