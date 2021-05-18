@@ -23,6 +23,7 @@ import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.data.login.LoginResult
 import xyz.tcreopargh.amttd.ui.group.GroupViewFragment
 import xyz.tcreopargh.amttd.ui.login.LoginActivity
+import xyz.tcreopargh.amttd.ui.settings.SettingsFragment
 import xyz.tcreopargh.amttd.ui.todo.TodoViewFragment
 import xyz.tcreopargh.amttd.ui.todoedit.TodoEditFragment
 import xyz.tcreopargh.amttd.user.LocalUser
@@ -91,6 +92,21 @@ class MainActivity : BaseActivity() {
                 R.id.nav_logout     -> {
                     drawerLayout.closeDrawer(navView)
                     logoutAndRestart()
+                    false
+                }
+                R.id.nav_settings   -> {
+                    supportFragmentManager.beginTransaction().apply {
+                        val targetFragment = SettingsFragment.newInstance()
+                        replace(
+                            R.id.main_fragment_parent,
+                            targetFragment,
+                            targetFragment::class.simpleName
+                        )
+                        setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        addToBackStack(null)
+                        commit()
+                    }
+                    drawerLayout.closeDrawer(navView)
                     false
                 }
                 else                -> {
@@ -265,7 +281,7 @@ class MainActivity : BaseActivity() {
                 text = user.username
             }
             headerView.findViewById<TextView>(R.id.headerSubtitle).apply {
-                text = user.uuid.toString()
+                text = user.email
             }
         }
     }

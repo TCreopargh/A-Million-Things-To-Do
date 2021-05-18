@@ -131,4 +131,13 @@
     <string name="illegal_arguments">Illegal Arguments</string>
     <string name="delete">Delete</string>
     <string name="remove">remove</string>
+    <string name="user_settings">User Settings</string>
+    <string name="change_username">Change Username</string>
+    <string name="general_settings">General</string>
+    <string name="night_mode">Night Mode</string>
+    <string name="change_pfp">Change your user avatar</string>
+    <string name="dark_ui">Use darker UI background</string>
+    <string name="app_lang_desc">Change the application language</string>
+    <string name="language">Language</string>
+    <string name="language_default">System Default</string>
 </resources>
