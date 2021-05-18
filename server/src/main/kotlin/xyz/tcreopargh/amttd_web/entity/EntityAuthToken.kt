@@ -23,7 +23,7 @@ data class EntityAuthToken(
 
 ) : IEntity {
     companion object {
-        val LIFESPAN: Long by lazy { 86400000L * 7 }
+        const val LIFESPAN: Long = 86400000L * 7
     }
 
     fun isExpired(): Boolean {
