@@ -2,8 +2,8 @@ package xyz.tcreopargh.amttd.util
 
 import android.util.Log
 import xyz.tcreopargh.amttd.AMTTD
-import xyz.tcreopargh.amttd.common.bean.request.IActionRequest
-import xyz.tcreopargh.amttd.common.bean.response.IActionResponse
+import xyz.tcreopargh.amttd.common.bean.request.ICrudRequest
+import xyz.tcreopargh.amttd.common.bean.response.ICrudResponse
 import xyz.tcreopargh.amttd.common.data.CrudType
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import java.lang.reflect.Type
@@ -17,7 +17,7 @@ import java.net.URL
  * Note: The callback methods are **NOT** executed in the main thread.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class CrudTask<Entity, out Request : IActionRequest<Entity>, in Response : IActionResponse<Entity>>(
+abstract class CrudTask<Entity, out Request : ICrudRequest<Entity>, in Response : ICrudResponse<Entity>>(
     val request: Request,
     val path: String,
     val responseType: Type,

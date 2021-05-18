@@ -19,9 +19,9 @@ import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.common.bean.request.WorkGroupActionRequest
+import xyz.tcreopargh.amttd.common.bean.request.WorkGroupCrudRequest
 import xyz.tcreopargh.amttd.common.bean.request.WorkGroupViewRequest
-import xyz.tcreopargh.amttd.common.bean.response.WorkGroupActionResponse
+import xyz.tcreopargh.amttd.common.bean.response.WorkGroupCrudResponse
 import xyz.tcreopargh.amttd.common.bean.response.WorkGroupViewResponse
 import xyz.tcreopargh.amttd.common.data.CrudType
 import xyz.tcreopargh.amttd.common.data.IWorkGroup
@@ -90,8 +90,8 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                     setView(viewRoot)
                     setPositiveButton(R.string.confirm) { dialog, _ ->
                         object :
-                            CrudTask<WorkGroupImpl, WorkGroupActionRequest, WorkGroupActionResponse>(
-                                request = WorkGroupActionRequest(
+                            CrudTask<WorkGroupImpl, WorkGroupCrudRequest, WorkGroupCrudResponse>(
+                                request = WorkGroupCrudRequest(
                                     operation = CrudType.UPDATE,
                                     entity = WorkGroupImpl(it).apply {
                                         name = titleText.text.toString()
@@ -99,7 +99,7 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                                     userId = (activity as? MainActivity)?.loggedInUser?.uuid
                                 ),
                                 path = "/workgroup",
-                                responseType = object : TypeToken<WorkGroupActionResponse>() {}.type
+                                responseType = object : TypeToken<WorkGroupCrudResponse>() {}.type
                             ) {
                             override fun onSuccess(entity: WorkGroupImpl?) {
                                 Thread.sleep(200)
@@ -114,14 +114,14 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                     }
                     setNeutralButton(R.string.remove) { dialog, _ ->
                         object :
-                            CrudTask<WorkGroupImpl, WorkGroupActionRequest, WorkGroupActionResponse>(
-                                request = WorkGroupActionRequest(
+                            CrudTask<WorkGroupImpl, WorkGroupCrudRequest, WorkGroupCrudResponse>(
+                                request = WorkGroupCrudRequest(
                                     operation = CrudType.DELETE,
                                     entity = WorkGroupImpl(it),
                                     userId = (activity as? MainActivity)?.loggedInUser?.uuid
                                 ),
                                 path = "/workgroup",
-                                responseType = object : TypeToken<WorkGroupActionResponse>() {}.type
+                                responseType = object : TypeToken<WorkGroupCrudResponse>() {}.type
                             ) {
                             override fun onSuccess(entity: WorkGroupImpl?) {
                                 Thread.sleep(200)
@@ -163,8 +163,8 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
             titleText.setText("")
             setView(viewRoot)
             setPositiveButton(R.string.confirm) { dialog, _ ->
-                object : CrudTask<WorkGroupImpl, WorkGroupActionRequest, WorkGroupActionResponse>(
-                    request = WorkGroupActionRequest(
+                object : CrudTask<WorkGroupImpl, WorkGroupCrudRequest, WorkGroupCrudResponse>(
+                    request = WorkGroupCrudRequest(
                         operation = CrudType.CREATE,
                         entity = WorkGroupImpl().apply {
                             name = titleText.text.toString()
@@ -172,7 +172,7 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                         userId = (activity as? MainActivity)?.loggedInUser?.uuid
                     ),
                     path = "/workgroup",
-                    responseType = object : TypeToken<WorkGroupActionResponse>() {}.type
+                    responseType = object : TypeToken<WorkGroupCrudResponse>() {}.type
                 ) {
                     override fun onSuccess(entity: WorkGroupImpl?) {
                         Thread.sleep(500)

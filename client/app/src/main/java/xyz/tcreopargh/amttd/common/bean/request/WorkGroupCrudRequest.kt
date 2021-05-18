@@ -4,7 +4,7 @@ import xyz.tcreopargh.amttd.common.data.CrudType
 import xyz.tcreopargh.amttd.common.data.WorkGroupImpl
 import java.util.*
 
-data class WorkGroupActionRequest(
+data class WorkGroupCrudRequest(
     override var operation: CrudType? = null,
 
     /**
@@ -14,4 +14,4 @@ data class WorkGroupActionRequest(
      */
     override var entity: WorkGroupImpl? = null,
     var userId: UUID? = null
-) : IActionRequest<WorkGroupImpl>
+) : ICrudRequest<WorkGroupImpl>

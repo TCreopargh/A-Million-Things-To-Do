@@ -15,8 +15,8 @@ import com.google.gson.reflect.TypeToken
 import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.common.bean.request.WorkGroupActionRequest
-import xyz.tcreopargh.amttd.common.bean.response.WorkGroupActionResponse
+import xyz.tcreopargh.amttd.common.bean.request.WorkGroupCrudRequest
+import xyz.tcreopargh.amttd.common.bean.response.WorkGroupCrudResponse
 import xyz.tcreopargh.amttd.common.data.CrudType
 import xyz.tcreopargh.amttd.common.data.IWorkGroup
 import xyz.tcreopargh.amttd.common.data.WorkGroupImpl
@@ -76,7 +76,7 @@ class GroupViewAdapter(
                         val uuid = workGroup.groupId
                         val request = Request.Builder()
                             .post(
-                                WorkGroupActionRequest(
+                                WorkGroupCrudRequest(
                                     CrudType.READ,
                                     WorkGroupImpl(groupId = uuid)
                                 ).toJsonRequest()
@@ -85,10 +85,10 @@ class GroupViewAdapter(
                         val response = AMTTD.okHttpClient.newCall(request).execute()
                         val body = response.body?.string()
                         // Don't simplify this
-                        val result: WorkGroupActionResponse =
+                        val result: WorkGroupCrudResponse =
                             gson.fromJson(
                                 body,
-                                object : TypeToken<WorkGroupActionResponse>() {}.type
+                                object : TypeToken<WorkGroupCrudResponse>() {}.type
                             )
                         if (result.success != true) {
                             throw AmttdException.getFromErrorCode(result.error)

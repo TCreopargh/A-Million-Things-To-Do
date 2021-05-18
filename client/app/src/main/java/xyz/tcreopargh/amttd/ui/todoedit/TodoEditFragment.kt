@@ -13,8 +13,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.todo_view_fragment.*
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.common.bean.request.TodoEntryActionRequest
-import xyz.tcreopargh.amttd.common.bean.response.TodoEntryActionResponse
+import xyz.tcreopargh.amttd.common.bean.request.TodoEntryCrudRequest
+import xyz.tcreopargh.amttd.common.bean.response.TodoEntryCrudResponse
 import xyz.tcreopargh.amttd.common.data.CrudType
 import xyz.tcreopargh.amttd.common.data.ITodoEntry
 import xyz.tcreopargh.amttd.common.data.TodoEntryImpl
@@ -77,13 +77,13 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
     private fun initializeItems() {
         todoEditSwipeContainer.isRefreshing = true
         val uuid = entryId ?: return
-        object : CrudTask<TodoEntryImpl, TodoEntryActionRequest, TodoEntryActionResponse>(
-            request = TodoEntryActionRequest(
+        object : CrudTask<TodoEntryImpl, TodoEntryCrudRequest, TodoEntryCrudResponse>(
+            request = TodoEntryCrudRequest(
                 CrudType.READ,
                 TodoEntryImpl(entryId = uuid)
             ),
             path = "/todo-entry",
-            responseType = object : TypeToken<TodoEntryActionResponse>() {}.type
+            responseType = object : TypeToken<TodoEntryCrudResponse>() {}.type
         ) {
             override fun onSuccess(entity: TodoEntryImpl?) {
                 viewModel.entry.postValue(entity)
