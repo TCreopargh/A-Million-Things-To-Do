@@ -22,12 +22,12 @@ import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.data.login.LoginResult
+import xyz.tcreopargh.amttd.data.user.LocalUser
 import xyz.tcreopargh.amttd.ui.group.GroupViewFragment
 import xyz.tcreopargh.amttd.ui.login.LoginActivity
 import xyz.tcreopargh.amttd.ui.settings.SettingsFragment
 import xyz.tcreopargh.amttd.ui.todo.TodoViewFragment
 import xyz.tcreopargh.amttd.ui.todoedit.TodoEditFragment
-import xyz.tcreopargh.amttd.data.user.LocalUser
 import xyz.tcreopargh.amttd.util.PACKAGE_NAME_DOT
 import xyz.tcreopargh.amttd.util.ResultCode
 import xyz.tcreopargh.amttd.util.doRestart
