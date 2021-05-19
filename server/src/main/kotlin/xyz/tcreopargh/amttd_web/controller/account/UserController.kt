@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import xyz.tcreopargh.amttd_web.annotation.LoginRequired
 import xyz.tcreopargh.amttd_web.common.bean.request.ChangeUsernameRequest
 import xyz.tcreopargh.amttd_web.common.bean.response.SimpleResponse
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
@@ -12,6 +13,7 @@ import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import javax.servlet.http.HttpServletRequest
 
 @RestController
+@LoginRequired
 class UserController : ControllerBase() {
     @PostMapping(
         "/user/rename",

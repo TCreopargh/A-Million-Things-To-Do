@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import xyz.tcreopargh.amttd_web.annotation.LoginRequired
 import xyz.tcreopargh.amttd_web.common.bean.request.TodoEntryCrudRequest
 import xyz.tcreopargh.amttd_web.common.bean.response.TodoEntryCrudResponse
 import xyz.tcreopargh.amttd_web.common.data.CrudType
@@ -16,6 +17,7 @@ import xyz.tcreopargh.amttd_web.util.logger
 import javax.servlet.http.HttpServletRequest
 
 @RestController
+@LoginRequired
 class TodoEntryController : ControllerBase() {
     @PostMapping(
         "/todo-entry",

@@ -18,7 +18,7 @@ import xyz.tcreopargh.amttd_web.util.random
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-class RegisterHandler : ControllerBase() {
+class RegisterController : ControllerBase() {
     @PostMapping(
         "/register",
         consumes = [MediaType.APPLICATION_JSON_VALUE],

@@ -16,7 +16,7 @@ import xyz.tcreopargh.amttd_web.util.logger
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-class LoginHandler : ControllerBase() {
+class LoginController : ControllerBase() {
     @PostMapping(
         "/login",
         consumes = [MediaType.APPLICATION_JSON_VALUE],
