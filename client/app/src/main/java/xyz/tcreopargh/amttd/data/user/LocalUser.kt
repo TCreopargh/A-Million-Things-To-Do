@@ -1,4 +1,4 @@
-package xyz.tcreopargh.amttd.user
+package xyz.tcreopargh.amttd.data.user
 
 import android.os.Parcel
 import android.os.Parcelable

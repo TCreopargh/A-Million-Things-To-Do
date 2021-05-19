@@ -27,7 +27,7 @@ import xyz.tcreopargh.amttd.ui.login.LoginActivity
 import xyz.tcreopargh.amttd.ui.settings.SettingsFragment
 import xyz.tcreopargh.amttd.ui.todo.TodoViewFragment
 import xyz.tcreopargh.amttd.ui.todoedit.TodoEditFragment
-import xyz.tcreopargh.amttd.user.LocalUser
+import xyz.tcreopargh.amttd.data.user.LocalUser
 import xyz.tcreopargh.amttd.util.PACKAGE_NAME_DOT
 import xyz.tcreopargh.amttd.util.ResultCode
 import xyz.tcreopargh.amttd.util.doRestart

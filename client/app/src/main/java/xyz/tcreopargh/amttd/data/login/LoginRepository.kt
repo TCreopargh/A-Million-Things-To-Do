@@ -2,7 +2,7 @@ package xyz.tcreopargh.amttd.data.login
 
 import android.util.Log
 import xyz.tcreopargh.amttd.AMTTD
-import xyz.tcreopargh.amttd.user.LocalUser
+import xyz.tcreopargh.amttd.data.user.LocalUser
 import java.util.*
 
 /**

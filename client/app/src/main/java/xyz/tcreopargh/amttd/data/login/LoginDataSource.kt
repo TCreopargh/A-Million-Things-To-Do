@@ -8,7 +8,7 @@ import xyz.tcreopargh.amttd.common.bean.request.LoginRequest
 import xyz.tcreopargh.amttd.common.bean.request.RegisterRequest
 import xyz.tcreopargh.amttd.common.bean.response.LoginResponse
 import xyz.tcreopargh.amttd.common.exception.AmttdException
-import xyz.tcreopargh.amttd.user.LocalUser
+import xyz.tcreopargh.amttd.data.user.LocalUser
 import xyz.tcreopargh.amttd.util.gson
 import xyz.tcreopargh.amttd.util.rootUrl
 import xyz.tcreopargh.amttd.util.toJsonRequest

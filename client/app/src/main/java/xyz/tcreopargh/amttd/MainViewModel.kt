@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import xyz.tcreopargh.amttd.data.login.LoginDataSource
 import xyz.tcreopargh.amttd.data.login.LoginRepository
-import xyz.tcreopargh.amttd.user.LocalUser
+import xyz.tcreopargh.amttd.data.user.LocalUser
 
 /**
  * @author TCreopargh
