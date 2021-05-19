@@ -16,4 +16,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val usernamePref: EditTextPreference? = preferenceScreen.findPreference("username")
         usernamePref?.text = ((activity as? MainActivity)?.loggedInUser?.username)
     }
+
+    override fun onStart() {
+        super.onStart()
+        (activity as? MainActivity)?.onFragmentStart(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as? MainActivity)?.onFragmentStop(this)
+    }
 }

@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -66,6 +67,9 @@ class MainActivity : BaseActivity() {
         fab = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
             when (val currentFragment = getCurrentlyDisplayedFragment()) {
+                is SettingsFragment  -> {
+                    // Do nothing
+                }
                 is TodoEditFragment  -> {
                 }
                 is TodoViewFragment  -> {
@@ -155,7 +159,10 @@ class MainActivity : BaseActivity() {
             supportFragmentManager.findFragmentByTag(TodoViewFragment::class.simpleName) as? TodoViewFragment
         val groupView =
             supportFragmentManager.findFragmentByTag(GroupViewFragment::class.simpleName) as? GroupViewFragment
-        return todoEdit?.takeIf { it.isVisible }
+        val settings =
+            supportFragmentManager.findFragmentByTag(SettingsFragment::class.simpleName) as? SettingsFragment
+        return settings?.takeIf { it.isVisible }
+            ?: todoEdit?.takeIf { it.isVisible }
             ?: todoView?.takeIf { it.isVisible }
             ?: groupView?.takeIf { it.isVisible }
     }
@@ -197,13 +204,25 @@ class MainActivity : BaseActivity() {
 
     private fun onFragmentChanged() {
         when (getCurrentlyDisplayedFragment()) {
+            is SettingsFragment  -> {
+                fab.hide()
+            }
             is TodoEditFragment  -> {
+                if (!fab.isVisible) {
+                    fab.show()
+                }
                 fab.setImageResource(R.drawable.ic_baseline_add_comment_24)
             }
             is TodoViewFragment  -> {
+                if (!fab.isVisible) {
+                    fab.show()
+                }
                 fab.setImageResource(R.drawable.ic_baseline_add_24)
             }
             is GroupViewFragment -> {
+                if (!fab.isVisible) {
+                    fab.show()
+                }
                 fab.setImageResource(R.drawable.ic_baseline_add_24)
             }
         }

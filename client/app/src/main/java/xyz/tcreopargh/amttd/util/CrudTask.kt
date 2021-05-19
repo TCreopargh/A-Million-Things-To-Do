@@ -73,8 +73,6 @@ abstract class CrudTask<Entity, out Request : ICrudRequest<Entity>, in Response 
     }
 
     open fun execute() {
-        Thread {
-            run()
-        }.start()
+        Thread(this).start()
     }
 }
