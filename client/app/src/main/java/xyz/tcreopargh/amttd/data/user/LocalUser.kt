@@ -15,25 +15,9 @@ class LocalUser(
     override var email: String,
     val authToken: String?
 ) : IUser, Serializable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString() ?: "",
-        UUID.fromString(parcel.readString()),
-        parcel.readString() ?: "",
-        parcel.readString()
-    )
 
     override fun toString(): String {
         return "{username=$username, uuid=$uuid, authToken=$authToken}"
-    }
-
-    companion object CREATOR : Parcelable.Creator<LocalUser> {
-        override fun createFromParcel(parcel: Parcel): LocalUser {
-            return LocalUser(parcel)
-        }
-
-        override fun newArray(size: Int): Array<LocalUser?> {
-            return arrayOfNulls(size)
-        }
     }
 }
 
