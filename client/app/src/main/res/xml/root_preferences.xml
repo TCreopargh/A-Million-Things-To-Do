@@ -1,24 +1,31 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/user_settings">
+    <PreferenceCategory
+            app:title="@string/user_settings"
+            app:iconSpaceReserved="false">
 
         <EditTextPreference
                 app:key="username"
                 app:title="@string/change_username"
+                app:iconSpaceReserved="false"
                 app:useSimpleSummaryProvider="true" />
 
         <Preference
                 app:title="Profile Picture"
                 app:summary="@string/change_pfp"
+                app:iconSpaceReserved="false"
                 app:key="profilePicture" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/general_settings">
+    <PreferenceCategory
+            app:title="@string/general_settings"
+            app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
                 app:key="night_mode"
                 app:summary="@string/dark_ui"
+                app:iconSpaceReserved="false"
                 app:title="@string/night_mode" />
 
         <ListPreference
@@ -26,6 +33,7 @@
                 app:useSimpleSummaryProvider="true"
                 app:defaultValue="default"
                 app:title="@string/language"
+                app:iconSpaceReserved="false"
                 app:entries="@array/language_entries"
                 app:entryValues="@array/language_values" />
 

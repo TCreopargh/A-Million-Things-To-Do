@@ -6,7 +6,7 @@ import xyz.tcreopargh.amttd.ui.ViewModelBase
 /**
  * @author TCreopargh
  */
-class SettingsViewModel: ViewModelBase() {
+class SettingsViewModel : ViewModelBase() {
     val actualUsername = MutableLiveData<String>().apply {
         value = ""
     }

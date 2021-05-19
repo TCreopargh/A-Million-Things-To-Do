@@ -60,7 +60,8 @@ class WorkGroupController : ControllerBase() {
                 CrudType.CREATE -> {
                     val userId = body.userId ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
                     val user =
-                        userService.findByIdOrNull(userId) ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
+                        userService.findByIdOrNull(userId)
+                            ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
                     val entity = workGroupService.saveImmediately(EntityWorkGroup().apply {
                         groupName = body.entity?.name
                             ?: throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS)
