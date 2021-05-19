@@ -19,7 +19,8 @@ class UserService {
     fun saveAll(users: List<EntityUser>) = userRepository.saveAll(users)
     fun findByUsername(username: String) = userRepository.findByName(username)
     fun findByEmail(email: String) = userRepository.findByEmailAddress(email)
-    fun findById(uuid: UUID) = userRepository.findByIdOrNull(uuid)
+    fun findById(uuid: UUID) = userRepository.findById(uuid)
+    fun findByIdOrNull(uuid: UUID) = userRepository.findByIdOrNull(uuid)
 
     @Transactional
     fun update(uuid: UUID, newUser: EntityUser) {

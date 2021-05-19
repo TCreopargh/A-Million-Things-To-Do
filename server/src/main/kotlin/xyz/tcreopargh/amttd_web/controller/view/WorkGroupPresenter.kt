@@ -12,7 +12,6 @@ import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityWorkGroup
 import xyz.tcreopargh.amttd_web.util.logger
-import java.util.*
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 
@@ -31,7 +30,7 @@ class WorkGroupPresenter : ControllerBase() {
             var workGroups: Set<EntityWorkGroup> = setOf()
 
             body.uuid?.let {
-                val user = userService.findById(it)
+                val user = userService.findByIdOrNull(it)
                 user?.joinedWorkGroups?.run Groups@{
                     workGroups = this@Groups
                 }

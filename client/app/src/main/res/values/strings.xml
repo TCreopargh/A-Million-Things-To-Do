@@ -140,4 +140,6 @@
     <string name="app_lang_desc">Change the application language</string>
     <string name="language">Language</string>
     <string name="language_default">System Default</string>
+    <string name="login_required">Login Required</string>
+    <string name="username_changed">Username changed to %s, please restart the app to see the changes</string>
 </resources>
