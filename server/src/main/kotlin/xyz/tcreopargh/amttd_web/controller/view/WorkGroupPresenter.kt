@@ -12,6 +12,7 @@ import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityWorkGroup
 import xyz.tcreopargh.amttd_web.util.logger
+import java.util.*
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 
@@ -38,6 +39,7 @@ class WorkGroupPresenter : ControllerBase() {
             val list = workGroups.stream().map {
                 WorkGroupImpl(it)
             }.collect(Collectors.toList())
+            list.sortByDescending { it.timeCreated }
             WorkGroupViewResponse(success = true, workGroups = list)
         } catch (e: Exception) {
             logger.error(e.toString())

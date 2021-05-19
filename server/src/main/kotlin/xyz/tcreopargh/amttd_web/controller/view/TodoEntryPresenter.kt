@@ -34,6 +34,7 @@ class TodoEntryPresenter : ControllerBase() {
             val list = entries.stream().filter { it != null }.map {
                 TodoEntryImpl(it)
             }.collect(Collectors.toList()) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
+            list.sortByDescending { it.timeCreated }
             TodoEntryViewResponse(success = true, entries = list)
         } catch (e: Exception) {
             TodoEntryViewResponse(success = false, error = AmttdException.ErrorCode.getFromException(e).value)

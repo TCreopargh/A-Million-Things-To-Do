@@ -7,6 +7,7 @@ import org.springframework.web.client.HttpStatusCodeException
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketException
+import java.net.SocketTimeoutException
 import java.net.http.HttpConnectTimeoutException
 import java.net.http.HttpTimeoutException
 import java.sql.SQLException
@@ -117,6 +118,7 @@ class AmttdException(val errorCode: ErrorCode, val nestedException: Exception? =
             fun getFromException(e: Exception?): ErrorCode = when (e) {
                 null                               -> EXCEPTION_NOT_AVAILABLE
                 is AmttdException                  -> e.errorCode
+                is SocketTimeoutException          -> TIMED_OUT
                 is JsonParseException              -> INVALID_JSON
                 is JsonSyntaxException             -> INVALID_JSON
                 is HttpTimeoutException            -> TIMED_OUT
