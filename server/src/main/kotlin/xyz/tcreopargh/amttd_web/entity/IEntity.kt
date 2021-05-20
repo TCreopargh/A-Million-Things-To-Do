@@ -1,6 +1,6 @@
 package xyz.tcreopargh.amttd_web.entity
 
 /**
- * An database entity.
+ * A database entity.
  */
 interface IEntity
