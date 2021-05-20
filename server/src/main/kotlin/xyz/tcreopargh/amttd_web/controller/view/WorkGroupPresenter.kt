@@ -43,7 +43,7 @@ class WorkGroupPresenter : ControllerBase() {
             list.sortByDescending { it.timeCreated }
             WorkGroupViewResponse(success = true, workGroups = list)
         } catch (e: Exception) {
-            logger.error(e.toString())
+            logger.error("Exception in WorkGroupPresenter: ", e)
             WorkGroupViewResponse(success = false, error = AmttdException.ErrorCode.getFromException(e).value)
         }
     }

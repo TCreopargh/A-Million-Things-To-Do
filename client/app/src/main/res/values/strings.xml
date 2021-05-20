@@ -28,7 +28,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="edit">Edit</string>
     <string name="error_code_message">Error code %s - %s%s</string>
-    <string name="error_occured">An error has occurred! </string>
+    <string name="error_occurred">An error has occurred! -&#160;</string>
     <string name="exception_not_available">Error is not specified by server</string>
     <string name="expand">Expand</string>
     <string name="failed_to_create_entity">Failed To Create Entity</string>
@@ -142,4 +142,9 @@
     <string name="language_default">System Default</string>
     <string name="login_required">Login Required</string>
     <string name="username_changed">Username changed to %s, please restart the app to see the changes</string>
+    <string name="email_changed">Email changed to %s, please restart the app to see the changes</string>
+    <string name="change_email">Change Email</string>
+    <string name="change_password">Change Password</string>
+    <string name="change_password_summary">Change your password</string>
+    <string name="password_changed">Password changed, please log in again.</string>
 </resources>

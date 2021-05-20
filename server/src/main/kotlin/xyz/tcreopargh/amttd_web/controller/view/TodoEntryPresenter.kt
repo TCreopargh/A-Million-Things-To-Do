@@ -12,6 +12,7 @@ import xyz.tcreopargh.amttd_web.common.data.TodoEntryImpl
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
+import xyz.tcreopargh.amttd_web.util.logger
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 
@@ -39,6 +40,7 @@ class TodoEntryPresenter : ControllerBase() {
             list.sortByDescending { it.timeCreated }
             TodoEntryViewResponse(success = true, entries = list)
         } catch (e: Exception) {
+            logger.error("Exception in TodoEntryPresenter: ", e)
             TodoEntryViewResponse(success = false, error = AmttdException.ErrorCode.getFromException(e).value)
         }
     }
