@@ -59,8 +59,10 @@ class AuthenticationInterceptor : HandlerInterceptor {
 
     companion object {
         fun resetSession(request: HttpServletRequest, response: HttpServletResponse): Boolean {
-            request.session.setAttribute("uuid", null)
-            request.session.setAttribute("token", null)
+            request.session.apply {
+                setAttribute("uuid", null)
+                setAttribute("token", null)
+            }
             response.status = HttpStatus.FORBIDDEN.value()
             return false
         }
