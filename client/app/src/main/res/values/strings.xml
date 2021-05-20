@@ -147,4 +147,7 @@
     <string name="change_password">Change Password</string>
     <string name="change_password_summary">Change your password</string>
     <string name="password_changed">Password changed, please log in again.</string>
+    <string name="add_work_group">Add Work Group</string>
+    <string name="remove_work_group_confirm">Do you really want to remove this work group? This cannot be undone.</string>
+    <string name="remove_work_group">Remove Work Group</string>
 </resources>

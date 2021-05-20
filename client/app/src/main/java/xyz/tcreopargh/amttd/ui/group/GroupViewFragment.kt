@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -113,26 +114,40 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                         dialog.cancel()
                     }
                     setNeutralButton(R.string.remove) { dialog, _ ->
-                        object :
-                            CrudTask<WorkGroupImpl, WorkGroupCrudRequest, WorkGroupCrudResponse>(
-                                request = WorkGroupCrudRequest(
-                                    operation = CrudType.DELETE,
-                                    entity = WorkGroupImpl(it),
-                                    userId = (activity as? MainActivity)?.loggedInUser?.uuid
-                                ),
-                                path = "/workgroup",
-                                responseType = object : TypeToken<WorkGroupCrudResponse>() {}.type
-                            ) {
-                            override fun onSuccess(entity: WorkGroupImpl?) {
-                                Thread.sleep(200)
-                                viewModel.dirty.postValue(true)
-                            }
+                        AlertDialog.Builder(context).apply {
+                            setTitle(R.string.remove_work_group)
+                            setMessage(R.string.remove_work_group_confirm)
+                            setPositiveButton(R.string.confirm) { dialogInner, _ ->
+                                object :
+                                    CrudTask<WorkGroupImpl, WorkGroupCrudRequest, WorkGroupCrudResponse>(
+                                        request = WorkGroupCrudRequest(
+                                            operation = CrudType.DELETE,
+                                            entity = WorkGroupImpl(it),
+                                            userId = (activity as? MainActivity)?.loggedInUser?.uuid
+                                        ),
+                                        path = "/workgroup",
+                                        responseType = object :
+                                            TypeToken<WorkGroupCrudResponse>() {}.type
+                                    ) {
+                                    override fun onSuccess(entity: WorkGroupImpl?) {
+                                        Thread.sleep(200)
+                                        viewModel.dirty.postValue(true)
+                                    }
 
-                            override fun onFailure(e: Exception) {
-                                viewModel.exception.postValue(AmttdException.getFromException(e))
+                                    override fun onFailure(e: Exception) {
+                                        viewModel.exception.postValue(
+                                            AmttdException.getFromException(
+                                                e
+                                            )
+                                        )
+                                    }
+                                }.execute()
+                                dialog.cancel()
+                                dialogInner.cancel()
                             }
-                        }.execute()
-                        dialog.cancel()
+                            setNegativeButton(R.string.cancel) { dialogInner, _ -> dialogInner.cancel() }
+                        }.create().show()
+
                     }
                     setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
                 }.create().show()
@@ -162,6 +177,8 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
             val titleText = viewRoot.findViewById<EditText>(R.id.groupEditTitleText)
             titleText.setText("")
             setView(viewRoot)
+            viewRoot.findViewById<TextView>(R.id.groupEditDialogTitle)?.text =
+                getString(R.string.add_work_group)
             setPositiveButton(R.string.confirm) { dialog, _ ->
                 object : CrudTask<WorkGroupImpl, WorkGroupCrudRequest, WorkGroupCrudResponse>(
                     request = WorkGroupCrudRequest(
