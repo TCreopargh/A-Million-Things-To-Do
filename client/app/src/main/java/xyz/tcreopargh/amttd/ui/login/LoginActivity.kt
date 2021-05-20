@@ -94,7 +94,7 @@ class LoginActivity : BaseActivity() {
             it?.run {
                 Toast.makeText(
                     this@LoginActivity,
-                    getString(R.string.error_occured) + it.getLocalizedString(this@LoginActivity),
+                    getString(R.string.error_occurred) + it.getLocalizedString(this@LoginActivity),
                     Toast.LENGTH_SHORT
                 ).show()
             }

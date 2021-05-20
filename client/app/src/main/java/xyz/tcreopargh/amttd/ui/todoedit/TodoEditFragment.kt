@@ -56,7 +56,7 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
             it?.run {
                 Toast.makeText(
                     context,
-                    getString(R.string.error_occured) + it.getLocalizedString(context),
+                    getString(R.string.error_occurred) + it.getLocalizedString(context),
                     Toast.LENGTH_SHORT
                 ).show()
                 todoSwipeContainer.isRefreshing = false
