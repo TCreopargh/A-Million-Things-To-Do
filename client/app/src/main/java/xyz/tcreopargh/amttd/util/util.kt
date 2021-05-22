@@ -34,7 +34,7 @@ const val PACKAGE_NAME_DOT = "$PACKAGE_NAME."
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.
  */
-fun Calendar.format() = DateFormat.getDateInstance(
+fun Calendar.format(): String = DateFormat.getDateInstance(
     DateFormat.MEDIUM,
     AMTTD.context.resources.configuration.locales.get(0)
 ).format(this.time)
