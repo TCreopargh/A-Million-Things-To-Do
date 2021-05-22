@@ -2,8 +2,8 @@ package xyz.tcreopargh.amttd.ui.todoedit
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.Spannable
 import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +19,7 @@ import xyz.tcreopargh.amttd.common.bean.response.TodoEntryCrudResponse
 import xyz.tcreopargh.amttd.common.data.CrudType
 import xyz.tcreopargh.amttd.common.data.ITodoEntry
 import xyz.tcreopargh.amttd.common.data.TodoEntryImpl
+import xyz.tcreopargh.amttd.common.data.action.ActionGeneric
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.CrudTask
@@ -135,16 +136,17 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                 }
                 tasks.addView(itemView)
             }
-            for (action in entry.actionHistory) {
+            for (actionGeneric in entry.actionHistory) {
+                val action = ActionGeneric(actionGeneric).action
                 val itemView = layoutInflater.inflate(R.layout.action_view_item, null)
                 itemView.apply {
-                    findViewById<TextView>(R.id.textView).apply {
+                    findViewById<TextView>(R.id.actionText).apply {
                         text = TextUtils.concat(
                             action.getDisplayText(), " ",
-                            SpannableString("@").setColor(context.getColor(R.color.design_default_color_primary)),
+                            SpannableString("@").setColor(context.getColor(R.color.primary)),
                             " ",
-                            SpannableString(action.timeCreated.format())
-                        ) as Spannable
+                            SpannableString(action.timeCreated.format()).setColor(context.getColor(R.color.secondary))
+                        ) as Spanned
                     }
                 }
                 actions.addView(itemView)

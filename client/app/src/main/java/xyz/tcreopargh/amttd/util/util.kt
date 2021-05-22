@@ -12,6 +12,7 @@ import android.text.*
 import android.text.style.ForegroundColorSpan
 import android.widget.EditText
 import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
@@ -129,6 +130,7 @@ fun JsonObject.toResponseBody(): ResponseBody = this.toString().toResponseBody(m
 fun JsonObject.toRequestBody(): RequestBody = this.toString().toRequestBody(mediaTypeJson)
 
 fun i18n(@StringRes resId: Int) = AMTTD.i18n(resId)
+fun getColor(@ColorRes colorId: Int) = AMTTD.context.getColor(colorId)
 fun i18n(@StringRes resId: Int, vararg objects: Any?) = AMTTD.i18n(resId, *objects)
 
 fun URL.withPath(path: String): URL {

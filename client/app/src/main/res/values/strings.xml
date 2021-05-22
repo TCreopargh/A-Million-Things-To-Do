@@ -1,5 +1,5 @@
 <resources>
-    <string name="action_comment">commented: </string>
+    <string name="action_comment">commented: %s</string>
     <string name="action_login">Log In</string>
     <string name="action_not_supported">Action Not Supported</string>
     <string name="action_register">Sign Up</string>
@@ -151,4 +151,6 @@
     <string name="remove_work_group_confirm">Do you really want to remove this work group? This cannot be undone.</string>
     <string name="remove_work_group">Remove Work Group</string>
     <string name="action_type">Action Type</string>
+    <string name="change_status">\"changed status from \"</string>
+    <string name="change_status_to">\" to \"</string>
 </resources>
