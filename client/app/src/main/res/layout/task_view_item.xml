@@ -15,7 +15,9 @@
 
     <View
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="32dp"
+            android:id="@+id/taskPlaceholderView"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1" />
 
     <ImageButton

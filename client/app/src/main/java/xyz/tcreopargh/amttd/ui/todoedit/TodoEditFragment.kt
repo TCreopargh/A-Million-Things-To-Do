@@ -125,9 +125,14 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
             for (task in entry.tasks) {
                 val itemView = layoutInflater.inflate(R.layout.task_view_item, null)
                 itemView.apply {
-                    findViewById<CheckBox>(R.id.taskCheckbox).apply {
+                    val checkbox = findViewById<CheckBox>(R.id.taskCheckbox).apply {
                         text = task.name
                         isChecked = task.completed
+                    }
+                    findViewById<View>(R.id.taskPlaceholderView).apply {
+                        setOnClickListener {
+                            checkbox.toggle()
+                        }
                     }
                     findViewById<ImageButton>(R.id.taskDeleteButton).apply {
                         // TODO: Implement task deletion
