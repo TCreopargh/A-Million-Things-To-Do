@@ -4,7 +4,10 @@ import android.text.Spannable
 import android.text.SpannableString
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.common.data.UserImpl
+import xyz.tcreopargh.amttd.util.getColor
 import xyz.tcreopargh.amttd.util.i18n
+import xyz.tcreopargh.amttd.util.plus
+import xyz.tcreopargh.amttd.util.setColor
 import java.util.*
 
 /**
@@ -25,7 +28,14 @@ class ActionComment(
     )
 
     override fun getActionText(): Spannable {
-        return SpannableString(i18n(R.string.action_comment) + stringExtra)
+        return SpannableString(user?.username + " ")
+            .setColor(getColor(R.color.primary)) +
+                SpannableString(
+                    i18n(
+                        R.string.action_comment,
+                        comment
+                    )
+                )
     }
 
     override val stringExtra: String
