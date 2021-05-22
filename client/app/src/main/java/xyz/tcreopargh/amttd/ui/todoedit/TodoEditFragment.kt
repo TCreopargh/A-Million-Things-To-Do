@@ -1,13 +1,14 @@
 package xyz.tcreopargh.amttd.ui.todoedit
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.reflect.TypeToken
@@ -22,6 +23,7 @@ import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.CrudTask
 import xyz.tcreopargh.amttd.util.format
+import xyz.tcreopargh.amttd.util.setColor
 import java.util.*
 
 class TodoEditFragment : FragmentOnMainActivityBase() {
@@ -95,6 +97,7 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
         }.execute()
     }
 
+    @SuppressLint("InflateParams")
     private fun initView(viewRoot: View, entry: ITodoEntry?) {
         if (entry == null) {
             Toast.makeText(context, R.string.unknown_error, Toast.LENGTH_SHORT).show()
@@ -116,6 +119,36 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                 entry.status.color,
                 android.graphics.PorterDuff.Mode.SRC
             )
+            val tasks = findViewById<LinearLayout>(R.id.todoTaskItemView)
+            val actions = findViewById<LinearLayout>(R.id.actionHistoryLayout)
+            for (task in entry.tasks) {
+                val itemView = layoutInflater.inflate(R.layout.task_view_item, null)
+                itemView.apply {
+                    findViewById<CheckBox>(R.id.taskCheckbox).apply {
+                        text = task.name
+                        isChecked = task.completed
+                    }
+                    findViewById<ImageButton>(R.id.taskDeleteButton).apply {
+                        // TODO: Implement task deletion
+                        setOnClickListener(null)
+                    }
+                }
+                tasks.addView(itemView)
+            }
+            for (action in entry.actionHistory) {
+                val itemView = layoutInflater.inflate(R.layout.action_view_item, null)
+                itemView.apply {
+                    findViewById<TextView>(R.id.textView).apply {
+                        text = TextUtils.concat(
+                            action.getDisplayText(), " ",
+                            SpannableString("@").setColor(context.getColor(R.color.design_default_color_primary)),
+                            " ",
+                            SpannableString(action.timeCreated.format())
+                        ) as Spannable
+                    }
+                }
+                actions.addView(itemView)
+            }
         }
     }
 

@@ -150,4 +150,5 @@
     <string name="add_work_group">Add Work Group</string>
     <string name="remove_work_group_confirm">Do you really want to remove this work group? This cannot be undone.</string>
     <string name="remove_work_group">Remove Work Group</string>
+    <string name="action_type">Action Type</string>
 </resources>
