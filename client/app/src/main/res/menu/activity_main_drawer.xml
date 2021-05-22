@@ -9,15 +9,15 @@
                 android:icon="@drawable/ic_baseline_home_24"
                 android:iconTint="@color/black"
                 android:title="@string/menu_group_view" />
+        <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_baseline_settings_24"
+                android:title="@string/action_settings" />
     </group>
 
     <group
             android:checkableBehavior="all"
             android:id="@+id/allSelectable">
-        <item
-                android:id="@+id/nav_settings"
-                android:icon="@drawable/ic_baseline_settings_24"
-                android:title="@string/action_settings" />
         <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_baseline_exit_to_app_24"

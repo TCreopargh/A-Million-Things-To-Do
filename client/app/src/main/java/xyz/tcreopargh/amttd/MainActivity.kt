@@ -205,21 +205,29 @@ class MainActivity : BaseActivity() {
     private fun onFragmentChanged() {
         when (getCurrentlyDisplayedFragment()) {
             is SettingsFragment  -> {
+                navView.menu.findItem(R.id.nav_group_view).isChecked = false
+                navView.menu.findItem(R.id.nav_settings).isChecked = true
                 fab.hide()
             }
             is TodoEditFragment  -> {
+                navView.menu.findItem(R.id.nav_group_view).isChecked = true
+                navView.menu.findItem(R.id.nav_settings).isChecked = false
                 if (!fab.isVisible) {
                     fab.show()
                 }
                 fab.setImageResource(R.drawable.ic_baseline_add_comment_24)
             }
             is TodoViewFragment  -> {
+                navView.menu.findItem(R.id.nav_group_view).isChecked = true
+                navView.menu.findItem(R.id.nav_settings).isChecked = false
                 if (!fab.isVisible) {
                     fab.show()
                 }
                 fab.setImageResource(R.drawable.ic_baseline_add_24)
             }
             is GroupViewFragment -> {
+                navView.menu.findItem(R.id.nav_group_view).isChecked = true
+                navView.menu.findItem(R.id.nav_settings).isChecked = false
                 if (!fab.isVisible) {
                     fab.show()
                 }
