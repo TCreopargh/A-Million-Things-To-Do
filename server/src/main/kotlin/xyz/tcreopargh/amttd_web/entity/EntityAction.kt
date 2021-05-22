@@ -43,7 +43,7 @@ data class EntityAction(
     override var toStatus: TodoStatus? = null,
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "task_id", nullable = false)
+    @JoinColumn(name = "task_id", nullable = true)
     override var task: EntityTask? = null
 ) : IAction, IEntity {
 
