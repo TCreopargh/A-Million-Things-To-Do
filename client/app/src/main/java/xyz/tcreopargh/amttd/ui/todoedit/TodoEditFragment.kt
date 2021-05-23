@@ -158,5 +158,4 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
             }
         }
     }
-
 }

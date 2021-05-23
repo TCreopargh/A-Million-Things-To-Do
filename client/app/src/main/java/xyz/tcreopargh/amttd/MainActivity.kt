@@ -71,6 +71,7 @@ class MainActivity : BaseActivity() {
                     // Do nothing
                 }
                 is TodoEditFragment  -> {
+                    // Add action
                 }
                 is TodoViewFragment  -> {
                 }
