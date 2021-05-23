@@ -52,7 +52,19 @@ data class ActionGeneric(
                 timeCreated = timeCreated,
                 task = task ?: TaskImpl()
             )
-            ActionType.TASK_UNCOMPLETED -> ActionTaskCompleted(
+            ActionType.TASK_UNCOMPLETED -> ActionTaskUncompleted(
+                actionId = actionId,
+                user = user,
+                timeCreated = timeCreated,
+                task = task ?: TaskImpl()
+            )
+            ActionType.TASK_ADDED       -> ActionTaskAdded(
+                actionId = actionId,
+                user = user,
+                timeCreated = timeCreated,
+                task = task ?: TaskImpl()
+            )
+            ActionType.TASK_REMOVED     -> ActionTaskRemoved(
                 actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,

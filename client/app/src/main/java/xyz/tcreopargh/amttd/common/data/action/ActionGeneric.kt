@@ -14,14 +14,14 @@ import java.util.*
  * action type for serialization.
  */
 data class ActionGeneric(
-    override val actionId: UUID,
-    override val user: UserImpl?,
-    override val timeCreated: Calendar,
-    override val actionType: ActionType,
-    override var stringExtra: String?,
-    override val fromStatus: TodoStatus?,
-    override val toStatus: TodoStatus?,
-    override val task: TaskImpl?
+    override val actionId: UUID = UUID.randomUUID(),
+    override val user: UserImpl? = null,
+    override val timeCreated: Calendar = Calendar.getInstance(),
+    override val actionType: ActionType = ActionType.COMMENT,
+    override var stringExtra: String? = null,
+    override val fromStatus: TodoStatus? = null,
+    override val toStatus: TodoStatus? = null,
+    override val task: TaskImpl? = null
 ) : IAction {
 
     override fun getActionText(): Spannable = SpannableString(i18n(R.string.unknown_action))
@@ -58,7 +58,19 @@ data class ActionGeneric(
                 timeCreated = timeCreated,
                 task = task ?: TaskImpl()
             )
-            ActionType.TASK_UNCOMPLETED -> ActionTaskCompleted(
+            ActionType.TASK_UNCOMPLETED -> ActionTaskUncompleted(
+                actionId = actionId,
+                user = user,
+                timeCreated = timeCreated,
+                task = task ?: TaskImpl()
+            )
+            ActionType.TASK_ADDED       -> ActionTaskAdded(
+                actionId = actionId,
+                user = user,
+                timeCreated = timeCreated,
+                task = task ?: TaskImpl()
+            )
+            ActionType.TASK_REMOVED     -> ActionTaskRemoved(
                 actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,

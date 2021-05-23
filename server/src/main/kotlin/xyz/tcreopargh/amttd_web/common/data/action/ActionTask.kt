@@ -32,6 +32,24 @@ class ActionTaskUncompleted(
 ) :
     IActionTask {
 
-
     override val actionType: ActionType = ActionType.TASK_UNCOMPLETED
+}
+
+class ActionTaskAdded(
+    override val actionId: UUID,
+    override val user: UserImpl?,
+    override val timeCreated: Calendar,
+    override val task: TaskImpl
+) : IActionTask {
+    override val actionType: ActionType = ActionType.TASK_ADDED
+}
+
+class ActionTaskRemoved(
+    override val actionId: UUID,
+    override val user: UserImpl?,
+    override val timeCreated: Calendar,
+    override val task: TaskImpl
+) : IActionTask {
+
+    override val actionType: ActionType = ActionType.TASK_REMOVED
 }

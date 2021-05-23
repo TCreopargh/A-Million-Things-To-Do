@@ -156,4 +156,6 @@
     <string name="comment">Comment</string>
     <string name="add_comment">Add Comment</string>
     <string name="unauthorized_operation">Unauthorized Operation</string>
+    <string name="action_task_added">Added task:</string>
+    <string name="action_task_removed">Removed task:</string>
 </resources>
