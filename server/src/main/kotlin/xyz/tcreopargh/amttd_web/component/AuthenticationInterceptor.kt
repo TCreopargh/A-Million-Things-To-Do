@@ -63,6 +63,7 @@ class AuthenticationInterceptor : HandlerInterceptor {
                 setAttribute("uuid", null)
                 setAttribute("token", null)
             }
+            request.session.invalidate()
             response.status = HttpStatus.FORBIDDEN.value()
             return false
         }

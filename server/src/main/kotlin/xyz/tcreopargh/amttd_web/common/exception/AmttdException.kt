@@ -78,6 +78,7 @@ class AmttdException(val errorCode: ErrorCode, val nestedException: Exception? =
         CORRUPTED_DATA(41010),
         USER_ALREADY_EXISTS(41011),
         LOGIN_REQUIRED(41012),
+        UNAUTHORIZED_OPERATION(41013),
 
         // HTTP Status
         HTTP_ERROR(42000),

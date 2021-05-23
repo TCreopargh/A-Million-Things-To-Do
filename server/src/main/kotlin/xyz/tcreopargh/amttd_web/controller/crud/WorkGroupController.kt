@@ -31,6 +31,7 @@ class WorkGroupController : ControllerBase() {
         body: WorkGroupCrudRequest
     ): WorkGroupCrudResponse {
         return try {
+            verifyWorkgroup(request, body.entity?.groupId)
             val id =
                 body.entity?.groupId ?: throw AmttdException(AmttdException.ErrorCode.JSON_MISSING_FIELD)
             val workGroup = if (body.operation != CrudType.CREATE) {

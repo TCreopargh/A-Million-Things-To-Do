@@ -30,6 +30,7 @@ class TodoEntryController : ControllerBase() {
         @RequestBody body: TodoEntryCrudRequest
     ): TodoEntryCrudResponse {
         return try {
+            verifyTodoEntry(request, body.entity?.entryId)
             when (body.operation) {
                 CrudType.READ -> {
                     var entry: EntityTodoEntry? = null

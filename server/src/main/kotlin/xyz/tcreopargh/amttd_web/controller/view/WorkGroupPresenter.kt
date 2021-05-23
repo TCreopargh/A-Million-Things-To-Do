@@ -29,6 +29,7 @@ class WorkGroupPresenter : ControllerBase() {
     fun resolveWorkGroups(request: HttpServletRequest, @RequestBody body: WorkGroupViewRequest): WorkGroupViewResponse {
 
         return try {
+            verifyUser(request, body.uuid)
             var workGroups: Set<EntityWorkGroup> = setOf()
 
             body.uuid?.let {

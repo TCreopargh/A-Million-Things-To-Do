@@ -30,6 +30,7 @@ class TodoEntryPresenter : ControllerBase() {
         @RequestBody body: TodoEntryViewRequest
     ): TodoEntryViewResponse {
         return try {
+            verifyWorkgroup(request, body.groupId)
             var entries: List<EntityTodoEntry> = listOf()
             body.groupId?.let {
                 entries = workGroupService.findByIdOrNull(it)?.entries ?: listOf()

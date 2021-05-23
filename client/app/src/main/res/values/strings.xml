@@ -153,4 +153,7 @@
     <string name="action_type">Action Type</string>
     <string name="change_status">\"changed status from \"</string>
     <string name="change_status_to">\" to \"</string>
+    <string name="comment">Comment</string>
+    <string name="add_comment">Add Comment</string>
+    <string name="unauthorized_operation">Unauthorized Operation</string>
 </resources>

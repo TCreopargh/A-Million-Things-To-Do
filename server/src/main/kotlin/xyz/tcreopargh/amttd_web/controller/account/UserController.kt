@@ -28,6 +28,7 @@ class UserController : ControllerBase() {
         val newPassword = body.newPassword
         val uuid = body.userId
         return try {
+            verifyUser(request, uuid)
             if (newUsername != null && !isUsernameValid(newUsername)) {
                 throw AmttdException(AmttdException.ErrorCode.ILLEGAL_USERNAME)
             }

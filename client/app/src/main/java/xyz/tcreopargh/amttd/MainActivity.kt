@@ -1,12 +1,14 @@
 package xyz.tcreopargh.amttd
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.*
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -72,6 +74,7 @@ class MainActivity : BaseActivity() {
                 }
                 is TodoEditFragment  -> {
                     // Add action
+                    addComment()
                 }
                 is TodoViewFragment  -> {
                 }
@@ -137,6 +140,20 @@ class MainActivity : BaseActivity() {
             viewModel.setUser(savedInstanceState.getSerializable("User") as? LocalUser)
         }
         attemptLoginWithLocalCache()
+    }
+
+    private fun addComment() {
+        AlertDialog.Builder(this).apply {
+            @SuppressLint("InflateParams")
+            val viewRoot = layoutInflater.inflate(R.layout.add_comment_layout, null)
+            val commentText = viewRoot.findViewById<EditText>(R.id.addCommentText)
+            setView(viewRoot)
+            setPositiveButton(R.string.confirm) { dialog, _ ->
+                // TODO: Send add comment request
+                dialog.cancel()
+            }
+            setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+        }.create().show()
     }
 
     private fun selectGroup() {

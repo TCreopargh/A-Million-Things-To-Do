@@ -17,6 +17,7 @@ data class TodoEntryImpl(
     override var tasks: List<TaskImpl> = listOf(),
     override var actionHistory: List<ActionGeneric> = listOf()
 ) : ITodoEntry {
+
     constructor(todoEntry: ITodoEntry) : this(
         todoEntry.entryId,
         todoEntry.creator?.run { UserImpl(this) },
