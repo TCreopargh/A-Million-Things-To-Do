@@ -19,7 +19,7 @@ class AMTTD : App() {
             private set
         lateinit var okHttpClient: OkHttpClient
             private set
-        val logTag = "AMTTD"
+        const val logTag = "AMTTD"
         fun i18n(@StringRes stringId: Int) = context.getString(stringId)
         fun i18n(@StringRes stringId: Int, vararg objects: Any?) =
             context.getString(stringId, *objects)
