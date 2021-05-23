@@ -35,13 +35,12 @@ abstract class CrudTask<Entity, out Request : ICrudRequest<Entity>, in Response 
 
     override fun run() {
         try {
-            val httpRequest = okhttp3.Request.Builder()
-                .post(
-                    request.toJsonRequest()
-                ).url(
-                    if (isPathAbsolute) URL(path) else rootUrl.withPath(path)
-                )
-                .build()
+            val httpRequest =
+                okHttpRequest(if (isPathAbsolute) URL(path) else rootUrl.withPath(path))
+                    .post(
+                        request.toJsonRequest()
+                    )
+                    .build()
             val response = AMTTD.okHttpClient.newCall(httpRequest).execute()
             val body = response.body?.string() ?: "{}"
             if (enableJsonDebugging) {

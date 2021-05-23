@@ -211,10 +211,10 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
         Thread {
             val workGroups: List<IWorkGroup> = try {
                 val uuid = (activity as? MainActivity)?.loggedInUser?.uuid ?: return@Thread
-                val request = Request.Builder()
+                val request = okHttpRequest("/workgroups")
                     .post(
                         WorkGroupViewRequest(uuid).toJsonRequest()
-                    ).url(rootUrl.withPath("/workgroups"))
+                    )
                     .build()
                 val response = AMTTD.okHttpClient.newCall(request).execute()
                 val body = response.body?.string()

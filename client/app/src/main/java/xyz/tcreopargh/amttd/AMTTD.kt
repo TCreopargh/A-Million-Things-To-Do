@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.annotation.StringRes
 import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 import android.app.Application as App
 
 /**
@@ -22,11 +23,17 @@ class AMTTD : App() {
         fun i18n(@StringRes stringId: Int) = context.getString(stringId)
         fun i18n(@StringRes stringId: Int, vararg objects: Any?) =
             context.getString(stringId, *objects)
+
+        //seconds
+        const val TIMEOUT = 10L
     }
 
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        okHttpClient = OkHttpClient()
+        okHttpClient = OkHttpClient().newBuilder().connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+            .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+            .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
+            .build()
     }
 }

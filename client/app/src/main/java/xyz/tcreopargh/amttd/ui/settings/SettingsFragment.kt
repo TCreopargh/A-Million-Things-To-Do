@@ -154,11 +154,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun sendUserProfileChangeRequest(request: UserProfileChangeRequest): Boolean {
         Thread {
             try {
-                val httpRequest = okhttp3.Request.Builder()
+                val httpRequest = okHttpRequest("/user/change-profile")
                     .post(
                         request.toJsonRequest()
-                    ).url(
-                        rootUrl.withPath("/user/change-profile")
                     )
                     .build()
                 val response = AMTTD.okHttpClient.newCall(httpRequest).execute()

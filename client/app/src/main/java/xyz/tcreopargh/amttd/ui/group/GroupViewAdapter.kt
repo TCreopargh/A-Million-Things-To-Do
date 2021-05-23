@@ -74,13 +74,13 @@ class GroupViewAdapter(
                 Thread {
                     val group: IWorkGroup? = try {
                         val uuid = workGroup.groupId
-                        val request = Request.Builder()
+                        val request = okHttpRequest("/workgroup")
                             .post(
                                 WorkGroupCrudRequest(
                                     CrudType.READ,
                                     WorkGroupImpl(groupId = uuid)
                                 ).toJsonRequest()
-                            ).url(rootUrl.withPath("/workgroup"))
+                            )
                             .build()
                         val response = AMTTD.okHttpClient.newCall(request).execute()
                         val body = response.body?.string()

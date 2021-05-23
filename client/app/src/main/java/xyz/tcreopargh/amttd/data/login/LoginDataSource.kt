@@ -9,10 +9,7 @@ import xyz.tcreopargh.amttd.common.bean.request.RegisterRequest
 import xyz.tcreopargh.amttd.common.bean.response.LoginResponse
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.data.user.LocalUser
-import xyz.tcreopargh.amttd.util.gson
-import xyz.tcreopargh.amttd.util.rootUrl
-import xyz.tcreopargh.amttd.util.toJsonRequest
-import xyz.tcreopargh.amttd.util.withPath
+import xyz.tcreopargh.amttd.util.*
 import java.util.*
 
 
@@ -23,24 +20,23 @@ class LoginDataSource {
 
     fun login(email: String, password: String): LoginResult<LocalUser> {
         // TODO: acquire UUID and authToken from server
-        val loginRequest = Request.Builder()
+        val loginRequest = okHttpRequest("/login")
             .post(
                 LoginRequest(email = email, password = password).toJsonRequest()
-            ).url(rootUrl.withPath("/login"))
+            )
             .build()
         return sendRequest(loginRequest)
     }
 
     fun register(email: String, password: String, username: String): LoginResult<LocalUser> {
-        val registerRequest = Request.Builder()
+        val registerRequest = okHttpRequest("/register")
             .post(
                 RegisterRequest(
                     email = email,
                     password = password,
                     username = username
                 ).toJsonRequest()
-            ).url(rootUrl.withPath("/register"))
-            .build()
+            ).build()
         return sendRequest(registerRequest)
 
     }
@@ -74,6 +70,10 @@ class LoginDataSource {
                         uuid = uuid,
                         authToken = authToken
                     )
+                    val headers = response.headers
+                    val cookies = headers.values("Set-Cookie")
+                    val session = cookies[0];
+                    sessionId = session.substring(0, session.indexOf(";"))
                     return LoginResult.Success(user)
                 } else {
                     throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)

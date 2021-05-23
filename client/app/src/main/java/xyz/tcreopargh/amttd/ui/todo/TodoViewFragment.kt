@@ -83,12 +83,12 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
         Thread {
             val entries: List<ITodoEntry> = try {
                 val uuid = groupId ?: return@Thread
-                val request = Request.Builder()
+                val request = okHttpRequest("/todo")
                     .post(
                         jsonObjectOf(
                             "groupId" to uuid
                         ).toRequestBody()
-                    ).url(rootUrl.withPath("/todo"))
+                    )
                     .build()
                 val response = AMTTD.okHttpClient.newCall(request).execute()
                 val body = response.body?.string()
