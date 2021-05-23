@@ -33,11 +33,11 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
         fun newInstance() = TodoEditFragment()
     }
 
-    private lateinit var viewModel: TodoEditViewModel
+    lateinit var viewModel: TodoEditViewModel
 
     private lateinit var todoEditSwipeContainer: SwipeRefreshLayout
 
-    private var entryId: UUID? = null
+    var entryId: UUID? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +64,12 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                 ).show()
                 todoSwipeContainer.isRefreshing = false
                 viewModel.exception.value = null
+            }
+        }
+        viewModel.dirty.observe(viewLifecycleOwner) {
+            if (it) {
+                initializeItems()
+                viewModel.dirty.value = false
             }
         }
         initializeItems()
@@ -122,6 +128,8 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
             )
             val tasks = findViewById<LinearLayout>(R.id.todoTaskItemView)
             val actions = findViewById<LinearLayout>(R.id.actionHistoryLayout)
+            tasks.removeAllViewsInLayout()
+            actions.removeAllViewsInLayout()
             for (task in entry.tasks) {
                 val itemView = layoutInflater.inflate(R.layout.task_view_item, null)
                 itemView.apply {

@@ -3,10 +3,7 @@ package xyz.tcreopargh.amttd_web.controller
 import org.springframework.beans.factory.annotation.Autowired
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.entity.EntityUser
-import xyz.tcreopargh.amttd_web.service.TodoEntryService
-import xyz.tcreopargh.amttd_web.service.TokenService
-import xyz.tcreopargh.amttd_web.service.UserService
-import xyz.tcreopargh.amttd_web.service.WorkGroupService
+import xyz.tcreopargh.amttd_web.service.*
 import xyz.tcreopargh.amttd_web.util.logger
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -28,6 +25,9 @@ abstract class ControllerBase {
 
     @Autowired
     lateinit var todoEntryService: TodoEntryService
+
+    @Autowired
+    lateinit var actionService: ActionService
 
     fun isEmailValid(email: String?): Boolean {
         return email?.matches("^\\S+@\\S+\\.\\S+\$".toRegex()) == true && email.length < 80

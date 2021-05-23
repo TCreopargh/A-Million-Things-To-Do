@@ -44,13 +44,13 @@ data class EntityAction(
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id", nullable = true)
-    override var task: EntityTask? = null
-) : IAction, IEntity {
+    override var task: EntityTask? = null,
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "entry_id", nullable = false)
     @ExcludeToString
     var parent: EntityTodoEntry? = null
+) : IAction, IEntity {
 
     override fun toString(): String {
         return ExcludeToStringProcessor.getToString(this)

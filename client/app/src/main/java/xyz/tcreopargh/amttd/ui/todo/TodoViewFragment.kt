@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.reflect.TypeToken
-import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
+import xyz.tcreopargh.amttd.common.bean.request.TodoEntryViewRequest
 import xyz.tcreopargh.amttd.common.bean.response.TodoEntryViewResponse
 import xyz.tcreopargh.amttd.common.data.ITodoEntry
 import xyz.tcreopargh.amttd.common.exception.AmttdException
@@ -85,9 +85,7 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
                 val uuid = groupId ?: return@Thread
                 val request = okHttpRequest("/todo")
                     .post(
-                        jsonObjectOf(
-                            "groupId" to uuid
-                        ).toRequestBody()
+                        TodoEntryViewRequest(groupId = uuid).toJsonRequest()
                     )
                     .build()
                 val response = AMTTD.okHttpClient.newCall(request).execute()

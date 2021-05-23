@@ -20,8 +20,11 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import xyz.tcreopargh.amttd.common.bean.request.AddCommentRequest
+import xyz.tcreopargh.amttd.common.bean.response.SimpleResponse
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.data.login.LoginResult
 import xyz.tcreopargh.amttd.data.user.LocalUser
@@ -30,9 +33,7 @@ import xyz.tcreopargh.amttd.ui.login.LoginActivity
 import xyz.tcreopargh.amttd.ui.settings.SettingsFragment
 import xyz.tcreopargh.amttd.ui.todo.TodoViewFragment
 import xyz.tcreopargh.amttd.ui.todoedit.TodoEditFragment
-import xyz.tcreopargh.amttd.util.PACKAGE_NAME_DOT
-import xyz.tcreopargh.amttd.util.ResultCode
-import xyz.tcreopargh.amttd.util.doRestart
+import xyz.tcreopargh.amttd.util.*
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -74,7 +75,9 @@ class MainActivity : BaseActivity() {
                 }
                 is TodoEditFragment  -> {
                     // Add action
-                    addComment()
+                    currentFragment.entryId?.let {
+                        addComment(it, currentFragment)
+                    }
                 }
                 is TodoViewFragment  -> {
                 }
@@ -87,6 +90,17 @@ class MainActivity : BaseActivity() {
         navView = findViewById(R.id.nav_view)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+
+        viewModel.exception.observe(this) {
+            it?.run {
+                Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.error_occurred) + it.getLocalizedString(this@MainActivity),
+                    Toast.LENGTH_SHORT
+                ).show()
+                viewModel.exception.value = null
+            }
+        }
 
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
@@ -142,14 +156,39 @@ class MainActivity : BaseActivity() {
         attemptLoginWithLocalCache()
     }
 
-    private fun addComment() {
+    private fun addComment(entryId: UUID, fragment: TodoEditFragment) {
         AlertDialog.Builder(this).apply {
             @SuppressLint("InflateParams")
             val viewRoot = layoutInflater.inflate(R.layout.add_comment_layout, null)
             val commentText = viewRoot.findViewById<EditText>(R.id.addCommentText)
             setView(viewRoot)
             setPositiveButton(R.string.confirm) { dialog, _ ->
-                // TODO: Send add comment request
+                Thread {
+                    try {
+                        val userId = loggedInUser?.uuid ?: return@Thread
+                        val request = okHttpRequest("/action/comment")
+                            .post(
+                                AddCommentRequest(
+                                    userId = userId,
+                                    comment = commentText.text.toString(),
+                                    entryId = entryId
+                                ).toJsonRequest()
+                            )
+                            .build()
+                        val response = AMTTD.okHttpClient.newCall(request).execute()
+                        val body = response.body?.string()
+                        // Don't simplify this
+                        val result: SimpleResponse =
+                            gson.fromJson(body, object : TypeToken<SimpleResponse>() {}.type)
+                        if (result.success != true) {
+                            throw AmttdException.getFromErrorCode(result.error)
+                        }
+                        fragment.viewModel.dirty.postValue(true)
+                    } catch (e: Exception) {
+                        Log.e(AMTTD.logTag, e.stackTraceToString())
+                        fragment.viewModel.exception.postValue(AmttdException.getFromException(e))
+                    }
+                }.start()
                 dialog.cancel()
             }
             setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }

@@ -6,11 +6,12 @@ import androidx.lifecycle.ViewModel
 import xyz.tcreopargh.amttd.data.login.LoginDataSource
 import xyz.tcreopargh.amttd.data.login.LoginRepository
 import xyz.tcreopargh.amttd.data.user.LocalUser
+import xyz.tcreopargh.amttd.ui.ViewModelBase
 
 /**
  * @author TCreopargh
  */
-class MainViewModel : ViewModel() {
+class MainViewModel : ViewModelBase() {
     private var _loginRepo = MutableLiveData<LoginRepository>()
     var loginRepository: LiveData<LoginRepository> = _loginRepo
 
