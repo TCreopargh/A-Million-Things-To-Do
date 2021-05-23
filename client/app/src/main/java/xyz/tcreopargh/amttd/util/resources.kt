@@ -13,6 +13,7 @@ val gson: Gson = Gson()
 
 val random: Random = Random.Default
 
+@Volatile
 var sessionId: String? = null
 
 fun okHttpRequest(url: URL): Request.Builder {
