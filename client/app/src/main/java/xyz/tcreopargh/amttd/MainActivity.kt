@@ -23,8 +23,11 @@ import com.google.android.material.navigation.NavigationView
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
-import xyz.tcreopargh.amttd.common.bean.request.AddCommentRequest
+import xyz.tcreopargh.amttd.common.bean.request.ActionCrudRequest
 import xyz.tcreopargh.amttd.common.bean.response.SimpleResponse
+import xyz.tcreopargh.amttd.common.data.CrudType
+import xyz.tcreopargh.amttd.common.data.action.ActionGeneric
+import xyz.tcreopargh.amttd.common.data.action.ActionType
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.data.login.LoginResult
 import xyz.tcreopargh.amttd.data.user.LocalUser
@@ -166,11 +169,15 @@ class MainActivity : BaseActivity() {
                 Thread {
                     try {
                         val userId = loggedInUser?.uuid ?: return@Thread
-                        val request = okHttpRequest("/action/comment")
+                        val request = okHttpRequest("/action")
                             .post(
-                                AddCommentRequest(
+                                ActionCrudRequest(
+                                    operation = CrudType.CREATE,
                                     userId = userId,
-                                    comment = commentText.text.toString(),
+                                    entity = ActionGeneric(
+                                        actionType = ActionType.COMMENT,
+                                        stringExtra = commentText.text.toString()
+                                    ),
                                     entryId = entryId
                                 ).toJsonRequest()
                             )
