@@ -9,7 +9,9 @@ data class WorkGroupCrudRequest(
 
     /**
      * The work group related to the action.
+     *
      * If the action is *ADD*, the UUID will be ignored.
+     *
      * If the action is *DELETE*, only the UUID will be used.
      */
     override var entity: WorkGroupImpl? = null,
