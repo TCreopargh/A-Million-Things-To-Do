@@ -29,7 +29,7 @@ class ActionController : ControllerBase() {
         return try {
             verifyTodoEntry(request, body.entryId)
             verifyUser(request, body.userId)
-            var entry = todoEntryService.findByIdOrNull(
+            val entry = todoEntryService.findByIdOrNull(
                 body.entryId ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
             )
             val user =
