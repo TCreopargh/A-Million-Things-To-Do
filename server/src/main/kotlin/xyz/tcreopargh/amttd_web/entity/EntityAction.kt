@@ -42,6 +42,10 @@ data class EntityAction(
     @Enumerated(EnumType.STRING)
     override var toStatus: TodoStatus? = null,
 
+    override var oldValue: String? = null,
+
+    override var newValue: String? = null,
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id", nullable = true)
     override var task: EntityTask? = null,

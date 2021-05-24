@@ -35,6 +35,10 @@ interface IAction : Serializable {
         get() = null
     val task: ITask?
         get() = null
+    val oldValue: String?
+        get() = null
+    val newValue: String?
+        get() = null
 
     fun getUserNameText(): Spannable {
         return SpannableString(user?.username ?: "").setColor(Color.parseColor("#2196f3"))

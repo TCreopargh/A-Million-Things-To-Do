@@ -17,7 +17,9 @@ data class ActionGeneric(
     override var stringExtra: String? = null,
     override val fromStatus: TodoStatus? = null,
     override val toStatus: TodoStatus? = null,
-    override val task: TaskImpl? = null
+    override val task: TaskImpl? = null,
+    override var oldValue: String? = null,
+    override var newValue: String? = null
 ) : IAction {
 
     constructor(action: IAction) : this(
@@ -79,6 +81,20 @@ data class ActionGeneric(
             ActionType.DEADLINE_CHANGED -> ActionDeadlineChanged(
                 actionId = actionId,
                 user = user,
+                timeCreated = timeCreated
+            )
+            ActionType.TITLE_CHANGED -> ActionTitleChanged(
+                actionId = actionId,
+                user = user,
+                oldValue = oldValue,
+                newValue = newValue,
+                timeCreated = timeCreated
+            )
+            ActionType.DESCRIPTION_CHANGED -> ActionDescriptionChanged(
+                actionId = actionId,
+                user = user,
+                oldValue = oldValue,
+                newValue = newValue,
                 timeCreated = timeCreated
             )
         }

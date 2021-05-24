@@ -30,4 +30,8 @@ interface IAction : Serializable {
         get() = null
     val task: ITask?
         get() = null
+    val oldValue: String?
+        get() = null
+    val newValue: String?
+        get() = null
 }

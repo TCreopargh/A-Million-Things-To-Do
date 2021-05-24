@@ -61,5 +61,5 @@ data class EntityTodoEntry(
         get() = allTasks.filter { it.isPresent }
 
     override val actionHistory: List<EntityAction>
-        get() = actions.sortedByDescending { it.timeCreated }
+        get() = actions.sortedByDescending { it.timeCreated }.filterIndexed { index, _ -> index < 50 }
 }

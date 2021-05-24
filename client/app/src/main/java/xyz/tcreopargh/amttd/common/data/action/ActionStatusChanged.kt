@@ -24,9 +24,9 @@ class ActionStatusChanged(
     override fun getActionText(): Spannable {
         return SpannableString(user?.username + " ")
             .setColor(getColor(R.color.primary)) +
-                SpannableString(i18n(R.string.change_status)) +
-                fromStatus.getColoredString() +
-                SpannableString(i18n(R.string.change_status_to)) +
+                SpannableString(i18n(R.string.change_status)) + SpannableString(" ") +
+                fromStatus.getColoredString() + SpannableString(" ") +
+                SpannableString(i18n(R.string.change_status_to)) + SpannableString(" ") +
                 toStatus.getColoredString()
     }
 

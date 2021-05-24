@@ -151,8 +151,8 @@
     <string name="remove_work_group_confirm">Do you really want to remove this work group? This cannot be undone.</string>
     <string name="remove_work_group">Remove Work Group</string>
     <string name="action_type">Action Type</string>
-    <string name="change_status">\"changed status from \"</string>
-    <string name="change_status_to">\" to \"</string>
+    <string name="change_status">changed status from</string>
+    <string name="change_status_to">to</string>
     <string name="comment">Comment</string>
     <string name="add_comment">Add Comment</string>
     <string name="unauthorized_operation">Unauthorized Operation</string>
@@ -166,4 +166,6 @@
     <string name="change_deadline">changed deadline</string>
     <string name="remove_task">Remove Task</string>
     <string name="remove_task_confirm">Do you really want to remove this task? This cannot be undone.</string>
+    <string name="change_title">changed title from</string>
+    <string name="change_description">changed description from</string>
 </resources>

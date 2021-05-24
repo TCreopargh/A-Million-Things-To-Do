@@ -9,6 +9,8 @@ enum class ActionType : Serializable {
     COMMENT,
     STATUS_CHANGED,
     DEADLINE_CHANGED,
+    TITLE_CHANGED,
+    DESCRIPTION_CHANGED,
     TASK_COMPLETED,
     TASK_UNCOMPLETED,
     TASK_ADDED,

@@ -136,12 +136,13 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                 entry.deadline?.format() ?: getString(R.string.deadline_not_set)
             findViewById<ImageView>(R.id.todoEditIconColor)?.setColorFilter(
                 entry.status.color,
-                android.graphics.PorterDuff.Mode.SRC
+                PorterDuff.Mode.SRC
             )
             val tasks = findViewById<LinearLayout>(R.id.todoTaskItemView)
             val actions = findViewById<LinearLayout>(R.id.actionHistoryLayout)
             findViewById<Button>(R.id.actionExpandButton)?.apply {
-                text = context.getString(R.string.collapse)
+                text =
+                    if (expandActions) context.getString(R.string.collapse) else context.getString(R.string.expand)
                 setOnClickListener {
                     if (expandActions) {
                         expandActions = false
@@ -154,6 +155,7 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                     }
                 }
             }
+
             tasks.removeAllViewsInLayout()
             actions.removeAllViewsInLayout()
             for (task in entry.tasks) {
