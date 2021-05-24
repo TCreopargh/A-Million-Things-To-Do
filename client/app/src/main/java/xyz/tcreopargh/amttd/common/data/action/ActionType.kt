@@ -15,5 +15,5 @@ enum class ActionType : Serializable {
     TASK_UNCOMPLETED,
     TASK_ADDED,
     TASK_EDITED,
-    TASK_REMOVED, ;
+    TASK_REMOVED;
 }

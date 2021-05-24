@@ -20,13 +20,6 @@ class ActionComment(
     var comment: String
 ) : IAction {
 
-    constructor(action: IAction) : this(
-        actionId = action.actionId,
-        user = action.user?.let { UserImpl(it) },
-        timeCreated = action.timeCreated,
-        comment = action.stringExtra ?: "",
-    )
-
     override fun getActionText(): Spannable {
         return SpannableString(user?.username + " ")
             .setColor(getColor(R.color.primary)) +

@@ -13,13 +13,6 @@ class ActionComment(
     var comment: String
 ) : IAction {
 
-    constructor(action: IAction) : this(
-        actionId = action.actionId,
-        user = action.user?.let { UserImpl(it) },
-        timeCreated = action.timeCreated,
-        comment = action.stringExtra ?: "",
-    )
-
     override val stringExtra: String
         get() = comment
 
