@@ -39,6 +39,8 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
 
     var entryId: UUID? = null
 
+    private var expandActions = true
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -128,6 +130,20 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
             )
             val tasks = findViewById<LinearLayout>(R.id.todoTaskItemView)
             val actions = findViewById<LinearLayout>(R.id.actionHistoryLayout)
+            findViewById<Button>(R.id.actionExpandButton)?.apply {
+                text = context.getString(R.string.collapse)
+                setOnClickListener {
+                    if (expandActions) {
+                        expandActions = false
+                        text = context.getString(R.string.expand)
+                        actions.visibility = View.GONE
+                    } else {
+                        expandActions = true
+                        text = context.getString(R.string.collapse)
+                        actions.visibility = View.VISIBLE
+                    }
+                }
+            }
             tasks.removeAllViewsInLayout()
             actions.removeAllViewsInLayout()
             for (task in entry.tasks) {
@@ -158,7 +174,11 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                             action.getDisplayText(), " ",
                             SpannableString("@").setColor(context.getColor(R.color.primary)),
                             " ",
-                            SpannableString(action.timeCreated.format()).setColor(context.getColor(R.color.secondary))
+                            SpannableString(action.timeCreated.format()).setColor(
+                                context.getColor(
+                                    R.color.secondary
+                                )
+                            )
                         ) as Spanned
                     }
                 }

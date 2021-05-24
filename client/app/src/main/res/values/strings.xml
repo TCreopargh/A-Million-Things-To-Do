@@ -158,4 +158,5 @@
     <string name="unauthorized_operation">Unauthorized Operation</string>
     <string name="action_task_added">Added task:</string>
     <string name="action_task_removed">Removed task:</string>
+    <string name="collapse">Collapse</string>
 </resources>

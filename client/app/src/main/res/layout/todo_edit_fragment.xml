@@ -234,7 +234,7 @@
                     android:text="@string/expand"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/button"
+                    android:id="@+id/actionExpandButton"
                     android:textColor="@color/primary"
                     android:minHeight="0dp"
                     android:minWidth="0dp"
