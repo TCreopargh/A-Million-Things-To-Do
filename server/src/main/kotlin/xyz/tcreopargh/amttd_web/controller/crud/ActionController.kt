@@ -36,14 +36,14 @@ class ActionController : ControllerBase() {
                     verifyUser(request, body.userId)
                     val entry = todoEntryService.findByIdOrNull(
                         body.entryId ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
-                    )
+                    ) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                     val user =
                         userService.findByIdOrNull(
                             body.userId ?: throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
                         )
                     val entity = body.entity
                     val action: EntityAction = when (body.entity?.actionType) {
-                        ActionType.COMMENT          -> {
+                        ActionType.COMMENT             -> {
                             val comment = entity?.stringExtra
                             EntityAction(
                                 actionId = UUID.randomUUID(),
@@ -54,7 +54,7 @@ class ActionController : ControllerBase() {
                                 parent = entry
                             )
                         }
-                        ActionType.TASK_COMPLETED   -> {
+                        ActionType.TASK_COMPLETED      -> {
                             val taskId = body.entity?.task?.taskId
                                 ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                             val task = taskService.findByIdOrNull(taskId)
@@ -70,7 +70,7 @@ class ActionController : ControllerBase() {
                                 parent = entry
                             )
                         }
-                        ActionType.TASK_UNCOMPLETED -> {
+                        ActionType.TASK_UNCOMPLETED    -> {
                             val taskId = body.entity?.task?.taskId
                                 ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                             val task = taskService.findByIdOrNull(taskId)
@@ -86,7 +86,7 @@ class ActionController : ControllerBase() {
                                 parent = entry
                             )
                         }
-                        ActionType.TASK_ADDED       -> {
+                        ActionType.TASK_ADDED          -> {
                             val taskImpl = entity?.task ?: throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
                             val task = EntityTask(
                                 taskId = UUID.randomUUID(),
@@ -104,7 +104,7 @@ class ActionController : ControllerBase() {
                                 parent = entry
                             )
                         }
-                        ActionType.TASK_REMOVED     -> {
+                        ActionType.TASK_REMOVED        -> {
                             val taskId = body.entity?.task?.taskId
                                 ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                             val task = taskService.findByIdOrNull(taskId)
@@ -119,7 +119,7 @@ class ActionController : ControllerBase() {
                                 parent = entry
                             )
                         }
-                        ActionType.TASK_EDITED      -> {
+                        ActionType.TASK_EDITED         -> {
                             val taskId = body.entity?.task?.taskId
                                 ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                             val task = taskService.findByIdOrNull(taskId)
@@ -139,7 +139,49 @@ class ActionController : ControllerBase() {
                                 parent = entry
                             )
                         }
-                        else                        -> throw AmttdException(AmttdException.ErrorCode.UNSUPPORTED_OPERATION)
+                        ActionType.TITLE_CHANGED       -> {
+                            entry.title = entity?.newValue
+                                ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
+                            todoEntryService.saveImmediately(entry)
+                            EntityAction(
+                                actionId = UUID.randomUUID(),
+                                user = user,
+                                timeCreated = Calendar.getInstance(),
+                                actionType = ActionType.TITLE_CHANGED,
+                                oldValue = entity.oldValue,
+                                newValue = entity.newValue,
+                                parent = entry
+                            )
+                        }
+                        ActionType.DESCRIPTION_CHANGED -> {
+                            entry.description = entity?.newValue
+                                ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
+                            todoEntryService.saveImmediately(entry)
+                            EntityAction(
+                                actionId = UUID.randomUUID(),
+                                user = user,
+                                timeCreated = Calendar.getInstance(),
+                                actionType = ActionType.DESCRIPTION_CHANGED,
+                                oldValue = entity.oldValue,
+                                newValue = entity.newValue,
+                                parent = entry
+                            )
+                        }
+                        ActionType.STATUS_CHANGED      -> {
+                            entry.status = entity?.toStatus
+                                ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
+                            todoEntryService.saveImmediately(entry)
+                            EntityAction(
+                                actionId = UUID.randomUUID(),
+                                user = user,
+                                timeCreated = Calendar.getInstance(),
+                                actionType = ActionType.STATUS_CHANGED,
+                                fromStatus = entity.fromStatus,
+                                toStatus = entity.toStatus,
+                                parent = entry
+                            )
+                        }
+                        else                           -> throw AmttdException(AmttdException.ErrorCode.UNSUPPORTED_OPERATION)
                     }
                     actionService.saveImmediately(action)
                     ActionCrudResponse(

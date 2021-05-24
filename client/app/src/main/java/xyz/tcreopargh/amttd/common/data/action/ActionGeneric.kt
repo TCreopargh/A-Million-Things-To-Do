@@ -36,60 +36,62 @@ data class ActionGeneric(
         stringExtra = action.stringExtra,
         fromStatus = action.fromStatus,
         toStatus = action.toStatus,
-        task = action.task?.run { TaskImpl(this) }
+        task = action.task?.run { TaskImpl(this) },
+        oldValue = action.oldValue,
+        newValue = action.newValue
     )
 
     val action: IAction
         get() = when (actionType) {
-            ActionType.COMMENT          -> ActionComment(
+            ActionType.COMMENT             -> ActionComment(
                 actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,
                 comment = stringExtra ?: ""
             )
-            ActionType.STATUS_CHANGED   -> ActionStatusChanged(
+            ActionType.STATUS_CHANGED      -> ActionStatusChanged(
                 actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,
                 fromStatus = fromStatus ?: TodoStatus.NOT_STARTED,
                 toStatus = toStatus ?: TodoStatus.NOT_STARTED
             )
-            ActionType.TASK_COMPLETED   -> ActionTaskCompleted(
+            ActionType.TASK_COMPLETED      -> ActionTaskCompleted(
                 actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,
                 task = task ?: TaskImpl()
             )
-            ActionType.TASK_UNCOMPLETED -> ActionTaskUncompleted(
+            ActionType.TASK_UNCOMPLETED    -> ActionTaskUncompleted(
                 actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,
                 task = task ?: TaskImpl()
             )
-            ActionType.TASK_ADDED       -> ActionTaskAdded(
+            ActionType.TASK_ADDED          -> ActionTaskAdded(
                 actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,
                 task = task ?: TaskImpl()
             )
-            ActionType.TASK_REMOVED     -> ActionTaskRemoved(
+            ActionType.TASK_REMOVED        -> ActionTaskRemoved(
                 actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,
                 task = task ?: TaskImpl()
             )
-            ActionType.TASK_EDITED      -> ActionTaskEdited(
+            ActionType.TASK_EDITED         -> ActionTaskEdited(
                 actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,
                 task = task ?: TaskImpl()
             )
-            ActionType.DEADLINE_CHANGED -> ActionDeadlineChanged(
+            ActionType.DEADLINE_CHANGED    -> ActionDeadlineChanged(
                 actionId = actionId,
                 user = user,
                 timeCreated = timeCreated
             )
-            ActionType.TITLE_CHANGED -> ActionTitleChanged(
+            ActionType.TITLE_CHANGED       -> ActionTitleChanged(
                 actionId = actionId,
                 user = user,
                 oldValue = oldValue,

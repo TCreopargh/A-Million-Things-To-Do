@@ -168,4 +168,6 @@
     <string name="remove_task_confirm">Do you really want to remove this task? This cannot be undone.</string>
     <string name="change_title">changed title from</string>
     <string name="change_description">changed description from</string>
+    <string name="edit_todo_title">Edit Todo Title</string>
+    <string name="edit_todo_description">Edit Todo Description</string>
 </resources>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.text.InputType
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextUtils
@@ -118,17 +119,159 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
             return
         }
         viewRoot.apply {
-            findViewById<EditText>(R.id.todoEditTitleText).setText(
-                entry.title,
-                TextView.BufferType.EDITABLE
-            )
-            findViewById<EditText>(R.id.todoEditDescriptionText)?.setText(
-                entry.description,
-                TextView.BufferType.EDITABLE
-            )
+            findViewById<EditText>(R.id.todoEditTitleText)?.apply {
+                setText(
+                    entry.title,
+                    TextView.BufferType.NORMAL
+                )
+                inputType = InputType.TYPE_NULL
+                setOnClickListener {
+                    AlertDialog.Builder(context).apply {
+                        @SuppressLint("InflateParams")
+                        val dialogView =
+                            layoutInflater.inflate(R.layout.todo_title_edit_layout, null)
+                        val titleText =
+                            dialogView.findViewById<EditText>(R.id.todoTitleEditTitleText)
+                        entry.title.let {
+                            titleText.setText(it)
+                        }
+                        setView(dialogView)
+                        setPositiveButton(R.string.confirm) { dialog, _ ->
+                            object :
+                                CrudTask<ActionGeneric, ActionCrudRequest, ActionCrudResponse>(
+                                    request = ActionCrudRequest(
+                                        operation = CrudType.CREATE,
+                                        entity = ActionGeneric(
+                                            actionType = ActionType.TITLE_CHANGED,
+                                            oldValue = entry.title,
+                                            newValue = titleText.text.toString()
+                                        ),
+                                        userId = (activity as? MainActivity)?.loggedInUser?.uuid,
+                                        entryId = entryId
+                                    ),
+                                    path = "/action",
+                                    responseType = object :
+                                        TypeToken<ActionCrudResponse>() {}.type
+                                ) {
+                                override fun onSuccess(entity: ActionGeneric?) {
+                                    viewModel.dirty.postValue(true)
+                                }
+
+                                override fun onFailure(e: Exception) {
+                                    viewModel.exception.postValue(
+                                        AmttdException.getFromException(
+                                            e
+                                        )
+                                    )
+                                }
+                            }.execute()
+
+                            dialog.cancel()
+                        }
+                        setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+                    }.create().show()
+                }
+            }
+            findViewById<EditText>(R.id.todoEditDescriptionText)?.apply {
+                setText(
+                    entry.description,
+                    TextView.BufferType.NORMAL
+                )
+                inputType = InputType.TYPE_NULL
+                setOnClickListener {
+                    AlertDialog.Builder(context).apply {
+                        @SuppressLint("InflateParams")
+                        val dialogView =
+                            layoutInflater.inflate(R.layout.todo_description_edit_layout, null)
+                        val titleText =
+                            dialogView.findViewById<EditText>(R.id.todoDescriptionEditTitleText)
+                        entry.description.let {
+                            titleText.setText(it)
+                        }
+                        setView(dialogView)
+                        setPositiveButton(R.string.confirm) { dialog, _ ->
+                            object :
+                                CrudTask<ActionGeneric, ActionCrudRequest, ActionCrudResponse>(
+                                    request = ActionCrudRequest(
+                                        operation = CrudType.CREATE,
+                                        entity = ActionGeneric(
+                                            actionType = ActionType.DESCRIPTION_CHANGED,
+                                            oldValue = entry.title,
+                                            newValue = titleText.text.toString()
+                                        ),
+                                        userId = (activity as? MainActivity)?.loggedInUser?.uuid,
+                                        entryId = entryId
+                                    ),
+                                    path = "/action",
+                                    responseType = object :
+                                        TypeToken<ActionCrudResponse>() {}.type
+                                ) {
+                                override fun onSuccess(entity: ActionGeneric?) {
+                                    viewModel.dirty.postValue(true)
+                                }
+
+                                override fun onFailure(e: Exception) {
+                                    viewModel.exception.postValue(
+                                        AmttdException.getFromException(
+                                            e
+                                        )
+                                    )
+                                }
+                            }.execute()
+
+                            dialog.cancel()
+                        }
+                        setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+                    }.create().show()
+                }
+            }
             findViewById<Button>(R.id.addTaskButton)?.apply {
                 setOnClickListener {
                     showEditTaskDialog(true)
+                }
+            }
+            findViewById<ImageButton>(R.id.todoEditStatusEditButton)?.apply {
+                setOnClickListener {
+                    setOnClickListener {
+                        AlertDialog.Builder(context).apply {
+                            setTitle(R.string.todo_status)
+                            val items =
+                                TodoStatus.values().map { it.getDisplayString() }.toTypedArray()
+                            setItems(items) { dialog, which ->
+                                object :
+                                    CrudTask<ActionGeneric, ActionCrudRequest, ActionCrudResponse>(
+                                        request = ActionCrudRequest(
+                                            operation = CrudType.CREATE,
+                                            entity = ActionGeneric(
+                                                actionType = ActionType.STATUS_CHANGED,
+                                                fromStatus = entry.status,
+                                                toStatus = TodoStatus.values()[which]
+                                            ),
+                                            userId = (activity as? MainActivity)?.loggedInUser?.uuid,
+                                            entryId = entryId
+                                        ),
+                                        path = "/action",
+                                        responseType = object :
+                                            TypeToken<ActionCrudResponse>() {}.type
+                                    ) {
+                                    override fun onSuccess(entity: ActionGeneric?) {
+                                        viewModel.dirty.postValue(true)
+                                    }
+
+                                    override fun onFailure(e: Exception) {
+                                        viewModel.exception.postValue(
+                                            AmttdException.getFromException(
+                                                e
+                                            )
+                                        )
+                                    }
+                                }.execute()
+
+                                dialog.cancel()
+                            }
+                            setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+                        }.create().show()
+                    }
                 }
             }
             findViewById<TextView>(R.id.todoEditStatusText)?.text = entry.status.getDisplayString()
@@ -253,8 +396,6 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
             }
             setView(viewRoot)
             setPositiveButton(R.string.confirm) { dialog, _ ->
-                // TODO: send post request
-                // Use action CRUD request to do this
                 val name = titleText.text.toString()
                 if (isAdd) {
                     object : CrudTask<ActionGeneric, ActionCrudRequest, ActionCrudResponse>(

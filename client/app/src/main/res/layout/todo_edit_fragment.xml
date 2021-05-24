@@ -20,6 +20,7 @@
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="false"
                     android:autofillHints="@string/todo_title"
                     app:layout_constraintStart_toStartOf="parent"
                     android:hint="@string/todo_title"
@@ -27,7 +28,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:textSize="18sp"
-                    android:inputType="text"
+                    android:inputType="none"
                     android:id="@+id/todoEditTitleText"
                     app:layout_constraintTop_toBottomOf="@+id/textView"
                     android:layout_marginTop="8dp" />
@@ -35,7 +36,8 @@
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
+                    android:inputType="none"
+                    android:focusable="false"
                     android:hint="@string/todo_description"
                     android:textSize="16sp"
                     android:autofillHints="@string/todo_description"
