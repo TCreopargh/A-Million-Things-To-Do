@@ -56,10 +56,10 @@ class ActionController : ControllerBase() {
                                 success = true
                             )
                         }
-                        else               -> TODO("Not Implemented")
+                        else               -> throw AmttdException(AmttdException.ErrorCode.UNSUPPORTED_OPERATION)
                     }
                 }
-                else            -> TODO("Not Implemented")
+                else            -> throw AmttdException(AmttdException.ErrorCode.UNSUPPORTED_OPERATION)
             }
         } catch (e: Exception) {
             logger.error("Error in action controller add comment: ", e)
