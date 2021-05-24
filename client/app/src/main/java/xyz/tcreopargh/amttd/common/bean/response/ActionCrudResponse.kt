@@ -1,7 +1,7 @@
-package xyz.tcreopargh.amttd_web.common.bean.response
+package xyz.tcreopargh.amttd.common.bean.response
 
-import xyz.tcreopargh.amttd_web.common.data.CrudType
-import xyz.tcreopargh.amttd_web.common.data.action.ActionGeneric
+import xyz.tcreopargh.amttd.common.data.CrudType
+import xyz.tcreopargh.amttd.common.data.action.ActionGeneric
 
 data class ActionCrudResponse(
     override var operation: CrudType? = null,

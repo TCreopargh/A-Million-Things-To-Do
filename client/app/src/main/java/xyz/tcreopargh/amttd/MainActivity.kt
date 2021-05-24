@@ -24,7 +24,7 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import xyz.tcreopargh.amttd.common.bean.request.ActionCrudRequest
-import xyz.tcreopargh.amttd.common.bean.response.SimpleResponse
+import xyz.tcreopargh.amttd.common.bean.response.ActionCrudResponse
 import xyz.tcreopargh.amttd.common.data.CrudType
 import xyz.tcreopargh.amttd.common.data.action.ActionGeneric
 import xyz.tcreopargh.amttd.common.data.action.ActionType
@@ -185,8 +185,8 @@ class MainActivity : BaseActivity() {
                         val response = AMTTD.okHttpClient.newCall(request).execute()
                         val body = response.body?.string()
                         // Don't simplify this
-                        val result: SimpleResponse =
-                            gson.fromJson(body, object : TypeToken<SimpleResponse>() {}.type)
+                        val result: ActionCrudResponse =
+                            gson.fromJson(body, object : TypeToken<ActionCrudResponse>() {}.type)
                         if (result.success != true) {
                             throw AmttdException.getFromErrorCode(result.error)
                         }

@@ -26,7 +26,10 @@ data class EntityTask(
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "entry_id", nullable = false)
     @ExcludeToString
-    var parent: EntityTodoEntry? = null
+    var parent: EntityTodoEntry? = null,
+
+    // If false, mark this task as deleted
+    var isPresent: Boolean = true
 ) : ITask, IEntity {
     override fun toString(): String {
         return ExcludeToStringProcessor.getToString(this)

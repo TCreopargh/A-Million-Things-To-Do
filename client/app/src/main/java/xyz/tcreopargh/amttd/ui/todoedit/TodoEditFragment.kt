@@ -2,6 +2,7 @@ package xyz.tcreopargh.amttd.ui.todoedit
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -10,17 +11,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.todo_view_fragment.*
+import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
+import xyz.tcreopargh.amttd.common.bean.request.ActionCrudRequest
 import xyz.tcreopargh.amttd.common.bean.request.TodoEntryCrudRequest
+import xyz.tcreopargh.amttd.common.bean.response.ActionCrudResponse
 import xyz.tcreopargh.amttd.common.bean.response.TodoEntryCrudResponse
-import xyz.tcreopargh.amttd.common.data.CrudType
-import xyz.tcreopargh.amttd.common.data.ITodoEntry
-import xyz.tcreopargh.amttd.common.data.TodoEntryImpl
+import xyz.tcreopargh.amttd.common.data.*
 import xyz.tcreopargh.amttd.common.data.action.ActionGeneric
+import xyz.tcreopargh.amttd.common.data.action.ActionType
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.CrudTask
@@ -158,6 +162,35 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                     val checkbox = findViewById<CheckBox>(R.id.taskCheckbox).apply {
                         text = task.name
                         isChecked = task.completed
+                        setOnCheckedChangeListener { _, isChecked ->
+                            object : CrudTask<ActionGeneric, ActionCrudRequest, ActionCrudResponse>(
+                                request = ActionCrudRequest(
+                                    operation = CrudType.CREATE,
+                                    entity = ActionGeneric(
+                                        actionType = if (isChecked) {
+                                            ActionType.TASK_COMPLETED
+                                        } else {
+                                            ActionType.TASK_UNCOMPLETED
+                                        },
+                                        task = TaskImpl(
+                                            task
+                                        )
+                                    ),
+                                    userId = (activity as? MainActivity)?.loggedInUser?.uuid,
+                                    entryId = entryId
+                                ),
+                                path = "/action",
+                                responseType = object : TypeToken<ActionCrudResponse>() {}.type
+                            ) {
+                                override fun onSuccess(entity: ActionGeneric?) {
+                                    viewModel.dirty.postValue(true)
+                                }
+
+                                override fun onFailure(e: Exception) {
+                                    viewModel.exception.postValue(AmttdException.getFromException(e))
+                                }
+                            }.execute()
+                        }
                     }
                     findViewById<View>(R.id.taskPlaceholderView).apply {
                         setOnClickListener {
@@ -166,7 +199,7 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                     }
                     findViewById<ImageButton>(R.id.taskEditButton).apply {
                         setOnClickListener {
-                            showEditTaskDialog(false, task.name)
+                            showEditTaskDialog(false, task)
                         }
                     }
                 }
@@ -177,15 +210,29 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                 val itemView = layoutInflater.inflate(R.layout.action_view_item, null)
                 itemView.apply {
                     findViewById<TextView>(R.id.actionText).apply {
+                        setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            ContextCompat.getDrawable(
+                                context,
+                                action.getImageRes()
+                            )?.apply {
+                                setTint(context.getColor(R.color.grey))
+                            }, null, null, null
+                        )
                         text = TextUtils.concat(
                             action.getDisplayText(), " ",
                             SpannableString("@").setColor(context.getColor(R.color.primary)),
                             " ",
-                            SpannableString(action.timeCreated.format()).setColor(
+                            SpannableString(action.timeCreated.format(false)).setColor(
                                 context.getColor(
                                     R.color.secondary
                                 )
-                            ) 
+                            ),
+                            " ",
+                            SpannableString(action.timeCreated.format(true)).setColor(
+                                context.getColor(
+                                    R.color.purple_200
+                                )
+                            )
                         ) as Spanned
                     }
                 }
@@ -194,27 +241,103 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
         }
     }
 
-    private fun showEditTaskDialog(isAdd: Boolean, initialName: String? = null) {
+    private fun showEditTaskDialog(isAdd: Boolean, task: ITask? = null) {
         AlertDialog.Builder(context).apply {
             @SuppressLint("InflateParams")
             val viewRoot = layoutInflater.inflate(R.layout.task_edit_layout, null)
             val titleText = viewRoot.findViewById<EditText>(R.id.taskEditTitleText)
-            if (initialName != null) {
-                titleText.setText(initialName)
+            task?.name?.let {
+                titleText.setText(it)
             }
             setView(viewRoot)
             setPositiveButton(R.string.confirm) { dialog, _ ->
                 // TODO: send post request
                 // Use action CRUD request to do this
+                val name = titleText.text.toString()
+                if (isAdd) {
+                    object : CrudTask<ActionGeneric, ActionCrudRequest, ActionCrudResponse>(
+                        request = ActionCrudRequest(
+                            operation = CrudType.CREATE,
+                            entity = ActionGeneric(
+                                actionType = ActionType.TASK_ADDED,
+                                task = TaskImpl(
+                                    name = name
+                                )
+                            ),
+                            userId = (activity as? MainActivity)?.loggedInUser?.uuid,
+                            entryId = entryId
+                        ),
+                        path = "/action",
+                        responseType = object : TypeToken<ActionCrudResponse>() {}.type
+                    ) {
+                        override fun onSuccess(entity: ActionGeneric?) {
+                            viewModel.dirty.postValue(true)
+                        }
+
+                        override fun onFailure(e: Exception) {
+                            viewModel.exception.postValue(AmttdException.getFromException(e))
+                        }
+                    }.execute()
+                } else {
+                    object : CrudTask<ActionGeneric, ActionCrudRequest, ActionCrudResponse>(
+                        request = ActionCrudRequest(
+                            operation = CrudType.CREATE,
+                            entity = ActionGeneric(
+                                actionType = ActionType.TASK_EDITED,
+                                task = TaskImpl(
+                                    task
+                                        ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
+                                ).apply {
+                                    this.name = name
+                                }
+                            ),
+                            userId = (activity as? MainActivity)?.loggedInUser?.uuid,
+                            entryId = entryId
+                        ),
+                        path = "/action",
+                        responseType = object : TypeToken<ActionCrudResponse>() {}.type
+                    ) {
+                        override fun onSuccess(entity: ActionGeneric?) {
+                            viewModel.dirty.postValue(true)
+                        }
+
+                        override fun onFailure(e: Exception) {
+                            viewModel.exception.postValue(AmttdException.getFromException(e))
+                        }
+                    }.execute()
+                }
                 dialog.cancel()
             }
             if (!isAdd) {
                 setNeutralButton(R.string.remove) { dialog, _ ->
                     AlertDialog.Builder(context).apply {
-                        setTitle(R.string.remove_work_group)
-                        setMessage(R.string.remove_work_group_confirm)
+                        setTitle(R.string.remove_task)
+                        setMessage(R.string.remove_task_confirm)
                         setPositiveButton(R.string.confirm) { dialogInner, _ ->
-                            // TODO: Send request to remove task
+                            object : CrudTask<ActionGeneric, ActionCrudRequest, ActionCrudResponse>(
+                                request = ActionCrudRequest(
+                                    operation = CrudType.CREATE,
+                                    entity = ActionGeneric(
+                                        actionType = ActionType.TASK_REMOVED,
+                                        task = TaskImpl(
+                                            task
+                                                ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
+                                        )
+                                    ),
+                                    userId = (activity as? MainActivity)?.loggedInUser?.uuid,
+                                    entryId = entryId
+                                ),
+                                path = "/action",
+                                responseType = object : TypeToken<ActionCrudResponse>() {}.type
+                            ) {
+                                override fun onSuccess(entity: ActionGeneric?) {
+                                    viewModel.dirty.postValue(true)
+                                }
+
+                                override fun onFailure(e: Exception) {
+                                    viewModel.exception.postValue(AmttdException.getFromException(e))
+                                }
+                            }.execute()
                             dialog.cancel()
                             dialogInner.cancel()
                         }

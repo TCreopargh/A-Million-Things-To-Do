@@ -53,3 +53,13 @@ class ActionTaskRemoved(
 
     override val actionType: ActionType = ActionType.TASK_REMOVED
 }
+
+class ActionTaskEdited(
+    override val actionId: UUID,
+    override val user: UserImpl?,
+    override val timeCreated: Calendar,
+    override val task: TaskImpl
+) : IActionTask {
+
+    override val actionType: ActionType = ActionType.TASK_EDITED
+}

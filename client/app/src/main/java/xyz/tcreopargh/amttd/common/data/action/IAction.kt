@@ -3,6 +3,7 @@ package xyz.tcreopargh.amttd.common.data.action
 import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableString
+import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.common.data.ITask
 import xyz.tcreopargh.amttd.common.data.IUser
 import xyz.tcreopargh.amttd.common.data.TodoStatus
@@ -44,4 +45,8 @@ interface IAction : Serializable {
     }
 
     fun getActionText(): Spannable
+
+    fun getImageRes(): Int {
+        return R.drawable.ic_baseline_comment_24
+    }
 }

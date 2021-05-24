@@ -76,5 +76,16 @@ data class ActionGeneric(
                 timeCreated = timeCreated,
                 task = task ?: TaskImpl()
             )
+            ActionType.TASK_EDITED      -> ActionTaskEdited(
+                actionId = actionId,
+                user = user,
+                timeCreated = timeCreated,
+                task = task ?: TaskImpl()
+            )
+            ActionType.DEADLINE_CHANGED -> ActionDeadlineChanged(
+                actionId = actionId,
+                user = user,
+                timeCreated = timeCreated
+            )
         }
 }

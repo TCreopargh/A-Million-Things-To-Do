@@ -162,4 +162,8 @@
     <string name="add">Add</string>
     <string name="name">Name</string>
     <string name="edit_task">Edit Task</string>
+    <string name="action_task_edited">edited task:</string>
+    <string name="change_deadline">changed deadline</string>
+    <string name="remove_task">Remove Task</string>
+    <string name="remove_task_confirm">Do you really want to remove this task? This cannot be undone.</string>
 </resources>

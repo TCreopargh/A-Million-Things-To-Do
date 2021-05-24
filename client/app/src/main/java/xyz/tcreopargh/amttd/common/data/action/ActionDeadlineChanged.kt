@@ -14,23 +14,18 @@ import java.util.*
 /**
  * @author TCreopargh
  */
-class ActionStatusChanged(
+class ActionDeadlineChanged(
     override val actionId: UUID,
     override val user: UserImpl?,
-    override val timeCreated: Calendar,
-    override val fromStatus: TodoStatus,
-    override val toStatus: TodoStatus
+    override val timeCreated: Calendar
 ) : IAction {
     override fun getActionText(): Spannable {
         return SpannableString(user?.username + " ")
             .setColor(getColor(R.color.primary)) +
-                SpannableString(i18n(R.string.change_status)) +
-                fromStatus.getColoredString() +
-                SpannableString(i18n(R.string.change_status_to)) +
-                toStatus.getColoredString()
+                SpannableString(i18n(R.string.change_deadline))
     }
 
-    override val actionType: ActionType = ActionType.STATUS_CHANGED
+    override val actionType: ActionType = ActionType.DEADLINE_CHANGED
 
-    override fun getImageRes(): Int = R.drawable.ic_baseline_done_all_24
+    override fun getImageRes(): Int = R.drawable.ic_baseline_access_alarm_24
 }

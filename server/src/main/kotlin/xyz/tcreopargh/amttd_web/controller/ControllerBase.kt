@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.service.*
-import xyz.tcreopargh.amttd_web.util.logger
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import kotlin.streams.toList
@@ -28,6 +27,9 @@ abstract class ControllerBase {
 
     @Autowired
     lateinit var actionService: ActionService
+
+    @Autowired
+    lateinit var taskService: TaskService
 
     fun isEmailValid(email: String?): Boolean {
         return email?.matches("^\\S+@\\S+\\.\\S+\$".toRegex()) == true && email.length < 80

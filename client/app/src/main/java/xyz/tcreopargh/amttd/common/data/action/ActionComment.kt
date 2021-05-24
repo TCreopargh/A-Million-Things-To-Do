@@ -42,4 +42,6 @@ class ActionComment(
         get() = comment
 
     override val actionType: ActionType = ActionType.COMMENT
+
+    override fun getImageRes(): Int = R.drawable.ic_baseline_comment_24
 }

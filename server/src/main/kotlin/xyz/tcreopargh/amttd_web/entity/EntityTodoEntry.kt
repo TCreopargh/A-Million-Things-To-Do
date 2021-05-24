@@ -42,10 +42,10 @@ data class EntityTodoEntry(
     override var deadline: Calendar? = null,
 
     @OneToMany(targetEntity = EntityTask::class, mappedBy = "parent")
-    override var tasks: List<EntityTask> = listOf(),
+    var allTasks: List<EntityTask> = listOf(),
 
     @OneToMany(targetEntity = EntityAction::class, mappedBy = "parent")
-    override var actionHistory: List<EntityAction> = listOf(),
+    var actions: List<EntityAction> = listOf(),
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id", nullable = false)
@@ -56,4 +56,10 @@ data class EntityTodoEntry(
     override fun toString(): String {
         return ExcludeToStringProcessor.getToString(this)
     }
+
+    override val tasks: List<EntityTask>
+        get() = allTasks.filter { it.isPresent }
+
+    override val actionHistory: List<EntityAction>
+        get() = actions.sortedByDescending { it.timeCreated }
 }
