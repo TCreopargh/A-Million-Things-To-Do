@@ -42,7 +42,7 @@ fun Calendar.format(): String = DateFormat.getDateInstance(
 
 fun Random.nextString(
     length: Int,
-    dictionary: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    dictionary: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 ): String {
     return StringBuilder().apply {
         repeat(length) {
