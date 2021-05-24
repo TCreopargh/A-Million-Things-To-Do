@@ -28,12 +28,12 @@ class ActionController : ControllerBase() {
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
     @ResponseBody
-    fun addComment(request: HttpServletRequest, @RequestBody body: ActionCrudRequest): ActionCrudResponse {
+    fun handleAction(request: HttpServletRequest, @RequestBody body: ActionCrudRequest): ActionCrudResponse {
         return try {
+            verifyTodoEntry(request, body.entryId)
+            verifyUser(request, body.userId)
             when (body.operation) {
                 CrudType.CREATE -> {
-                    verifyTodoEntry(request, body.entryId)
-                    verifyUser(request, body.userId)
                     val entry = todoEntryService.findByIdOrNull(
                         body.entryId ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                     ) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
