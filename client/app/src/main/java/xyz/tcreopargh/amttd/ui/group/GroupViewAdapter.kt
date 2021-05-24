@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.reflect.TypeToken
-import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.common.bean.request.WorkGroupCrudRequest
@@ -22,7 +21,10 @@ import xyz.tcreopargh.amttd.common.data.IWorkGroup
 import xyz.tcreopargh.amttd.common.data.WorkGroupImpl
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.ui.todo.TodoViewFragment
-import xyz.tcreopargh.amttd.util.*
+import xyz.tcreopargh.amttd.util.format
+import xyz.tcreopargh.amttd.util.gson
+import xyz.tcreopargh.amttd.util.okHttpRequest
+import xyz.tcreopargh.amttd.util.toJsonRequest
 
 /**
  * @author TCreopargh

@@ -9,7 +9,9 @@ data class TodoEntryCrudRequest(
 
     /**
      * The to_do entry related to the action.
+     *
      * If the action is *ADD*, the UUID will be ignored.
+     *
      * If the action is *DELETE*, only the UUID will be used.
      */
     override var entity: TodoEntryImpl? = null,

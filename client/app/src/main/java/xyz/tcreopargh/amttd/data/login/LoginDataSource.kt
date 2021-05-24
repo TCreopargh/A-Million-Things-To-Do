@@ -72,7 +72,7 @@ class LoginDataSource {
                     )
                     val headers = response.headers
                     val cookies = headers.values("Set-Cookie")
-                    val session = cookies[0];
+                    val session = cookies[0]
                     sessionId = session.substring(0, session.indexOf(";"))
                     return LoginResult.Success(user)
                 } else {

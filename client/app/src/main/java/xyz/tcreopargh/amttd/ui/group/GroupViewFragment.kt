@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.group_view_fragment.*
-import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R

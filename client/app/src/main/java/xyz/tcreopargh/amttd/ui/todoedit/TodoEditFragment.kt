@@ -1,6 +1,7 @@
 package xyz.tcreopargh.amttd.ui.todoedit
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -121,6 +122,11 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                 entry.description,
                 TextView.BufferType.EDITABLE
             )
+            findViewById<Button>(R.id.addTaskButton)?.apply {
+                setOnClickListener {
+                    showEditTaskDialog(true)
+                }
+            }
             findViewById<TextView>(R.id.todoEditStatusText)?.text = entry.status.getDisplayString()
             findViewById<TextView>(R.id.todoEditDeadlineText)?.text =
                 entry.deadline?.format() ?: getString(R.string.deadline_not_set)
@@ -158,9 +164,10 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                             checkbox.toggle()
                         }
                     }
-                    findViewById<ImageButton>(R.id.taskDeleteButton).apply {
-                        // TODO: Implement task deletion
-                        setOnClickListener(null)
+                    findViewById<ImageButton>(R.id.taskEditButton).apply {
+                        setOnClickListener {
+                            showEditTaskDialog(false, task.name)
+                        }
                     }
                 }
                 tasks.addView(itemView)
@@ -185,5 +192,38 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                 actions.addView(itemView)
             }
         }
+    }
+
+    private fun showEditTaskDialog(isAdd: Boolean, initialName: String? = null) {
+        AlertDialog.Builder(context).apply {
+            @SuppressLint("InflateParams")
+            val viewRoot = layoutInflater.inflate(R.layout.task_edit_layout, null)
+            val titleText = viewRoot.findViewById<EditText>(R.id.taskEditTitleText)
+            if (initialName != null) {
+                titleText.setText(initialName)
+            }
+            setView(viewRoot)
+            setPositiveButton(R.string.confirm) { dialog, _ ->
+                // TODO: send post request
+                // Use action CRUD request to do this
+                dialog.cancel()
+            }
+            if (!isAdd) {
+                setNeutralButton(R.string.remove) { dialog, _ ->
+                    AlertDialog.Builder(context).apply {
+                        setTitle(R.string.remove_work_group)
+                        setMessage(R.string.remove_work_group_confirm)
+                        setPositiveButton(R.string.confirm) { dialogInner, _ ->
+                            // TODO: Send request to remove task
+                            dialog.cancel()
+                            dialogInner.cancel()
+                        }
+                        setNegativeButton(R.string.cancel) { dialogInner, _ -> dialogInner.cancel() }
+                    }.create().show()
+
+                }
+            }
+            setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+        }.create().show()
     }
 }
