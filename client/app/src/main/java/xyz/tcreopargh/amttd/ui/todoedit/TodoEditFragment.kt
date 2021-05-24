@@ -185,7 +185,7 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                                 context.getColor(
                                     R.color.secondary
                                 )
-                            )
+                            ) 
                         ) as Spanned
                     }
                 }
