@@ -79,6 +79,7 @@ class AmttdException(val errorCode: ErrorCode, val nestedException: Exception? =
         USER_ALREADY_EXISTS(41011, R.string.user_already_exists),
         LOGIN_REQUIRED(41012, R.string.login_required),
         UNAUTHORIZED_OPERATION(41013, R.string.unauthorized_operation),
+        INSUFFICIENT_PERMISSION(41014, R.string.insufficient_permission),
 
         // HTTP Status
         HTTP_ERROR(42000, R.string.http_error),

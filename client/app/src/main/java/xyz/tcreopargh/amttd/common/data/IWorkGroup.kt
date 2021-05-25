@@ -11,5 +11,6 @@ interface IWorkGroup : Serializable {
     val name: String
     val timeCreated: Calendar
 
+    val leader: IUser?
     val usersInGroup: List<IUser> get() = listOf()
 }

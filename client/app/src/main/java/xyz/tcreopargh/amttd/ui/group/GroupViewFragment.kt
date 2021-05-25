@@ -3,9 +3,11 @@ package xyz.tcreopargh.amttd.ui.group
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.NOT_FOCUSABLE
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
@@ -82,12 +84,27 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
 
         viewModel.groupToEdit.observe(viewLifecycleOwner) {
             it?.run {
+                val loggedInUserId =
+                    (activity as? MainActivity)?.loggedInUser?.uuid ?: throw AmttdException(
+                        AmttdException.ErrorCode.LOGIN_REQUIRED
+                    )
                 AlertDialog.Builder(context).apply {
                     @SuppressLint("InflateParams")
                     val viewRoot = layoutInflater.inflate(R.layout.group_edit_layout, null)
                     val titleText = viewRoot.findViewById<EditText>(R.id.groupEditTitleText)
                     titleText.setText(it.name)
                     setView(viewRoot)
+                    if (it.leader?.uuid != loggedInUserId) {
+                        titleText.focusable = NOT_FOCUSABLE
+                        titleText.inputType = InputType.TYPE_NULL
+                        titleText.setOnClickListener {
+                            Toast.makeText(
+                                context,
+                                R.string.work_group_edit_no_permission,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                     setPositiveButton(R.string.confirm) { dialog, _ ->
                         object :
                             CrudTask<WorkGroupImpl, WorkGroupCrudRequest, WorkGroupCrudResponse>(
@@ -96,7 +113,7 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                                     entity = WorkGroupImpl(it).apply {
                                         name = titleText.text.toString()
                                     },
-                                    userId = (activity as? MainActivity)?.loggedInUser?.uuid
+                                    userId = loggedInUserId
                                 ),
                                 path = "/workgroup",
                                 responseType = object : TypeToken<WorkGroupCrudResponse>() {}.type
@@ -112,17 +129,28 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                         }.execute()
                         dialog.cancel()
                     }
-                    setNeutralButton(R.string.remove) { dialog, _ ->
+                    val neutralButtonText =
+                        if (it.leader?.uuid == loggedInUserId) {
+                            R.string.remove
+                        } else {
+                            R.string.leave
+                        }
+                    setNeutralButton(neutralButtonText) { dialog, _ ->
                         AlertDialog.Builder(context).apply {
-                            setTitle(R.string.remove_work_group)
-                            setMessage(R.string.remove_work_group_confirm)
+                            if (it.leader?.uuid == loggedInUserId) {
+                                setTitle(R.string.remove_work_group)
+                                setMessage(R.string.remove_work_group_confirm)
+                            } else {
+                                setTitle(R.string.leave_work_group)
+                                setMessage(R.string.leave_work_group_confirm)
+                            }
                             setPositiveButton(R.string.confirm) { dialogInner, _ ->
                                 object :
                                     CrudTask<WorkGroupImpl, WorkGroupCrudRequest, WorkGroupCrudResponse>(
                                         request = WorkGroupCrudRequest(
                                             operation = CrudType.DELETE,
                                             entity = WorkGroupImpl(it),
-                                            userId = (activity as? MainActivity)?.loggedInUser?.uuid
+                                            userId = loggedInUserId
                                         ),
                                         path = "/workgroup",
                                         responseType = object :

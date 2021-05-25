@@ -170,4 +170,9 @@
     <string name="change_description">changed description from</string>
     <string name="edit_todo_title">Edit Todo Title</string>
     <string name="edit_todo_description">Edit Todo Description</string>
+    <string name="insufficient_permission">Insufficient Permission</string>
+    <string name="leave_work_group">Leave Work Group</string>
+    <string name="leave_work_group_confirm">Do you really want to leave this work group?</string>
+    <string name="leave">Leave</string>
+    <string name="work_group_edit_no_permission">Only work group leaders can edit work groups!</string>
 </resources>
