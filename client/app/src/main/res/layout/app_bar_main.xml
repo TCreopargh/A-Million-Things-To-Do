@@ -24,11 +24,25 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_baseline_add_24"
             android:contentDescription="@string/add_entry" />
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            app:layout_anchor="@id/fab"
+            android:id="@+id/fabMenuLayout"
+            android:orientation="vertical"
+            app:layout_anchorGravity="top|end"
+            android:layout_gravity="top|end"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginVertical="16dp"
+            android:layout_height="wrap_content" >
+
+    </LinearLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

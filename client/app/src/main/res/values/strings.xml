@@ -175,4 +175,7 @@
     <string name="leave_work_group_confirm">Do you really want to leave this work group?</string>
     <string name="leave">Leave</string>
     <string name="work_group_edit_no_permission">Only work group leaders can edit work groups!</string>
+    <string name="operation">Operation</string>
+    <string name="create_group">Create Work Group</string>
+    <string name="join_group">Join Work Group</string>
 </resources>

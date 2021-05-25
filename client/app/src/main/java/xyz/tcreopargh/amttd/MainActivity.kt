@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -21,6 +22,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.app_bar_main.view.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import xyz.tcreopargh.amttd.common.bean.request.ActionCrudRequest
@@ -57,6 +60,8 @@ class MainActivity : BaseActivity() {
     private var exception: Exception? = null
 
     private lateinit var fab: FloatingActionButton
+    private lateinit var fabLayout: LinearLayout
+    private lateinit var fabMenu: FabMenu
 
     val loggedInUser
         get() = viewModel.getUser()
@@ -71,7 +76,19 @@ class MainActivity : BaseActivity() {
         setSupportActionBar(toolbar)
 
         fab = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
+        fabLayout = findViewById(R.id.fabMenuLayout)
+        fabMenu = FabMenu(this, fab, fabLayout).apply {
+            addItem(R.string.create_group, R.drawable.ic_baseline_group_add_24)
+            addItem(R.string.join_group, R.drawable.ic_baseline_group_24)
+            setOnItemClickListener { i, fabMenuItem ->
+                fabMenu.close()
+                if (i == 0) {
+                    (getCurrentlyDisplayedFragment() as? GroupViewFragment)?.addWorkGroup()
+                }
+            }
+        }
+        fabMenu.create()
+        fabMenu.setFabOnClickListener { view ->
             when (val currentFragment = getCurrentlyDisplayedFragment()) {
                 is SettingsFragment  -> {
                     // Do nothing
@@ -85,7 +102,9 @@ class MainActivity : BaseActivity() {
                 is TodoViewFragment  -> {
                 }
                 is GroupViewFragment -> {
-                    currentFragment.addWorkGroup()
+                    if (!fabMenu.isShowing) {
+                        fabMenu.show()
+                    }
                 }
             }
         }
@@ -272,6 +291,7 @@ class MainActivity : BaseActivity() {
                 navView.menu.findItem(R.id.nav_group_view).isChecked = false
                 navView.menu.findItem(R.id.nav_settings).isChecked = true
                 fab.hide()
+
             }
             is TodoEditFragment  -> {
                 navView.menu.findItem(R.id.nav_group_view).isChecked = true
@@ -280,6 +300,7 @@ class MainActivity : BaseActivity() {
                     fab.show()
                 }
                 fab.setImageResource(R.drawable.ic_baseline_add_comment_24)
+
             }
             is TodoViewFragment  -> {
                 navView.menu.findItem(R.id.nav_group_view).isChecked = true
@@ -296,6 +317,7 @@ class MainActivity : BaseActivity() {
                     fab.show()
                 }
                 fab.setImageResource(R.drawable.ic_baseline_add_24)
+
             }
         }
     }
