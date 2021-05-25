@@ -31,7 +31,9 @@ class WorkGroupController : ControllerBase() {
         body: WorkGroupCrudRequest
     ): WorkGroupCrudResponse {
         return try {
-            verifyWorkgroup(request, body.entity?.groupId)
+            if(body.operation != CrudType.CREATE) {
+                verifyWorkgroup(request, body.entity?.groupId)
+            }
             val id =
                 body.entity?.groupId ?: throw AmttdException(AmttdException.ErrorCode.JSON_MISSING_FIELD)
             val workGroup = if (body.operation != CrudType.CREATE) {
@@ -47,7 +49,9 @@ class WorkGroupController : ControllerBase() {
                     )
                 }
                 CrudType.UPDATE -> {
-
+                    if (workGroup.leader?.uuid != body.userId) {
+                        throw AmttdException(AmttdException.ErrorCode.INSUFFICIENT_PERMISSION)
+                    }
                     WorkGroupCrudResponse(
                         operation = body.operation,
                         success = true,
@@ -66,9 +70,10 @@ class WorkGroupController : ControllerBase() {
                     val entity = workGroupService.saveImmediately(EntityWorkGroup().apply {
                         groupName = body.entity?.name
                             ?: throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS)
+                        leader = user
                     })
                     val obj = WorkGroupImpl(entity)
-                    user.joinedWorkGroups = user.joinedWorkGroups + entity
+                    user.joinedWorkGroups = (user.joinedWorkGroups + entity).toMutableSet()
                     userService.saveImmediately(user)
                     WorkGroupCrudResponse(
                         operation = body.operation,
@@ -77,11 +82,26 @@ class WorkGroupController : ControllerBase() {
                     )
                 }
                 CrudType.DELETE -> {
-                    workGroupService.delete(id)
-                    WorkGroupCrudResponse(
-                        operation = body.operation,
-                        success = true
-                    )
+                    val userId = body.userId ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
+                    if (workGroup.leader?.uuid != userId) {
+                        val user =
+                            userService.findByIdOrNull(userId)
+                                ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
+                        user.joinedWorkGroups.removeIf { it.groupId == workGroup.groupId }
+                        workGroup.users.removeIf { it.uuid == user.uuid }
+                        workGroupService.saveImmediately(workGroup)
+                        userService.saveImmediately(user)
+                        WorkGroupCrudResponse(
+                            operation = body.operation,
+                            success = true
+                        )
+                    } else {
+                        workGroupService.delete(id)
+                        WorkGroupCrudResponse(
+                            operation = body.operation,
+                            success = true
+                        )
+                    }
                 }
                 else -> throw AmttdException(AmttdException.ErrorCode.ACTION_NOT_SUPPORTED)
             }

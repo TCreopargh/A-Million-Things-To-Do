@@ -34,7 +34,12 @@ data class EntityWorkGroup(
 
     @OneToMany(mappedBy = "parent")
     @ExcludeToString
-    var entries: List<EntityTodoEntry> = listOf()
+    var entries: List<EntityTodoEntry> = listOf(),
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_uuid", columnDefinition = "varchar(64)", updatable = false)
+    @ExcludeToString
+    override var leader: EntityUser? = null
 
 ) : IWorkGroup, IEntity {
     override val name: String

@@ -2,8 +2,10 @@ package xyz.tcreopargh.amttd_web.entity
 
 import org.hibernate.annotations.Type
 import xyz.tcreopargh.amttd_web.common.data.IUser
+import java.awt.print.Book
 import java.util.*
 import javax.persistence.*
+
 
 @Entity
 @Table(
@@ -42,7 +44,7 @@ data class EntityUser(
         joinColumns = [JoinColumn(name = "user_uuid")],
         inverseJoinColumns = [JoinColumn(name = "groupId")]
     )
-    var joinedWorkGroups: Set<EntityWorkGroup> = setOf()
+    var joinedWorkGroups: MutableSet<EntityWorkGroup> = mutableSetOf()
 ) : IEntity, IUser {
     override val username: String
         get() = name.toString()
