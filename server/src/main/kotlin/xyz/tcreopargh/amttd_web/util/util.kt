@@ -16,6 +16,8 @@ import kotlin.random.Random
 
 fun generateToken() = random.nextString(64)
 
+fun generateInvitationCode() = random.nextString(8)
+
 fun Random.nextString(
     length: Int,
     dictionary: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
