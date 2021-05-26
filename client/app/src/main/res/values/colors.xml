@@ -15,4 +15,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="divider">#FF9E9E9E</color>
     <color name="grey">#FF9E9E9E</color>
+    <color name="dark">#424242</color>
 </resources>
