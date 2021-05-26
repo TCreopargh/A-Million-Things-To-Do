@@ -2,6 +2,7 @@ package xyz.tcreopargh.amttd.ui.todo
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -127,7 +128,6 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
                         }
                     setView(rootView)
                     setPositiveButton(R.string.confirm) { dialog, _ ->
-                        // TODO: Send share group request
                         dialog.dismiss()
                     }
                     setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
