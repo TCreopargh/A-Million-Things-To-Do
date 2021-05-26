@@ -28,7 +28,7 @@ class FabMenu(
 
     private var isCreated = false
 
-    val originalDrawable = fab.drawable
+    private val originalDrawable: Drawable = fab.drawable
 
     val itemList = mutableListOf<FabMenuItem>()
 
@@ -41,7 +41,7 @@ class FabMenu(
     }
 
     fun addItem(text: String, drawable: Drawable?) {
-        val item = FabMenuItem(context, text, drawable, fab, parent, itemList.size, this)
+        val item = FabMenuItem(context, text, drawable, itemList.size, this)
         itemList.add(item)
     }
 
@@ -49,7 +49,7 @@ class FabMenu(
         @StringRes textId: Int,
         @DrawableRes drawableId: Int
     ) {
-        val item = FabMenuItem(context, textId, drawableId, fab, parent, itemList.size, this)
+        val item = FabMenuItem(context, textId, drawableId, itemList.size, this)
         itemList.add(item)
     }
 
@@ -104,8 +104,6 @@ class FabMenu(
         val context: Context,
         val text: String = "",
         val drawable: Drawable? = null,
-        val fab: FloatingActionButton,
-        val parent: LinearLayout,
         val index: Int,
         val menu: FabMenu
     ) {
@@ -113,16 +111,12 @@ class FabMenu(
             context: Context,
             @StringRes textId: Int,
             @DrawableRes drawableId: Int = R.drawable.ic_baseline_add_24,
-            fab: FloatingActionButton,
-            parent: LinearLayout,
             index: Int,
             menu: FabMenu
         ) : this(
             context,
             context.getString(textId),
             ContextCompat.getDrawable(context, drawableId),
-            fab,
-            parent,
             index,
             menu
         )
