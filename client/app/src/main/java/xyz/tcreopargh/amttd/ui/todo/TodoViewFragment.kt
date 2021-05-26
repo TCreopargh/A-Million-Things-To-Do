@@ -1,16 +1,19 @@
 package xyz.tcreopargh.amttd.ui.todo
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.activity_work_group_share.*
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
@@ -76,6 +79,64 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
         super.onCreate(savedInstanceState)
         groupId = arguments?.get("groupId") as? UUID
         viewModel = ViewModelProvider(this).get(TodoViewViewModel::class.java)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.options_todoentry, menu)
+    }
+
+    @SuppressLint("InflateParams")
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.actionShareWorkGroup -> {
+                val builder = AlertDialog.Builder(context).apply {
+                    val rootView =
+                        layoutInflater.inflate(R.layout.share_workgroup_dialog, null)?.apply {
+                            val expirationTimeText = findViewById<TextView>(R.id.expirationTimeText)
+                            var days = 1
+                            val seekbar = findViewById<SeekBar>(R.id.expirationTimeSeekBar)?.apply {
+                                val values: IntArray =
+                                    context.resources.getIntArray(R.array.expiration_time_values)
+                                max = values.size - 1
+                                setOnSeekBarChangeListener(object :
+                                    SeekBar.OnSeekBarChangeListener {
+                                    @SuppressLint("SetTextI18n")
+                                    override fun onProgressChanged(
+                                        seekBar: SeekBar?,
+                                        progress: Int,
+                                        fromUser: Boolean
+                                    ) {
+                                        days = values[progress]
+                                        val quantifier =
+                                            if (days <= 1) getString(R.string.day) else getString(
+                                                R.string.days
+                                            )
+                                        expirationTimeText.text = "$days$quantifier"
+                                    }
+
+                                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                                    }
+
+                                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                                    }
+
+                                })
+                            }
+                        }
+                    setView(rootView)
+                    setPositiveButton(R.string.confirm) { dialog, _ ->
+                        // TODO: Send share group request
+                        dialog.dismiss()
+                    }
+                    setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                }.create().show()
+                return true
+            }
+        }
+
+        return false
     }
 
     private fun initializeItems() {

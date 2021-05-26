@@ -180,4 +180,11 @@
     <string name="join_group">Join Work Group</string>
     <string name="join_work_group">Join Work Group</string>
     <string name="invitation_code">Invitation Code</string>
+    <string name="action_share_workgroup">Share Work Group</string>
+    <string name="invitation_qr_code">Invitation QR Code</string>
+    <string name="copy_to_clipboard">Copy To Clipboard</string>
+    <string name="expiration_time_days">Expiration Time (Days)</string>
+    <string name="_1_day">1 Day</string>
+    <string name="days">&#160;Days</string>
+    <string name="day">&#160;Day</string>
 </resources>

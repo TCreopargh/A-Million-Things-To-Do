@@ -203,8 +203,8 @@
                         android:contentDescription="@string/edit"
                         android:src="@drawable/ic_baseline_edit_24"
                         android:clickable="true"
-                        android:tint="@color/primary"
-                        android:background="?android:selectableItemBackgroundBorderless" />
+                        android:background="?android:selectableItemBackgroundBorderless"
+                        app:tint="@color/primary" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -245,8 +245,8 @@
                         tools:ignore="RelativeOverlap"
                         android:contentDescription="@string/edit"
                         android:src="@drawable/ic_baseline_edit_24"
-                        android:tint="@color/primary"
-                        android:background="?android:selectableItemBackgroundBorderless" />
+                        android:background="?android:selectableItemBackgroundBorderless"
+                        app:tint="@color/primary" />
             </RelativeLayout>
 
             <Button

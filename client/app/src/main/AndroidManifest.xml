@@ -7,21 +7,27 @@
     <application
             android:name=".AMTTD"
             android:allowBackup="true"
+            android:fullBackupContent="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.AMillionThingsToDo"
-            android:usesCleartextTraffic="true"
-            android:fullBackupContent="true">
+            android:usesCleartextTraffic="true">
+        <activity
+                android:name=".ui.share.WorkGroupShareActivity"
+                android:label="@string/action_share_workgroup"
+                android:excludeFromRecents="true"
+                android:theme="@android:style/Theme.Dialog"
+                android:launchMode="singleTop" />
         <activity
                 android:name=".ui.login.LoginActivity"
-                android:launchMode="standard"
-                android:label="@string/title_activity_login" />
+                android:label="@string/title_activity_login"
+                android:launchMode="singleTask" />
         <activity
                 android:name=".MainActivity"
                 android:label="@string/app_name"
-                android:launchMode="standard"
+                android:launchMode="singleTask"
                 android:theme="@style/Theme.AMillionThingsToDo.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
