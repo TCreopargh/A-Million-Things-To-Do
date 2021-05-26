@@ -20,7 +20,7 @@ import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.common.bean.request.ShareWorkGroupRequest
 import xyz.tcreopargh.amttd.common.bean.response.ShareWorkGroupResponse
 import xyz.tcreopargh.amttd.common.exception.AmttdException
-import xyz.tcreopargh.amttd.util.getAmttdUri
+import xyz.tcreopargh.amttd.util.getGroupUri
 import xyz.tcreopargh.amttd.util.gson
 import xyz.tcreopargh.amttd.util.okHttpRequest
 import xyz.tcreopargh.amttd.util.toJsonRequest
@@ -77,7 +77,7 @@ class WorkGroupShareActivity : BaseActivity() {
             }
             invitationCodeText.text = it
             try {
-                qrCodeImage.setImageBitmap(encodeAsBitmap(getAmttdUri(it), 512, 512))
+                qrCodeImage.setImageBitmap(encodeAsBitmap(getGroupUri(it), 512, 512))
             } catch (e: Exception) {
                 Log.e(AMTTD.logTag, e.stackTraceToString())
                 viewModel.exception.postValue(AmttdException.getFromException(e))

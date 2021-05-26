@@ -31,8 +31,14 @@ import kotlin.random.Random
 
 const val PACKAGE_NAME = "xyz.tcreopargh.amttd"
 const val PACKAGE_NAME_DOT = "$PACKAGE_NAME."
+const val GROUP_URI_PREFIX = "amttd://group/"
 
-fun getAmttdUri(path: String) = "amttd://$path"
+fun isGroupUri(uri: String) = uri.startsWith(GROUP_URI_PREFIX, false)
+fun getGroupUri(path: String) = "$GROUP_URI_PREFIX$path"
+fun getGroupInvitationCode(amttdUri: String): String? {
+    if (!isGroupUri(amttdUri)) return null
+    return amttdUri.substring(GROUP_URI_PREFIX.length)
+}
 
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.

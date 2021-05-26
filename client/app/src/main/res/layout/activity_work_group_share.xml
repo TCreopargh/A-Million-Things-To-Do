@@ -50,7 +50,7 @@
             android:background="?android:selectableItemBackgroundBorderless"
             android:id="@+id/copyButton"
             android:contentDescription="@string/copy_to_clipboard"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_marginEnd="16dp"
             app:tint="@color/primary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInvitationCode"
