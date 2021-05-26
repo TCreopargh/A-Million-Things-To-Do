@@ -21,8 +21,10 @@ import kotlinx.android.synthetic.main.group_view_fragment.*
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
+import xyz.tcreopargh.amttd.common.bean.request.JoinWorkGroupRequest
 import xyz.tcreopargh.amttd.common.bean.request.WorkGroupCrudRequest
 import xyz.tcreopargh.amttd.common.bean.request.WorkGroupViewRequest
+import xyz.tcreopargh.amttd.common.bean.response.JoinWorkGroupResponse
 import xyz.tcreopargh.amttd.common.bean.response.WorkGroupCrudResponse
 import xyz.tcreopargh.amttd.common.bean.response.WorkGroupViewResponse
 import xyz.tcreopargh.amttd.common.data.CrudType
@@ -195,6 +197,47 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
         viewModel =
             ViewModelProvider(this).get(GroupViewModel::class.java)
         setHasOptionsMenu(true)
+    }
+
+    fun joinWorkGroup() {
+        AlertDialog.Builder(context).apply {
+            @SuppressLint("InflateParams")
+            val viewRoot = layoutInflater.inflate(R.layout.group_join_layout, null)
+            val invitationCodeText =
+                viewRoot.findViewById<EditText>(R.id.groupJoinInvitationCodeText)
+            setView(viewRoot)
+            setPositiveButton(R.string.confirm) { dialog, _ ->
+                Thread {
+                    try {
+                        val request = okHttpRequest("/workgroups/join")
+                            .post(
+                                JoinWorkGroupRequest(
+                                    userId = (activity as? MainActivity)?.loggedInUser?.uuid
+                                        ?: throw AmttdException(AmttdException.ErrorCode.LOGIN_REQUIRED),
+                                    invitationCode = invitationCodeText.text.toString()
+                                ).toJsonRequest()
+                            )
+                            .build()
+                        val response = AMTTD.okHttpClient.newCall(request).execute()
+                        val body = response.body?.string()
+                        val result: JoinWorkGroupResponse =
+                            gson.fromJson(
+                                body,
+                                object : TypeToken<JoinWorkGroupResponse>() {}.type
+                            )
+                        if (result.success != true) {
+                            throw AmttdException.getFromErrorCode(result.error)
+                        }
+                        viewModel.dirty.postValue(true)
+                    } catch (e: Exception) {
+                        Log.e(AMTTD.logTag, e.stackTraceToString())
+                        viewModel.exception.postValue(AmttdException.getFromException(e))
+                    }
+                }.start()
+                dialog.cancel()
+            }
+            setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+        }.create().show()
     }
 
     fun addWorkGroup() {

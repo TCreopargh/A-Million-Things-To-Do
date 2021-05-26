@@ -101,7 +101,6 @@ class WorkGroupShareActivity : BaseActivity() {
                         .build()
                     val response = AMTTD.okHttpClient.newCall(request).execute()
                     val body = response.body?.string()
-                    // Don't simplify this
                     val result: ShareWorkGroupResponse =
                         gson.fromJson(body, object : TypeToken<ShareWorkGroupResponse>() {}.type)
                     if (result.success != true) {

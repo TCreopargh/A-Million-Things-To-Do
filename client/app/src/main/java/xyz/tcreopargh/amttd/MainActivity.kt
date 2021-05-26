@@ -82,8 +82,13 @@ class MainActivity : BaseActivity() {
             addItem(R.string.join_group, R.drawable.ic_baseline_group_24)
             setOnItemClickListener { i, fabMenuItem ->
                 fabMenu.close()
-                if (i == 0) {
-                    (getCurrentlyDisplayedFragment() as? GroupViewFragment)?.addWorkGroup()
+                when(i) {
+                    0 -> {
+                        (getCurrentlyDisplayedFragment() as? GroupViewFragment)?.addWorkGroup()
+                    }
+                    1 -> {
+                        (getCurrentlyDisplayedFragment() as? GroupViewFragment)?.joinWorkGroup()
+                    }
                 }
             }
         }
