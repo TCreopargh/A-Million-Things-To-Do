@@ -32,11 +32,10 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="256dp"
+            android:layout_height="256dp"
             android:id="@+id/invitationQrCode"
             android:src="@drawable/ic_baseline_qr_code_24"
-            app:tint="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInvitationCode"

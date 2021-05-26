@@ -37,6 +37,9 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
 
     private lateinit var viewModel: TodoViewViewModel
 
+
+    private var invitationCodeExpirationTime = 1
+
     private var groupId: UUID? = null
 
     override fun onCreateView(
@@ -97,7 +100,6 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
                     val rootView =
                         layoutInflater.inflate(R.layout.share_workgroup_dialog, null)?.apply {
                             val expirationTimeText = findViewById<TextView>(R.id.expirationTimeText)
-                            var days = 1
                             val seekbar = findViewById<SeekBar>(R.id.expirationTimeSeekBar)?.apply {
                                 val values: IntArray =
                                     context.resources.getIntArray(R.array.expiration_time_values)
@@ -110,12 +112,12 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
                                         progress: Int,
                                         fromUser: Boolean
                                     ) {
-                                        days = values[progress]
+                                        invitationCodeExpirationTime = values[progress]
                                         val quantifier =
-                                            if (days <= 1) getString(R.string.day) else getString(
+                                            if (invitationCodeExpirationTime <= 1) getString(R.string.day) else getString(
                                                 R.string.days
                                             )
-                                        expirationTimeText.text = "$days$quantifier"
+                                        expirationTimeText.text = "$invitationCodeExpirationTime$quantifier"
                                     }
 
                                     override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -132,6 +134,7 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
                         val intent = Intent(context, WorkGroupShareActivity::class.java).apply {
                             putExtra("groupId", groupId.toString())
                             putExtra("userId", (activity as? MainActivity)?.loggedInUser?.uuid?.toString())
+                            putExtra("expirationTimeInDays", invitationCodeExpirationTime)
                         }
                         startActivity(intent)
                         dialog.dismiss()

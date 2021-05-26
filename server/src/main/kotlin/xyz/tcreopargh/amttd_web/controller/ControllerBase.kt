@@ -31,6 +31,9 @@ abstract class ControllerBase {
     @Autowired
     lateinit var taskService: TaskService
 
+    @Autowired
+    lateinit var invitationCodeService: InvitationCodeService
+
     fun isEmailValid(email: String?): Boolean {
         return email?.matches("^\\S+@\\S+\\.\\S+\$".toRegex()) == true && email.length < 80
     }

@@ -148,8 +148,9 @@ class AmttdException(val errorCode: ErrorCode, val nestedException: Exception? =
             return AmttdException(ErrorCode.getFromErrorCode(errorCode))
         }
 
-        fun getFromException(e: Exception?): AmttdException =
-            AmttdException(ErrorCode.getFromException(e), e)
+        fun getFromException(e: Exception?): AmttdException {
+            return AmttdException(ErrorCode.getFromException(e), e)
+        }
     }
 
     val errorCodeValue: Int
