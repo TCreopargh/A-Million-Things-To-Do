@@ -23,6 +23,7 @@ import xyz.tcreopargh.amttd.common.bean.response.TodoEntryViewResponse
 import xyz.tcreopargh.amttd.common.data.ITodoEntry
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
+import xyz.tcreopargh.amttd.ui.share.WorkGroupShareActivity
 import xyz.tcreopargh.amttd.util.*
 import java.util.*
 
@@ -128,6 +129,11 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
                         }
                     setView(rootView)
                     setPositiveButton(R.string.confirm) { dialog, _ ->
+                        val intent = Intent(context, WorkGroupShareActivity::class.java).apply {
+                            putExtra("groupId", groupId.toString())
+                            putExtra("userId", (activity as? MainActivity)?.loggedInUser?.uuid?.toString())
+                        }
+                        startActivity(intent)
                         dialog.dismiss()
                     }
                     setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }

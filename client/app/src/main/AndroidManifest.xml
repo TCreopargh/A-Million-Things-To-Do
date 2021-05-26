@@ -18,7 +18,7 @@
                 android:name=".ui.share.WorkGroupShareActivity"
                 android:label="@string/action_share_workgroup"
                 android:excludeFromRecents="true"
-                android:theme="@android:style/Theme.Dialog"
+                android:theme="@style/Theme.AppCompat.Light.Dialog"
                 android:launchMode="singleTop" />
         <activity
                 android:name=".ui.login.LoginActivity"
