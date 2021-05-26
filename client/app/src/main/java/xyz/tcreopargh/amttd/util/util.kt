@@ -32,6 +32,8 @@ import kotlin.random.Random
 const val PACKAGE_NAME = "xyz.tcreopargh.amttd"
 const val PACKAGE_NAME_DOT = "$PACKAGE_NAME."
 
+fun getAmttdUri(path: String) = "amttd://$path"
+
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.
  */

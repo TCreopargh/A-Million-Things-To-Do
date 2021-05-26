@@ -189,4 +189,5 @@
     <string name="day">&#160;Day</string>
     <string name="amttd_invitation_code">AMTTD Invitation Code</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="requested_entity_invalid">Requested Entity Invalid</string>
 </resources>

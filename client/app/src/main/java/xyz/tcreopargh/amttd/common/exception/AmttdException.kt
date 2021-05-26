@@ -80,6 +80,7 @@ class AmttdException(val errorCode: ErrorCode, val nestedException: Exception? =
         LOGIN_REQUIRED(41012, R.string.login_required),
         UNAUTHORIZED_OPERATION(41013, R.string.unauthorized_operation),
         INSUFFICIENT_PERMISSION(41014, R.string.insufficient_permission),
+        REQUESTED_ENTITY_INVALID(41015, R.string.requested_entity_invalid),
 
         // HTTP Status
         HTTP_ERROR(42000, R.string.http_error),
