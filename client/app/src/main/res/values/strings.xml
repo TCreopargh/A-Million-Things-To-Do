@@ -178,4 +178,6 @@
     <string name="operation">Operation</string>
     <string name="create_group">Create Work Group</string>
     <string name="join_group">Join Work Group</string>
+    <string name="join_work_group">Join Work Group</string>
+    <string name="invitation_code">Invitation Code</string>
 </resources>

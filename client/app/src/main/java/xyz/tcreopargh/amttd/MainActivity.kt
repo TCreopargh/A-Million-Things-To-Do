@@ -291,6 +291,7 @@ class MainActivity : BaseActivity() {
                 navView.menu.findItem(R.id.nav_group_view).isChecked = false
                 navView.menu.findItem(R.id.nav_settings).isChecked = true
                 fab.hide()
+                fabMenu.close()
 
             }
             is TodoEditFragment  -> {
@@ -299,6 +300,7 @@ class MainActivity : BaseActivity() {
                 if (!fab.isVisible) {
                     fab.show()
                 }
+                fabMenu.close()
                 fab.setImageResource(R.drawable.ic_baseline_add_comment_24)
 
             }
@@ -308,6 +310,7 @@ class MainActivity : BaseActivity() {
                 if (!fab.isVisible) {
                     fab.show()
                 }
+                fabMenu.close()
                 fab.setImageResource(R.drawable.ic_baseline_add_24)
             }
             is GroupViewFragment -> {
@@ -316,6 +319,7 @@ class MainActivity : BaseActivity() {
                 if (!fab.isVisible) {
                     fab.show()
                 }
+                fabMenu.close()
                 fab.setImageResource(R.drawable.ic_baseline_add_24)
 
             }
