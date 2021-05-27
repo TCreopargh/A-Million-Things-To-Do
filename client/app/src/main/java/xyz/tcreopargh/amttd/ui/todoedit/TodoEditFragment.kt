@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.todo_view_fragment.*
-import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.common.bean.request.ActionCrudRequest
 import xyz.tcreopargh.amttd.common.bean.request.TodoEntryCrudRequest
@@ -43,8 +42,6 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
 
     private lateinit var todoEditSwipeContainer: SwipeRefreshLayout
 
-    var entryId: UUID? = null
-
     private var expandActions = true
 
     override fun onCreateView(
@@ -53,8 +50,10 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
     ): View? {
         val view = inflater.inflate(R.layout.todo_edit_fragment, container, false)
         viewModel.entry.observe(viewLifecycleOwner) {
-            initView(view, it)
-            todoEditSwipeContainer.isRefreshing = false
+            if(it != null) {
+                initView(view, it)
+                todoEditSwipeContainer.isRefreshing = false
+            }
         }
 
         todoEditSwipeContainer = view.findViewById(R.id.todoEditSwipeContainer)
@@ -88,12 +87,13 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(TodoEditViewModel::class.java)
-        entryId = arguments?.get("entryId") as? UUID
+        val args = arguments?.deepCopy()
+        viewModel.entryId.value = UUID.fromString(args?.get("entryId").toString())
     }
 
     private fun initializeItems() {
         todoEditSwipeContainer.isRefreshing = true
-        val uuid = entryId ?: return
+        val uuid = viewModel.entryId.value ?: return
         object : CrudTask<TodoEntryImpl, TodoEntryCrudRequest, TodoEntryCrudResponse>(
             request = TodoEntryCrudRequest(
                 CrudType.READ,
@@ -113,11 +113,7 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
     }
 
     @SuppressLint("InflateParams")
-    private fun initView(viewRoot: View, entry: ITodoEntry?) {
-        if (entry == null) {
-            Toast.makeText(context, R.string.unknown_error, Toast.LENGTH_SHORT).show()
-            return
-        }
+    private fun initView(viewRoot: View, entry: ITodoEntry) {
         viewRoot.apply {
             findViewById<EditText>(R.id.todoEditTitleText)?.apply {
                 setText(
@@ -146,8 +142,8 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                                             oldValue = entry.title,
                                             newValue = titleText.text.toString()
                                         ),
-                                        userId = (activity as? MainActivity)?.loggedInUser?.uuid,
-                                        entryId = entryId
+                                        userId = loggedInUser?.uuid,
+                                        entryId = viewModel.entryId.value
                                     ),
                                     path = "/action",
                                     responseType = object :
@@ -199,8 +195,8 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                                             oldValue = entry.title,
                                             newValue = titleText.text.toString()
                                         ),
-                                        userId = (activity as? MainActivity)?.loggedInUser?.uuid,
-                                        entryId = entryId
+                                        userId = loggedInUser?.uuid,
+                                        entryId = viewModel.entryId.value
                                     ),
                                     path = "/action",
                                     responseType = object :
@@ -247,8 +243,8 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                                                 fromStatus = entry.status,
                                                 toStatus = TodoStatus.values()[which]
                                             ),
-                                            userId = (activity as? MainActivity)?.loggedInUser?.uuid,
-                                            entryId = entryId
+                                            userId = loggedInUser?.uuid,
+                                            entryId = viewModel.entryId.value
                                         ),
                                         path = "/action",
                                         responseType = object :
@@ -321,8 +317,8 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                                             task
                                         )
                                     ),
-                                    userId = (activity as? MainActivity)?.loggedInUser?.uuid,
-                                    entryId = entryId
+                                    userId = loggedInUser?.uuid,
+                                    entryId = viewModel.entryId.value
                                 ),
                                 path = "/action",
                                 responseType = object : TypeToken<ActionCrudResponse>() {}.type
@@ -407,8 +403,8 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                                     name = name
                                 )
                             ),
-                            userId = (activity as? MainActivity)?.loggedInUser?.uuid,
-                            entryId = entryId
+                            userId = loggedInUser?.uuid,
+                            entryId = viewModel.entryId.value
                         ),
                         path = "/action",
                         responseType = object : TypeToken<ActionCrudResponse>() {}.type
@@ -434,8 +430,8 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                                     this.name = name
                                 }
                             ),
-                            userId = (activity as? MainActivity)?.loggedInUser?.uuid,
-                            entryId = entryId
+                            userId = loggedInUser?.uuid,
+                            entryId = viewModel.entryId.value
                         ),
                         path = "/action",
                         responseType = object : TypeToken<ActionCrudResponse>() {}.type
@@ -467,8 +463,8 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
                                                 ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
                                         )
                                     ),
-                                    userId = (activity as? MainActivity)?.loggedInUser?.uuid,
-                                    entryId = entryId
+                                    userId = loggedInUser?.uuid,
+                                    entryId = viewModel.entryId.value
                                 ),
                                 path = "/action",
                                 responseType = object : TypeToken<ActionCrudResponse>() {}.type

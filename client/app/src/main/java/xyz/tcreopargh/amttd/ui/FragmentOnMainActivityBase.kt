@@ -8,13 +8,19 @@ import xyz.tcreopargh.amttd.MainActivity
  */
 abstract class FragmentOnMainActivityBase : Fragment() {
 
+    val mainActivity
+    get() = activity as MainActivity
+
+    val loggedInUser
+    get() = mainActivity.loggedInUser
+
     override fun onStart() {
         super.onStart()
-        (activity as? MainActivity)?.onFragmentStart(this)
+        mainActivity.onFragmentStart(this)
     }
 
     override fun onStop() {
         super.onStop()
-        (activity as? MainActivity)?.onFragmentStop(this)
+        mainActivity.onFragmentStop(this)
     }
 }

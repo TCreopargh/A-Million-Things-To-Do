@@ -1,14 +1,12 @@
 package xyz.tcreopargh.amttd.ui.todo
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.SeekBar
-import android.widget.TextView
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +21,7 @@ import xyz.tcreopargh.amttd.common.bean.response.TodoEntryViewResponse
 import xyz.tcreopargh.amttd.common.data.ITodoEntry
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
-import xyz.tcreopargh.amttd.ui.share.WorkGroupShareActivity
+import xyz.tcreopargh.amttd.ui.group_user.GroupUserFragment
 import xyz.tcreopargh.amttd.util.*
 import java.util.*
 
@@ -37,11 +35,6 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
 
     private lateinit var viewModel: TodoViewViewModel
 
-
-    private var invitationCodeExpirationTime = 1
-
-    private var groupId: UUID? = null
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,7 +43,7 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
         val todoRecyclerView = view.findViewById<RecyclerView>(R.id.todoRecyclerView)
 
         todoSwipeContainer = view.findViewById(R.id.todoSwipeContainer)
-        val adapter = TodoViewAdapter(viewModel.entries.value ?: listOf(), activity)
+        val adapter = TodoViewAdapter(viewModel.entries.value ?: listOf(), this)
         todoSwipeContainer.setOnRefreshListener { initializeItems() }
         todoRecyclerView.adapter = adapter
         todoRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -82,8 +75,10 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        groupId = arguments?.get("groupId") as? UUID
+        val args = arguments?.deepCopy()
         viewModel = ViewModelProvider(this).get(TodoViewViewModel::class.java)
+        viewModel.groupId.value = UUID.fromString(args?.get("groupId")?.toString())
+        viewModel.isLeader.value = args?.getBoolean("isLeader") ?: false
         setHasOptionsMenu(true)
     }
 
@@ -94,53 +89,26 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
 
     @SuppressLint("InflateParams")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // This is a bit hacky
+        val viewModel = (mainActivity.getCurrentlyDisplayedFragment() as? TodoViewFragment)?.viewModel
         when (item.itemId) {
-            R.id.actionShareWorkGroup -> {
-                val builder = AlertDialog.Builder(context).apply {
-                    val rootView =
-                        layoutInflater.inflate(R.layout.share_workgroup_dialog, null)?.apply {
-                            val expirationTimeText = findViewById<TextView>(R.id.expirationTimeText)
-                            val seekbar = findViewById<SeekBar>(R.id.expirationTimeSeekBar)?.apply {
-                                val values: IntArray =
-                                    context.resources.getIntArray(R.array.expiration_time_values)
-                                max = values.size - 1
-                                setOnSeekBarChangeListener(object :
-                                    SeekBar.OnSeekBarChangeListener {
-                                    @SuppressLint("SetTextI18n")
-                                    override fun onProgressChanged(
-                                        seekBar: SeekBar?,
-                                        progress: Int,
-                                        fromUser: Boolean
-                                    ) {
-                                        invitationCodeExpirationTime = values[progress]
-                                        val quantifier =
-                                            if (invitationCodeExpirationTime <= 1) getString(R.string.day) else getString(
-                                                R.string.days
-                                            )
-                                        expirationTimeText.text = "$invitationCodeExpirationTime$quantifier"
-                                    }
-
-                                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                                    }
-
-                                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                                    }
-
-                                })
-                            }
-                        }
-                    setView(rootView)
-                    setPositiveButton(R.string.confirm) { dialog, _ ->
-                        val intent = Intent(context, WorkGroupShareActivity::class.java).apply {
-                            putExtra("groupId", groupId.toString())
-                            putExtra("userId", (activity as? MainActivity)?.loggedInUser?.uuid?.toString())
-                            putExtra("expirationTimeInDays", invitationCodeExpirationTime)
-                        }
-                        startActivity(intent)
-                        dialog.dismiss()
-                    }
-                    setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                }.create().show()
+            R.id.actionManageUsers -> {
+                val targetFragment = GroupUserFragment.newInstance().apply {
+                    arguments = bundleOf(
+                        "groupId" to (viewModel?.groupId?.value?.toString() ?: return false),
+                        "isLeader" to viewModel.isLeader.value
+                    )
+                }
+                parentFragmentManager.beginTransaction().apply {
+                    replace(
+                        R.id.main_fragment_parent,
+                        targetFragment,
+                        targetFragment::class.simpleName
+                    )
+                    setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    addToBackStack(null)
+                    commit()
+                }
                 return true
             }
         }
@@ -152,7 +120,7 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
         todoSwipeContainer.isRefreshing = true
         Thread {
             val entries: List<ITodoEntry> = try {
-                val uuid = groupId ?: return@Thread
+                val uuid = viewModel.groupId.value ?: return@Thread
                 val request = okHttpRequest("/todo")
                     .post(
                         TodoEntryViewRequest(groupId = uuid).toJsonRequest()

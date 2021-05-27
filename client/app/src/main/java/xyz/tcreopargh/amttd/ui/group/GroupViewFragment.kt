@@ -63,7 +63,7 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
         val view = inflater.inflate(R.layout.group_view_fragment, container, false)
         val groupRecyclerView = view.findViewById<RecyclerView>(R.id.groupRecyclerView)
         groupSwipeContainer = view.findViewById(R.id.groupSwipeContainer)
-        val adapter = GroupViewAdapter(viewModel.groups.value ?: mutableListOf(), this)
+        val adapter = GroupViewAdapter(viewModel.groups.value ?: listOf(), this)
         groupRecyclerView.adapter = adapter
         groupRecyclerView.layoutManager = LinearLayoutManager(context)
         groupSwipeContainer.setOnRefreshListener { initializeItems() }
@@ -94,7 +94,7 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
         viewModel.groupToEdit.observe(viewLifecycleOwner) {
             it?.run {
                 val loggedInUserId =
-                    (activity as? MainActivity)?.loggedInUser?.uuid ?: throw AmttdException(
+                    loggedInUser?.uuid ?: throw AmttdException(
                         AmttdException.ErrorCode.LOGIN_REQUIRED
                     )
                 AlertDialog.Builder(context).apply {
@@ -224,7 +224,7 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                         val request = okHttpRequest("/workgroups/join")
                             .post(
                                 JoinWorkGroupRequest(
-                                    userId = (activity as? MainActivity)?.loggedInUser?.uuid
+                                    userId = loggedInUser?.uuid
                                         ?: throw AmttdException(AmttdException.ErrorCode.LOGIN_REQUIRED),
                                     invitationCode = invitationCodeText?.text.toString()
                                 ).toJsonRequest()
@@ -286,9 +286,9 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                 object : CrudTask<WorkGroupImpl, WorkGroupCrudRequest, WorkGroupCrudResponse>(
                     request = WorkGroupCrudRequest(
                         operation = CrudType.CREATE,
-                        entity = WorkGroupImpl().apply {
+                        entity = WorkGroupImpl(
                             name = titleText.text.toString()
-                        },
+                        ),
                         userId = (activity as? MainActivity)?.loggedInUser?.uuid
                     ),
                     path = "/workgroup",
