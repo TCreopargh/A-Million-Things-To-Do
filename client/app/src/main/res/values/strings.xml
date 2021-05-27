@@ -194,4 +194,5 @@
     <string name="already_in_workgroup">Already In Work Group</string>
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="invalid_group_qr_code">Not a valid group invitation QR code!</string>
+    <string name="action_manage_users">Manage Users</string>
 </resources>

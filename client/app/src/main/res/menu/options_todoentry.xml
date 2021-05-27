@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:id="@+id/actionShareWorkGroup"
-            android:title="@string/action_share_workgroup"
-            android:orderInCategory="100"
-            android:icon="@drawable/ic_baseline_share_24"
+            android:id="@+id/actionManageUsers"
+            android:title="@string/action_manage_users"
+            android:orderInCategory="80"
+            android:icon="@drawable/ic_baseline_group_24"
             app:showAsAction="ifRoom" />
 </menu>

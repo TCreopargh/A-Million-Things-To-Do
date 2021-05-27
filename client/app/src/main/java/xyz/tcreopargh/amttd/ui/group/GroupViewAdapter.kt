@@ -8,7 +8,6 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.reflect.TypeToken
@@ -30,12 +29,12 @@ import xyz.tcreopargh.amttd.util.toJsonRequest
  * @author TCreopargh
  */
 class GroupViewAdapter(
-    var workGroups: MutableList<IWorkGroup>,
-    private val fragment: Fragment?
+    var workGroups: List<IWorkGroup>,
+    private val fragment: GroupViewFragment
 ) : RecyclerView.Adapter<GroupViewAdapter.ViewHolder>() {
 
     val activity
-        get() = fragment?.activity
+        get() = fragment.activity
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val groupNameText: TextView = view.findViewById(R.id.groupNameText)
@@ -58,7 +57,10 @@ class GroupViewAdapter(
             groupCard.setOnClickListener {
                 val fragmentManager = activity?.supportFragmentManager
                 val targetFragment = TodoViewFragment.newInstance().apply {
-                    arguments = bundleOf("groupId" to workGroup.groupId)
+                    arguments = bundleOf(
+                        "groupId" to workGroup.groupId.toString(),
+                        "isLeader" to (workGroup.leader?.uuid?.equals(fragment.loggedInUser?.uuid) == true)
+                    )
                 }
                 fragmentManager?.beginTransaction()?.apply {
                     replace(

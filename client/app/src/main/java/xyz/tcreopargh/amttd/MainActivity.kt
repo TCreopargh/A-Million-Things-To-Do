@@ -8,10 +8,7 @@ import android.os.*
 import android.util.Log
 import android.view.Menu
 import android.view.View
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
@@ -35,8 +32,10 @@ import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.data.login.LoginResult
 import xyz.tcreopargh.amttd.data.user.LocalUser
 import xyz.tcreopargh.amttd.ui.group.GroupViewFragment
+import xyz.tcreopargh.amttd.ui.group_user.GroupUserFragment
 import xyz.tcreopargh.amttd.ui.login.LoginActivity
 import xyz.tcreopargh.amttd.ui.settings.SettingsFragment
+import xyz.tcreopargh.amttd.ui.share.WorkGroupShareActivity
 import xyz.tcreopargh.amttd.ui.todo.TodoViewFragment
 import xyz.tcreopargh.amttd.ui.todoedit.TodoEditFragment
 import xyz.tcreopargh.amttd.util.*
@@ -63,9 +62,12 @@ class MainActivity : BaseActivity() {
     private lateinit var fabLayout: LinearLayout
     private lateinit var fabMenu: FabMenu
 
+    private var invitationCodeExpirationTime = 1
+
     val loggedInUser
         get() = viewModel.getUser()
 
+    @SuppressLint("InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -82,7 +84,7 @@ class MainActivity : BaseActivity() {
             addItem(R.string.join_group, R.drawable.ic_baseline_group_24)
             setOnItemClickListener { i, fabMenuItem ->
                 fabMenu.close()
-                when(i) {
+                when (i) {
                     0 -> {
                         (getCurrentlyDisplayedFragment() as? GroupViewFragment)?.addWorkGroup()
                     }
@@ -100,7 +102,7 @@ class MainActivity : BaseActivity() {
                 }
                 is TodoEditFragment  -> {
                     // Add action
-                    currentFragment.entryId?.let {
+                    currentFragment.viewModel.entryId.value?.let {
                         addComment(it, currentFragment)
                     }
                 }
@@ -110,6 +112,58 @@ class MainActivity : BaseActivity() {
                     if (!fabMenu.isShowing) {
                         fabMenu.show()
                     }
+                }
+                is GroupUserFragment -> {
+                    AlertDialog.Builder(this).apply {
+                        val rootView =
+                            layoutInflater.inflate(R.layout.share_workgroup_dialog, null)?.apply {
+                                val expirationTimeText =
+                                    findViewById<TextView>(R.id.expirationTimeText)
+                                findViewById<SeekBar>(R.id.expirationTimeSeekBar)?.apply {
+                                    val values: IntArray =
+                                        context.resources.getIntArray(R.array.expiration_time_values)
+                                    max = values.size - 1
+                                    setOnSeekBarChangeListener(object :
+                                        SeekBar.OnSeekBarChangeListener {
+                                        @SuppressLint("SetTextI18n")
+                                        override fun onProgressChanged(
+                                            seekBar: SeekBar?,
+                                            progress: Int,
+                                            fromUser: Boolean
+                                        ) {
+                                            invitationCodeExpirationTime = values[progress]
+                                            val quantifier =
+                                                if (invitationCodeExpirationTime <= 1) getString(R.string.day) else getString(
+                                                    R.string.days
+                                                )
+                                            expirationTimeText.text =
+                                                "$invitationCodeExpirationTime$quantifier"
+                                        }
+
+                                        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                                        }
+
+                                        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                                        }
+
+                                    })
+                                }
+                            }
+                        setView(rootView)
+                        setPositiveButton(R.string.confirm) { dialog, _ ->
+                            val intent = Intent(context, WorkGroupShareActivity::class.java).apply {
+                                putExtra(
+                                    "groupId",
+                                    currentFragment.viewModel.groupId.value.toString()
+                                )
+                                putExtra("userId", loggedInUser?.uuid?.toString())
+                                putExtra("expirationTimeInDays", invitationCodeExpirationTime)
+                            }
+                            startActivity(intent)
+                            dialog.dismiss()
+                        }
+                        setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                    }.create().show()
                 }
             }
         }
@@ -240,17 +294,20 @@ class MainActivity : BaseActivity() {
         navView.menu.findItem(R.id.nav_group_view).isChecked = true
     }
 
-    private fun getCurrentlyDisplayedFragment(): Fragment? {
+    fun getCurrentlyDisplayedFragment(): Fragment? {
         val todoEdit =
             supportFragmentManager.findFragmentByTag(TodoEditFragment::class.simpleName) as? TodoEditFragment
         val todoView =
             supportFragmentManager.findFragmentByTag(TodoViewFragment::class.simpleName) as? TodoViewFragment
         val groupView =
             supportFragmentManager.findFragmentByTag(GroupViewFragment::class.simpleName) as? GroupViewFragment
+        val groupUser =
+            supportFragmentManager.findFragmentByTag(GroupUserFragment::class.simpleName) as? GroupUserFragment
         val settings =
             supportFragmentManager.findFragmentByTag(SettingsFragment::class.simpleName) as? SettingsFragment
         return settings?.takeIf { it.isVisible }
             ?: todoEdit?.takeIf { it.isVisible }
+            ?: groupUser?.takeIf { it.isVisible }
             ?: todoView?.takeIf { it.isVisible }
             ?: groupView?.takeIf { it.isVisible }
     }
@@ -308,6 +365,15 @@ class MainActivity : BaseActivity() {
                 fabMenu.close()
                 fab.setImageResource(R.drawable.ic_baseline_add_comment_24)
 
+            }
+            is GroupUserFragment -> {
+                navView.menu.findItem(R.id.nav_group_view).isChecked = true
+                navView.menu.findItem(R.id.nav_settings).isChecked = false
+                if (!fab.isVisible) {
+                    fab.show()
+                }
+                fabMenu.close()
+                fab.setImageResource(R.drawable.ic_baseline_share_24)
             }
             is TodoViewFragment  -> {
                 navView.menu.findItem(R.id.nav_group_view).isChecked = true

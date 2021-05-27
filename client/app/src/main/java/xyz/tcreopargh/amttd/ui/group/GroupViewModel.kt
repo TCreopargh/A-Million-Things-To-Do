@@ -11,26 +11,20 @@ import java.util.*
  */
 class GroupViewModel : ViewModelBase() {
 
-    private val _groups = MutableLiveData<MutableList<IWorkGroup>>().apply {
-        value = mutableListOf()
-    }
-    val groups: LiveData<MutableList<IWorkGroup>> = _groups
+    private val _groups = MutableLiveData<List<IWorkGroup>>(listOf())
+    val groups: LiveData<List<IWorkGroup>> = _groups
 
-    val groupToEdit = MutableLiveData<IWorkGroup?>().apply {
-        value = null
-    }
+    val groupToEdit = MutableLiveData<IWorkGroup?>(null)
 
-    val dirty = MutableLiveData<Boolean>().apply {
-        value = false
-    }
+    val dirty = MutableLiveData(false)
 
     fun findGroupById(uuid: UUID): IWorkGroup? = groups.value?.find { it.groupId == uuid }
 
-    fun setGroup(value: MutableList<IWorkGroup>) {
+    fun setGroup(value: List<IWorkGroup>) {
         _groups.value = value
     }
 
-    fun postGroup(value: MutableList<IWorkGroup>) {
+    fun postGroup(value: List<IWorkGroup>) {
         _groups.postValue(value)
     }
 }

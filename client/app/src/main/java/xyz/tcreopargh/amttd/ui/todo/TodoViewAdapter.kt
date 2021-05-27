@@ -21,7 +21,7 @@ import xyz.tcreopargh.amttd.util.format
  */
 class TodoViewAdapter(
     var todoList: List<ITodoEntry> = mutableListOf(),
-    private val activity: FragmentActivity?
+    private val fragment: TodoViewFragment
 ) : RecyclerView.Adapter<TodoViewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -49,9 +49,9 @@ class TodoViewAdapter(
             todoBarColor.setBackgroundColor(item.status.color)
             todoIconColor.setColorFilter(item.status.color, android.graphics.PorterDuff.Mode.SRC)
             todoCard.setOnClickListener {
-                val fragmentManager = activity?.supportFragmentManager
+                val fragmentManager = fragment.activity?.supportFragmentManager
                 val targetFragment = TodoEditFragment.newInstance().apply {
-                    arguments = bundleOf("entryId" to item.entryId)
+                    arguments = bundleOf("entryId" to item.entryId.toString())
                 }
                 fragmentManager?.beginTransaction()?.apply {
                     replace(

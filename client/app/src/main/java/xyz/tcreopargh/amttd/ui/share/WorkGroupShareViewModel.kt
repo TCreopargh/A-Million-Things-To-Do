@@ -7,7 +7,5 @@ import xyz.tcreopargh.amttd.ui.ViewModelBase
  * @author TCreopargh
  */
 class WorkGroupShareViewModel : ViewModelBase() {
-    val invitationCode = MutableLiveData<String?>().apply {
-        value = null
-    }
+    val invitationCode = MutableLiveData<String?>(null)
 }
