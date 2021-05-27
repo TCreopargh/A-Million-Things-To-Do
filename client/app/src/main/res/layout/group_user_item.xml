@@ -9,7 +9,7 @@
     <com.makeramen.roundedimageview.RoundedImageView
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@mipmap/default_avatar"
             android:id="@+id/userAvatarView"
             app:riv_corner_radius="30dip"
             android:scaleType="fitCenter"
