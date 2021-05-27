@@ -27,16 +27,14 @@ class WorkGroupPresenter : ControllerBase() {
     )
     @ResponseBody
     fun resolveWorkGroups(request: HttpServletRequest, @RequestBody body: WorkGroupViewRequest): WorkGroupViewResponse {
-
         return try {
             verifyUser(request, body.uuid)
             var workGroups: Set<EntityWorkGroup> = setOf()
 
             body.uuid?.let {
                 val user = userService.findByIdOrNull(it)
-                user?.joinedWorkGroups?.run Groups@{
-                    workGroups = this@Groups
-                }
+                workGroups =
+                    user?.joinedWorkGroups ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
             }
             val list = workGroups.stream().map {
                 WorkGroupImpl(it)

@@ -19,13 +19,14 @@ import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.common.bean.request.TodoEntryViewRequest
 import xyz.tcreopargh.amttd.common.bean.response.TodoEntryViewResponse
 import xyz.tcreopargh.amttd.common.data.ITodoEntry
+import xyz.tcreopargh.amttd.common.data.IWorkGroup
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.ui.group_user.GroupUserFragment
 import xyz.tcreopargh.amttd.util.*
 import java.util.*
 
-class TodoViewFragment : FragmentOnMainActivityBase() {
+class TodoViewFragment : FragmentOnMainActivityBase(R.string.todo_view_title) {
 
     private lateinit var todoSwipeContainer: SwipeRefreshLayout
 
@@ -77,8 +78,7 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
         super.onCreate(savedInstanceState)
         val args = arguments?.deepCopy()
         viewModel = ViewModelProvider(this).get(TodoViewViewModel::class.java)
-        viewModel.groupId.value = UUID.fromString(args?.get("groupId")?.toString())
-        viewModel.isLeader.value = args?.getBoolean("isLeader") ?: false
+        viewModel.workGroup.value = args?.getSerializable("workGroup") as? IWorkGroup
         setHasOptionsMenu(true)
     }
 
@@ -96,8 +96,7 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
             R.id.actionManageUsers -> {
                 val targetFragment = GroupUserFragment.newInstance().apply {
                     arguments = bundleOf(
-                        "groupId" to (viewModel?.groupId?.value?.toString() ?: return false),
-                        "isLeader" to viewModel.isLeader.value
+                        "workGroup" to viewModel?.workGroup?.value
                     )
                 }
                 parentFragmentManager.beginTransaction().apply {
@@ -121,7 +120,7 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
         todoSwipeContainer.isRefreshing = true
         Thread {
             val entries: List<ITodoEntry> = try {
-                val uuid = viewModel.groupId.value ?: return@Thread
+                val uuid = viewModel.workGroup.value?.groupId ?: return@Thread
                 val request = okHttpRequest("/todo")
                     .post(
                         TodoEntryViewRequest(groupId = uuid).toJsonRequest()
@@ -141,7 +140,7 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
                 viewModel.exception.postValue(AmttdException.getFromException(e))
                 listOf()
             }
-            viewModel.postEntry(entries.toMutableList())
+            viewModel.postEntry(entries)
         }.start()
     }
 

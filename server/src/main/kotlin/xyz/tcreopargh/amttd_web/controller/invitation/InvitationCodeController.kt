@@ -27,6 +27,9 @@ class InvitationCodeController : ControllerBase() {
         return try {
             verifyWorkgroup(request, body.groupId)
             val invitationCode = generateInvitationCode()
+            if (invitationCodeService.findByCode(invitationCode) != null) {
+                throw AmttdException(AmttdException.ErrorCode.UNIQUE_ID_CONFLICT)
+            }
             invitationCodeService.saveImmediately(
                 EntityInvitationCode(
                     invitationCode = invitationCode,

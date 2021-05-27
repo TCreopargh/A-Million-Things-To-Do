@@ -58,8 +58,7 @@ class GroupViewAdapter(
                 val fragmentManager = activity?.supportFragmentManager
                 val targetFragment = TodoViewFragment.newInstance().apply {
                     arguments = bundleOf(
-                        "groupId" to workGroup.groupId.toString(),
-                        "isLeader" to (workGroup.leader?.uuid?.equals(fragment.loggedInUser?.uuid) == true)
+                        "workGroup" to workGroup
                     )
                 }
                 fragmentManager?.beginTransaction()?.apply {

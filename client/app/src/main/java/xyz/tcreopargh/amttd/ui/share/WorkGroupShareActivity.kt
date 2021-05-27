@@ -19,7 +19,9 @@ import xyz.tcreopargh.amttd.BaseActivity
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.common.bean.request.ShareWorkGroupRequest
 import xyz.tcreopargh.amttd.common.bean.response.ShareWorkGroupResponse
+import xyz.tcreopargh.amttd.common.data.IWorkGroup
 import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.data.user.LocalUser
 import xyz.tcreopargh.amttd.util.getGroupUri
 import xyz.tcreopargh.amttd.util.gson
 import xyz.tcreopargh.amttd.util.okHttpRequest
@@ -85,17 +87,20 @@ class WorkGroupShareActivity : BaseActivity() {
         }
 
         try {
-            val groupId = UUID.fromString(intent.getStringExtra("groupId"))
-            val userId = UUID.fromString(intent.getStringExtra("userId"))
-            val expirationTimeInDays = intent.getIntExtra("expirationTimeInDays", 1)
+            viewModel.workGroup.value = intent.getSerializableExtra("workGroup") as? IWorkGroup
+            viewModel.expirationTimeInDays.value = intent.getIntExtra("expirationTimeInDays", 1)
+            viewModel.loggedInUser.value = intent.getSerializableExtra("loggedInUser") as? LocalUser
             Thread {
                 try {
                     val request = okHttpRequest("/workgroups/share")
                         .post(
                             ShareWorkGroupRequest(
-                                userId = userId,
-                                groupId = groupId,
-                                expirationTimeInDays = expirationTimeInDays
+                                userId = viewModel.loggedInUser.value?.uuid ?: throw AmttdException(
+                                    AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL
+                                ),
+                                groupId = viewModel.workGroup.value?.groupId
+                                    ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL),
+                                expirationTimeInDays = viewModel.expirationTimeInDays.value
                             ).toJsonRequest()
                         )
                         .build()

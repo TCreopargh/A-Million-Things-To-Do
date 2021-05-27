@@ -32,7 +32,7 @@ import xyz.tcreopargh.amttd.util.format
 import xyz.tcreopargh.amttd.util.setColor
 import java.util.*
 
-class TodoEditFragment : FragmentOnMainActivityBase() {
+class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
 
     companion object {
         fun newInstance() = TodoEditFragment()

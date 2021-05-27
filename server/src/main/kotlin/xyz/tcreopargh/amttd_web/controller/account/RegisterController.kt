@@ -9,6 +9,7 @@ import xyz.tcreopargh.amttd_web.common.bean.request.RegisterRequest
 import xyz.tcreopargh.amttd_web.common.bean.response.LoginResponse
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException.ErrorCode
+import xyz.tcreopargh.amttd_web.component.AuthenticationInterceptor
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
@@ -16,6 +17,7 @@ import xyz.tcreopargh.amttd_web.util.logger
 import xyz.tcreopargh.amttd_web.util.nextString
 import xyz.tcreopargh.amttd_web.util.random
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @RestController
 class RegisterController : ControllerBase() {
@@ -25,8 +27,13 @@ class RegisterController : ControllerBase() {
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
     @ResponseBody
-    fun resolveRegister(request: HttpServletRequest, @RequestBody registerBody: RegisterRequest): LoginResponse {
+    fun resolveRegister(
+        request: HttpServletRequest,
+        httpResponse: HttpServletResponse,
+        @RequestBody registerBody: RegisterRequest
+    ): LoginResponse {
         try {
+            AuthenticationInterceptor.resetSession(request, httpResponse)
             val password = registerBody.password
             val email = registerBody.email?.lowercase()
             var username = registerBody.username

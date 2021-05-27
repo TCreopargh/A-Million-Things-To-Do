@@ -9,11 +9,13 @@ import xyz.tcreopargh.amttd_web.common.bean.request.LoginRequest
 import xyz.tcreopargh.amttd_web.common.bean.response.LoginResponse
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException.ErrorCode
+import xyz.tcreopargh.amttd_web.component.AuthenticationInterceptor
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.util.logger
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @RestController
 class LoginController : ControllerBase() {
@@ -23,9 +25,10 @@ class LoginController : ControllerBase() {
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
     @ResponseBody
-    fun resolveLogin(request: HttpServletRequest, @RequestBody loginBody: LoginRequest): LoginResponse {
+    fun resolveLogin(request: HttpServletRequest, httpResponse: HttpServletResponse, @RequestBody loginBody: LoginRequest): LoginResponse {
         val response: LoginResponse
         try {
+            AuthenticationInterceptor.resetSession(request, httpResponse)
             val password = loginBody.password
             val email = loginBody.email?.lowercase()
             val token = loginBody.token

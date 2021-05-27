@@ -144,6 +144,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onStart() {
         super.onStart()
         (activity as? MainActivity)?.onFragmentStart(this)
+        activity?.setTitle(R.string.settings_title)
     }
 
     override fun onStop() {

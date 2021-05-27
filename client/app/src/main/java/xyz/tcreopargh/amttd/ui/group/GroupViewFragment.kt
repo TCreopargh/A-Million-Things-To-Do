@@ -42,7 +42,7 @@ import java.util.*
 /**
  * @author TCreopargh
  */
-class GroupViewFragment : FragmentOnMainActivityBase() {
+class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title) {
 
     companion object {
         fun newInstance() = GroupViewFragment()
@@ -334,7 +334,7 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
                 viewModel.exception.postValue(AmttdException.getFromException(e))
                 listOf()
             }
-            viewModel.postGroup(workGroups.toMutableList())
+            viewModel.postGroup(workGroups)
         }.start()
     }
 

@@ -195,4 +195,19 @@
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="invalid_group_qr_code">Not a valid group invitation QR code!</string>
     <string name="action_manage_users">Manage Users</string>
+    <string name="more">More</string>
+    <string name="you">You</string>
+    <string name="action_kick_user">Kick User</string>
+    <string name="action_transfer_leader">Transfer Leadership</string>
+    <string name="kick_user_confirm">Do you really want to kick %s from this work group?</string>
+    <string name="transfer_leader_confirm">Do you really want to transfer the leadership of this work group to %s?</string>
+    <string name="cant_kick_yourself">You can\'t do anything to yourself!</string>
+    <string name="no_permission_to_manage_users">You don\'t have the permission to manage users. Only work group leaders can do it.</string>
+    <string name="leader">Leader</string>
+    <string name="you_leader">You, Leader</string>
+    <string name="manage_users_title">Manage Users</string>
+    <string name="work_groups_title">Work Groups</string>
+    <string name="todo_edit_title">View Todo Entry</string>
+    <string name="todo_view_title">Todo Entries</string>
+    <string name="settings_title">Settings</string>
 </resources>

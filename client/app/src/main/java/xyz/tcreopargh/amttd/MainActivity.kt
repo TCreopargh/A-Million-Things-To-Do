@@ -153,16 +153,16 @@ class MainActivity : BaseActivity() {
                         setPositiveButton(R.string.confirm) { dialog, _ ->
                             val intent = Intent(context, WorkGroupShareActivity::class.java).apply {
                                 putExtra(
-                                    "groupId",
-                                    currentFragment.viewModel.groupId.value.toString()
+                                    "workGroup",
+                                    currentFragment.viewModel.workGroup.value
                                 )
-                                putExtra("userId", loggedInUser?.uuid?.toString())
+                                putExtra("loggedInUser", loggedInUser)
                                 putExtra("expirationTimeInDays", invitationCodeExpirationTime)
                             }
                             startActivity(intent)
                             dialog.dismiss()
                         }
-                        setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                        setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
                     }.create().show()
                 }
             }
