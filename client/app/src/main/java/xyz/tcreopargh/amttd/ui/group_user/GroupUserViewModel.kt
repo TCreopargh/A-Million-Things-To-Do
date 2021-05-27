@@ -1,6 +1,5 @@
 package xyz.tcreopargh.amttd.ui.group_user
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import xyz.tcreopargh.amttd.common.data.IUser
 import xyz.tcreopargh.amttd.ui.ViewModelBase

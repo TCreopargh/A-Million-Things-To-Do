@@ -259,7 +259,8 @@ class GroupViewFragment : FragmentOnMainActivityBase() {
             if (result.contents != null && joinWorkGroupDialog?.isShowing == true) {
                 val content = result.contents
                 if (!isGroupUri(content)) {
-                    Toast.makeText(context, R.string.invalid_group_qr_code, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.invalid_group_qr_code, Toast.LENGTH_SHORT)
+                        .show()
                     return
                 }
                 val code = getGroupInvitationCode(content)

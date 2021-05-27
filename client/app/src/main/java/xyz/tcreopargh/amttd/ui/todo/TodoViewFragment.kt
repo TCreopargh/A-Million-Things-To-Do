@@ -90,7 +90,8 @@ class TodoViewFragment : FragmentOnMainActivityBase() {
     @SuppressLint("InflateParams")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // This is a bit hacky
-        val viewModel = (mainActivity.getCurrentlyDisplayedFragment() as? TodoViewFragment)?.viewModel
+        val viewModel =
+            (mainActivity.getCurrentlyDisplayedFragment() as? TodoViewFragment)?.viewModel
         when (item.itemId) {
             R.id.actionManageUsers -> {
                 val targetFragment = GroupUserFragment.newInstance().apply {

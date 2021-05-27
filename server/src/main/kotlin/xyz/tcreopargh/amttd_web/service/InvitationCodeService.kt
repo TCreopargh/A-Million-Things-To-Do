@@ -3,12 +3,9 @@ package xyz.tcreopargh.amttd_web.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityInvitationCode
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.repository.InvitationCodeRepository
-import xyz.tcreopargh.amttd_web.repository.TokenRepository
-import java.util.*
 
 @Service
 class InvitationCodeService {

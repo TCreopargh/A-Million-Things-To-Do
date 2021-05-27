@@ -9,10 +9,10 @@ import xyz.tcreopargh.amttd.MainActivity
 abstract class FragmentOnMainActivityBase : Fragment() {
 
     val mainActivity
-    get() = activity as MainActivity
+        get() = activity as MainActivity
 
     val loggedInUser
-    get() = mainActivity.loggedInUser
+        get() = mainActivity.loggedInUser
 
     override fun onStart() {
         super.onStart()

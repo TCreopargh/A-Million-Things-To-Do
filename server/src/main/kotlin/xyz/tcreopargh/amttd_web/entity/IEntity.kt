@@ -5,4 +5,4 @@ import java.io.Serializable
 /**
  * A database entity.
  */
-interface IEntity: Serializable
+interface IEntity : Serializable

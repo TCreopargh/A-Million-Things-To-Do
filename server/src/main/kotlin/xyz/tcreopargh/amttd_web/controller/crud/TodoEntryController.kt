@@ -30,7 +30,7 @@ class TodoEntryController : ControllerBase() {
         @RequestBody body: TodoEntryCrudRequest
     ): TodoEntryCrudResponse {
         return try {
-            if(body.operation != CrudType.CREATE) {
+            if (body.operation != CrudType.CREATE) {
                 verifyTodoEntry(request, body.entity?.entryId)
             }
             when (body.operation) {

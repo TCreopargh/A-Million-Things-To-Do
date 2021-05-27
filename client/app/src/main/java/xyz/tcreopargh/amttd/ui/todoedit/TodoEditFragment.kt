@@ -50,7 +50,7 @@ class TodoEditFragment : FragmentOnMainActivityBase() {
     ): View? {
         val view = inflater.inflate(R.layout.todo_edit_fragment, container, false)
         viewModel.entry.observe(viewLifecycleOwner) {
-            if(it != null) {
+            if (it != null) {
                 initView(view, it)
                 todoEditSwipeContainer.isRefreshing = false
             }

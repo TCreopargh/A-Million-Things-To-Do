@@ -31,7 +31,7 @@ class WorkGroupController : ControllerBase() {
         body: WorkGroupCrudRequest
     ): WorkGroupCrudResponse {
         return try {
-            if(body.operation != CrudType.CREATE) {
+            if (body.operation != CrudType.CREATE) {
                 verifyWorkgroup(request, body.entity?.groupId)
             }
             val id =

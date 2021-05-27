@@ -71,7 +71,7 @@ class InvitationCodeController : ControllerBase() {
             val user = userService.findByIdOrNull(
                 body.userId ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
             ) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
-            if(workGroup.users.contains(user)) {
+            if (workGroup.users.contains(user)) {
                 throw AmttdException(AmttdException.ErrorCode.ALREADY_IN_WORKGROUP)
             }
             workGroup.users.add(user)

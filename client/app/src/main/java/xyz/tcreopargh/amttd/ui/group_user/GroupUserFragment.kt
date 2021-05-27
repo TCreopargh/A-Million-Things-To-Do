@@ -1,7 +1,6 @@
 package xyz.tcreopargh.amttd.ui.group_user
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import java.util.*
@@ -20,6 +18,7 @@ class GroupUserFragment : FragmentOnMainActivityBase() {
     companion object {
         fun newInstance() = GroupUserFragment()
     }
+
     lateinit var viewModel: GroupUserViewModel
     private lateinit var swipeContainer: SwipeRefreshLayout
 
