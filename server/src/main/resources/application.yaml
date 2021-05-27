@@ -23,4 +23,8 @@ spring:
 logging:
   level:
     root: INFO
+server:
+  servlet:
+    session:
+      timeout: 3600s
 
