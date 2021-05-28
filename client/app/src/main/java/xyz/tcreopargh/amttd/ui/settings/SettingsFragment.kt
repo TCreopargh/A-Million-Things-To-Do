@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.EditTextPreference
+import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.gson.reflect.TypeToken
 import xyz.tcreopargh.amttd.AMTTD
@@ -21,22 +23,25 @@ import xyz.tcreopargh.amttd.util.*
 
 class SettingsFragment : PreferenceFragmentCompat() {
     companion object {
+        const val PREF_FILE_NAME = "app_settings"
         fun newInstance() = SettingsFragment()
     }
 
     private var usernamePref: EditTextPreference? = null
     private var emailPref: EditTextPreference? = null
     private var passwordPref: EditTextPreference? = null
+    private var nightModePref: ListPreference? = null
 
     private lateinit var viewModel: SettingsViewModel
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        preferenceManager.sharedPreferencesName = PREF_FILE_NAME
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
         usernamePref = preferenceScreen.findPreference("username")
         emailPref = preferenceScreen.findPreference("email")
         passwordPref = preferenceScreen.findPreference("password")
-
+        nightModePref = preferenceScreen.findPreference("night_mode")
     }
 
     override fun onCreateView(
@@ -136,6 +141,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 ).show()
                 viewModel.exception.value = null
             }
+        }
+
+        @Suppress("UsePropertyAccessSyntax", "UNUSED_ANONYMOUS_PARAMETER")
+        nightModePref?.setOnPreferenceChangeListener OnPrefChanged@{ preference, newValue ->
+            when (newValue.toString().toIntOrNull()) {
+                1    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                2    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                else -> setNightModeAutomatically()
+            }
+            return@OnPrefChanged true
         }
 
         return view

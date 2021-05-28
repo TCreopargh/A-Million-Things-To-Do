@@ -36,10 +36,13 @@
             app:title="@string/general_settings"
             app:iconSpaceReserved="false">
 
-        <SwitchPreferenceCompat
+        <ListPreference
                 app:key="night_mode"
                 app:summary="@string/dark_ui"
+                app:defaultValue="0"
                 app:iconSpaceReserved="false"
+                app:entries="@array/night_mode_entries"
+                app:entryValues="@array/night_mode_values"
                 app:title="@string/night_mode" />
 
         <ListPreference

@@ -11,11 +11,11 @@
     <color name="primary_dark">#fff50057</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="color_contrast">#FF000000</color>
-    <color name="color_bg">#FFFFFFFF</color>
-    <color name="card_bg">#FFFEFEFE</color>
+    <color name="color_contrast">#FFFFFFFF</color>
+    <color name="color_bg">#FF000000</color>
+    <color name="card_bg">#FF313131</color>
     <color name="divider">#FF9E9E9E</color>
-    <color name="app_bg">#FFF3F3F3</color>
+    <color name="app_bg">#FF1C1C1C</color>
     <color name="grey">#FF9E9E9E</color>
     <color name="dark">#424242</color>
 </resources>

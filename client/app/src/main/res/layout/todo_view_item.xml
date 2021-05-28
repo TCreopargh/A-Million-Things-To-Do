@@ -7,15 +7,15 @@
         android:clickable="true"
         app:cardElevation="3dp"
         app:cardCornerRadius="3dp"
-        android:layout_marginHorizontal="4dp"
-        android:layout_marginVertical="4dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="8dp"
         app:cardBackgroundColor="@android:color/transparent"
         android:layout_height="wrap_content">
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="@color/card_bg"
             android:orientation="horizontal">
 
         <View

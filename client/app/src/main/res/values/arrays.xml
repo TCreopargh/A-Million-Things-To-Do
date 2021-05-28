@@ -12,6 +12,18 @@
         <item>zh_cn</item>
     </string-array>
 
+    <string-array name="night_mode_entries">
+        <item>@string/auto</item>
+        <item>@string/disable</item>
+        <item>@string/always_night_mode</item>
+    </string-array>
+
+    <string-array name="night_mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <integer-array name="expiration_time_values">
         <item>1</item>
         <item>2</item>
@@ -26,4 +38,7 @@
         <item>180</item>
         <item>360</item>
     </integer-array>
+    <string name="always_night_mode">Always Night Mode</string>
+    <string name="disable">Disable</string>
+    <string name="auto">Auto</string>
 </resources>

@@ -160,7 +160,7 @@ class AmttdException(val errorCode: ErrorCode, val nestedException: Exception? =
         return context.getString(R.string.error_code_message,
             errorCode.value.toString(),
             errorCode.localizedString?.let { context.getString(it) } ?: errorCode.toString(),
-            nestedException?.let { " " + nestedException.message } ?: ""
+            nestedException?.let { " - " + nestedException.message } ?: ""
         )
     }
 

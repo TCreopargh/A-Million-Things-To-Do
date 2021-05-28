@@ -14,6 +14,7 @@ import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -157,4 +158,11 @@ fun doRestart(c: Activity) {
     c.finish()
     c.startActivity(Intent(c, c.javaClass))
     c.finishAffinity()
+}
+
+fun setNightModeAutomatically() {
+    when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
+        in 7..18 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        else     -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    }
 }
