@@ -70,6 +70,14 @@ class GroupUserFragment : FragmentOnMainActivityBase(R.string.manage_users_title
                 viewModel.exception.value = null
             }
         }
+
+        viewModel.dirty.observe(viewLifecycleOwner) {
+            if (it) {
+                adapter.workGroup = viewModel.workGroup.value
+                initializeItems()
+                viewModel.dirty.value = false
+            }
+        }
         initializeItems()
         return view
     }
@@ -96,7 +104,6 @@ class GroupUserFragment : FragmentOnMainActivityBase(R.string.manage_users_title
                     ).build()
                 val response = AMTTD.okHttpClient.newCall(request).execute()
                 val body = response.body?.string()
-                // Don't simplify this
                 val result: GroupUserViewResponse =
                     gson.fromJson(body, object : TypeToken<GroupUserViewResponse>() {}.type)
                 if (result.success != true) {

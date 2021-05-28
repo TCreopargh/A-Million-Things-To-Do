@@ -37,7 +37,7 @@ data class EntityWorkGroup(
     var entries: List<EntityTodoEntry> = listOf(),
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_uuid", columnDefinition = "varchar(64)", updatable = false)
+    @JoinColumn(name = "user_uuid", columnDefinition = "varchar(64)", updatable = true)
     @ExcludeToString
     override var leader: EntityUser? = null
 
