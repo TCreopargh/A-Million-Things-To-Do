@@ -1,7 +1,13 @@
 spring:
   datasource:
     hikari:
-      max-lifetime: 600000
+      connection-timeout: 60000
+      validation-timeout: 3000
+      login-timeout: 5
+      max-lifetime: 60000
+      maximum-pool-size: 10
+      minimum-idle: 10
+      read-only: false
     dbcp2:
       initial-size: 2
       max-wait-millis: 60000
