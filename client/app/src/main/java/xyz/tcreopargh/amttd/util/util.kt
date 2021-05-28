@@ -7,6 +7,8 @@
 package xyz.tcreopargh.amttd.util
 
 import android.app.Activity
+import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.text.*
 import android.text.style.ForegroundColorSpan
@@ -24,6 +26,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import xyz.tcreopargh.amttd.AMTTD
+import xyz.tcreopargh.amttd.ui.settings.SettingsFragment
 import java.net.URL
 import java.text.DateFormat
 import java.util.*
@@ -164,5 +167,19 @@ fun setNightModeAutomatically() {
     when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
         in 7..18 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         else     -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    }
+}
+
+fun setNightModeAccordingToPref(context: Context) {
+    context.getSharedPreferences(SettingsFragment.PREF_FILE_NAME, Application.MODE_PRIVATE)
+        .getString(
+            "night_mode",
+            "0"
+        )?.toIntOrNull().let {
+        when (it) {
+            1    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            2    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else -> setNightModeAutomatically()
+        }
     }
 }

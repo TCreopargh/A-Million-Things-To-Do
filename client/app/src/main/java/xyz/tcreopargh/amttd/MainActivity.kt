@@ -10,7 +10,6 @@ import android.view.Menu
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout

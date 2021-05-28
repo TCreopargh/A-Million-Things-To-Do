@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import okhttp3.OkHttpClient
 import xyz.tcreopargh.amttd.ui.settings.SettingsFragment
+import xyz.tcreopargh.amttd.util.setNightModeAccordingToPref
 import xyz.tcreopargh.amttd.util.setNightModeAutomatically
 import java.util.concurrent.TimeUnit
 import android.app.Application as App
@@ -38,16 +39,6 @@ class AMTTD : App() {
             .readTimeout(TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
             .build()
-
-        getSharedPreferences(SettingsFragment.PREF_FILE_NAME, MODE_PRIVATE).getString(
-            "night_mode",
-            "0"
-        )?.toIntOrNull().let {
-            when (it) {
-                1    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                2    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                else -> setNightModeAutomatically()
-            }
-        }
+        setNightModeAccordingToPref(context)
     }
 }
