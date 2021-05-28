@@ -113,7 +113,7 @@ class GroupUserAdapter(
                     .inflate(R.menu.options_group_user_operations, menu)
                 setOnMenuItemClickListener {
                     return@setOnMenuItemClickListener when (it.itemId) {
-                        R.id.actionKickUser -> {
+                        R.id.actionKickUser       -> {
                             AlertDialog.Builder(context).apply {
                                 setTitle(R.string.action_kick_user)
                                 setMessage(
@@ -159,7 +159,7 @@ class GroupUserAdapter(
                             }.create().show()
                             true
                         }
-                        else -> false
+                        else                      -> false
                     }
                 }
                 show()

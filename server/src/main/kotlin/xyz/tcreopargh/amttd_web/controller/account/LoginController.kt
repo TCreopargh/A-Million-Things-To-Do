@@ -25,7 +25,11 @@ class LoginController : ControllerBase() {
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
     @ResponseBody
-    fun resolveLogin(request: HttpServletRequest, httpResponse: HttpServletResponse, @RequestBody loginBody: LoginRequest): LoginResponse {
+    fun resolveLogin(
+        request: HttpServletRequest,
+        httpResponse: HttpServletResponse,
+        @RequestBody loginBody: LoginRequest
+    ): LoginResponse {
         val response: LoginResponse
         try {
             AuthenticationInterceptor.resetSession(request, httpResponse)

@@ -3,11 +3,8 @@ package xyz.tcreopargh.amttd
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatDelegate
 import okhttp3.OkHttpClient
-import xyz.tcreopargh.amttd.ui.settings.SettingsFragment
 import xyz.tcreopargh.amttd.util.setNightModeAccordingToPref
-import xyz.tcreopargh.amttd.util.setNightModeAutomatically
 import java.util.concurrent.TimeUnit
 import android.app.Application as App
 

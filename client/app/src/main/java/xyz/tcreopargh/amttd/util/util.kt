@@ -176,10 +176,10 @@ fun setNightModeAccordingToPref(context: Context) {
             "night_mode",
             "0"
         )?.toIntOrNull().let {
-        when (it) {
-            1    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            2    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            else -> setNightModeAutomatically()
+            when (it) {
+                1    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                2    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                else -> setNightModeAutomatically()
+            }
         }
-    }
 }
