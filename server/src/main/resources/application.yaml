@@ -1,5 +1,7 @@
 spring:
   datasource:
+    hikari:
+      max-lifetime: 600000
     dbcp2:
       initial-size: 2
       max-wait-millis: 60000
@@ -17,6 +19,7 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
+    open-in-view: true
   mvc:
     converters:
       preferred-json-mapper: gson
