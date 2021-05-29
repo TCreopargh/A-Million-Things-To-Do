@@ -9,6 +9,7 @@ import xyz.tcreopargh.amttd_web.annotation.LoginRequired
 import xyz.tcreopargh.amttd_web.common.bean.request.ActionCrudRequest
 import xyz.tcreopargh.amttd_web.common.bean.response.ActionCrudResponse
 import xyz.tcreopargh.amttd_web.common.data.CrudType
+import xyz.tcreopargh.amttd_web.common.data.TodoStatus
 import xyz.tcreopargh.amttd_web.common.data.action.ActionDeadlineChanged
 import xyz.tcreopargh.amttd_web.common.data.action.ActionGeneric
 import xyz.tcreopargh.amttd_web.common.data.action.ActionType
@@ -62,6 +63,15 @@ class ActionController : ControllerBase() {
                                 ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                             task.completed = true
                             taskService.saveImmediately(task)
+                            if (entry.tasks.none { !it.completed }) {
+                                entry.status = TodoStatus.COMPLETED
+                                todoEntryService.saveImmediately(entry)
+                            } else if (entry.tasks.size > 1
+                                && entry.tasks.filter { it.completed }.size in 1 until entry.tasks.size
+                            ) {
+                                entry.status = TodoStatus.IN_PROGRESS
+                                todoEntryService.saveImmediately(entry)
+                            }
                             EntityAction(
                                 actionId = UUID.randomUUID(),
                                 user = user,
@@ -78,6 +88,15 @@ class ActionController : ControllerBase() {
                                 ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                             task.completed = false
                             taskService.saveImmediately(task)
+                            if (entry.tasks.none { it.completed }) {
+                                entry.status = TodoStatus.NOT_STARTED
+                                todoEntryService.saveImmediately(entry)
+                            } else if (entry.tasks.size > 1
+                                && entry.tasks.filter { it.completed }.size in 1 until entry.tasks.size
+                            ) {
+                                entry.status = TodoStatus.IN_PROGRESS
+                                todoEntryService.saveImmediately(entry)
+                            }
                             EntityAction(
                                 actionId = UUID.randomUUID(),
                                 user = user,
