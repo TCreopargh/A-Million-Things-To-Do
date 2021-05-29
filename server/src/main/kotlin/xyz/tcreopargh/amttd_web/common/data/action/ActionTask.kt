@@ -54,11 +54,16 @@ class ActionTaskRemoved(
     override val actionType: ActionType = ActionType.TASK_REMOVED
 }
 
+/**
+ * Note: the new task name is actually set to [task.name] instead of the newValue
+ */
 class ActionTaskEdited(
     override val actionId: UUID,
     override val user: UserImpl?,
     override val timeCreated: Calendar,
-    override val task: TaskImpl
+    override val task: TaskImpl,
+    override val oldValue: String,
+    override val newValue: String
 ) : IActionTask {
 
     override val actionType: ActionType = ActionType.TASK_EDITED

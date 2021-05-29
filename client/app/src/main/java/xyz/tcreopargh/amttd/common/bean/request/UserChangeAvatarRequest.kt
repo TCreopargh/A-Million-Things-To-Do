@@ -1,4 +1,4 @@
-package xyz.tcreopargh.amttd_web.common.bean.request
+package xyz.tcreopargh.amttd.common.bean.request
 
 import java.util.*
 

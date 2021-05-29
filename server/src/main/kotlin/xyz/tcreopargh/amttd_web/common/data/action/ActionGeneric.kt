@@ -78,7 +78,9 @@ data class ActionGeneric(
                 actionId = actionId,
                 user = user,
                 timeCreated = timeCreated,
-                task = task ?: TaskImpl()
+                task = task ?: TaskImpl(),
+                oldValue = oldValue ?: "",
+                newValue = newValue ?: ""
             )
             ActionType.DEADLINE_CHANGED    -> ActionDeadlineChanged(
                 actionId = actionId,

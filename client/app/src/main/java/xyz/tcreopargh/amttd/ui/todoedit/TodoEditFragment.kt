@@ -395,6 +395,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
             @SuppressLint("InflateParams")
             val viewRoot = layoutInflater.inflate(R.layout.task_edit_layout, null)
             val titleText = viewRoot.findViewById<EditText>(R.id.taskEditTitleText)
+            val oldName = task?.name
             task?.name?.let {
                 titleText.setText(it)
             }
@@ -431,6 +432,8 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                             operation = CrudType.CREATE,
                             entity = ActionGeneric(
                                 actionType = ActionType.TASK_EDITED,
+                                oldValue = oldName,
+                                newValue = task?.name,
                                 task = TaskImpl(
                                     task
                                         ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)

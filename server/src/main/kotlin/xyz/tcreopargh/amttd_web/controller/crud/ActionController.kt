@@ -88,7 +88,7 @@ class ActionController : ControllerBase() {
                             )
                         }
                         ActionType.TASK_ADDED          -> {
-                            val taskImpl = entity?.task ?: throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
+                            val taskImpl = entity.task ?: throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
                             val task = EntityTask(
                                 taskId = UUID.randomUUID(),
                                 name = taskImpl.name,
@@ -125,6 +125,7 @@ class ActionController : ControllerBase() {
                                 ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                             val task = taskService.findByIdOrNull(taskId)
                                 ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
+                            val oldName = task.name
                             task.apply {
                                 name = entity.task?.name
                                     ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
@@ -137,7 +138,9 @@ class ActionController : ControllerBase() {
                                 timeCreated = Calendar.getInstance(),
                                 actionType = ActionType.TASK_EDITED,
                                 task = task,
-                                parent = entry
+                                parent = entry,
+                                oldValue = oldName,
+                                newValue = task.name
                             )
                         }
                         ActionType.TITLE_CHANGED       -> {
