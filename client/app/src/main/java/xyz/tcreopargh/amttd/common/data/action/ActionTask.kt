@@ -89,16 +89,21 @@ class ActionTaskRemoved(
     override fun getImageRes(): Int = R.drawable.ic_baseline_delete_outline_24
 }
 
+/**
+ * Note: the new task name is actually set to [task.name] instead of the newValue
+ */
 class ActionTaskEdited(
     override val actionId: UUID,
     override val user: UserImpl?,
     override val timeCreated: Calendar,
-    override val task: TaskImpl
+    override val task: TaskImpl,
+    override val oldValue: String,
+    override val newValue: String
 ) : IActionTask {
     override fun getActionText(): Spannable {
         return SpannableString(user?.username + " ")
             .setColor(getColor(R.color.primary)) +
-                SpannableString(i18n(R.string.action_task_edited) + " " + task.name)
+                SpannableString(i18n(R.string.action_task_edited, oldValue, newValue))
     }
 
     override val actionType: ActionType = ActionType.TASK_EDITED
