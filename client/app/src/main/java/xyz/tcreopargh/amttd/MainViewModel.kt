@@ -9,6 +9,8 @@ import xyz.tcreopargh.amttd.ui.ViewModelBase
 
 /**
  * @author TCreopargh
+ *
+ * Use [androidx.lifecycle.ViewModel]s to handle async operations and persistent data.
  */
 class MainViewModel : ViewModelBase() {
     private var _loginRepo = MutableLiveData<LoginRepository>()

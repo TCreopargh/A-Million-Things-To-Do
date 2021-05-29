@@ -40,9 +40,9 @@ class LoginActivity : BaseActivity() {
 
         setContentView(R.layout.activity_login)
 
-        email = findViewById<EditText>(R.id.email)
-        password = findViewById<EditText>(R.id.password)
-        loading = findViewById<ProgressBar>(R.id.loading)
+        email = findViewById(R.id.email)
+        password = findViewById(R.id.password)
+        loading = findViewById(R.id.loading)
 
         val login = findViewById<Button>(R.id.login)
         val register = findViewById<Button>(R.id.register)

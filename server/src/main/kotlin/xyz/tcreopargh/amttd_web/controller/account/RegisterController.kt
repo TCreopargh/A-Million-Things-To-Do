@@ -19,6 +19,11 @@ import xyz.tcreopargh.amttd_web.util.random
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * @author TCreopargh
+ *
+ * Handle user register.
+ */
 @RestController
 class RegisterController : ControllerBase() {
     @PostMapping(

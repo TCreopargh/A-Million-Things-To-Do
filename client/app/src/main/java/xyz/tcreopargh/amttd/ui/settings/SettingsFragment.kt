@@ -180,7 +180,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 if (enableJsonDebugging) {
                     Log.i(AMTTD.logTag, body)
                 }
-                // Don't simplify this
                 val result: SimpleResponse =
                     gson.fromJson(
                         body,

@@ -14,6 +14,8 @@ import java.net.URL
  *
  * A Task to send CRUD data to the server.
  *
+ * To use this, extend this class and override the methods.
+ *
  * Note: The callback methods are **NOT** executed in the main thread.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
@@ -49,7 +51,6 @@ abstract class CrudTask<Entity, out Request : ICrudRequest<Entity>, in Response 
             if (enableJsonDebugging) {
                 Log.i(AMTTD.logTag, body)
             }
-            // Don't simplify this
             val result: Response =
                 gson.fromJson(
                     body,

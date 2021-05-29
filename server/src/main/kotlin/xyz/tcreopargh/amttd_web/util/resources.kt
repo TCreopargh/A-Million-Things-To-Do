@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory
 import xyz.tcreopargh.amttd_web.AMTTD
 import kotlin.random.Random
 
-
 val gson: Gson = Gson()
 val random: Random = Random.Default
 

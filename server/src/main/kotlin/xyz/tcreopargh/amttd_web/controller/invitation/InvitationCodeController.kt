@@ -13,6 +13,11 @@ import xyz.tcreopargh.amttd_web.entity.EntityInvitationCode
 import xyz.tcreopargh.amttd_web.util.generateInvitationCode
 import javax.servlet.http.HttpServletRequest
 
+/**
+ * @author TCreopargh
+ *
+ * handle invitation codes.
+ */
 @RestController
 @LoginRequired
 @RequestMapping("/workgroups")

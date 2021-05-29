@@ -8,6 +8,16 @@ import xyz.tcreopargh.amttd_web.common.data.IWorkGroup
 import java.util.*
 import javax.persistence.*
 
+/**
+ * @author TCreopargh
+ *
+ * An workgroup is where a group of users co-operate on a list of to-do entries.
+ *
+ * Workgroup members can invite other users to join.
+ *
+ * A workgroup maintains a list of to-do entries.
+ * You must be a member of the workgroup to view or edit any of the to-do entries in it.
+ */
 @Entity
 @Table(name = "work_group")
 data class EntityWorkGroup(

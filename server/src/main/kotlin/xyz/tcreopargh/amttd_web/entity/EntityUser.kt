@@ -5,7 +5,15 @@ import xyz.tcreopargh.amttd_web.common.data.IUser
 import java.util.*
 import javax.persistence.*
 
-
+/**
+ * @author TCreopargh
+ *
+ * A plain, old user.
+ *
+ * UUID is used to uniquely identify an user, but Email is also unique.
+ *
+ * User names can duplicate across users.
+ */
 @Entity
 @Table(
     name = "user", indexes = [

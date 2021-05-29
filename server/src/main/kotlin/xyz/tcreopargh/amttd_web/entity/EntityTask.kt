@@ -7,6 +7,15 @@ import xyz.tcreopargh.amttd_web.common.data.ITask
 import java.util.*
 import javax.persistence.*
 
+/**
+ * @author TCreopargh
+ *
+ * A task is a "sub-item" of a to-do entry.
+ *
+ * A to-do entry is completed once all of its tasks are completed.
+ *
+ * An to-do entry should generate one task when created, which is the name of itself.
+ */
 @Entity
 @Table(name = "task")
 data class EntityTask(

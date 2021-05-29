@@ -13,6 +13,14 @@ import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.util.logger
 import javax.servlet.http.HttpServletRequest
 
+/**
+ * @author TCreopargh
+ *
+ * This class handles user profile changes.
+ *
+ * Not to be confused with [xyz.tcreopargh.amttd_web.controller.workgroup.WorkGroupUserController]
+ * which manages users in a workgroup.
+ */
 @RestController
 @LoginRequired
 class UserController : ControllerBase() {

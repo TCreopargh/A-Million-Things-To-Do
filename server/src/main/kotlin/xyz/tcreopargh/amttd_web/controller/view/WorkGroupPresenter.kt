@@ -16,6 +16,11 @@ import xyz.tcreopargh.amttd_web.util.logger
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 
+/**
+ * @author TCreopargh
+ *
+ * Present a list of workgroups associated with the user.
+ */
 @RestController
 @LoginRequired
 class WorkGroupPresenter : ControllerBase() {

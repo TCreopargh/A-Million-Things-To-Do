@@ -17,6 +17,13 @@ import xyz.tcreopargh.amttd_web.util.logger
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * @author TCreopargh
+ *
+ * Handle user login.
+ *
+ * Login can be performed in 2 ways: email+password or uuid+token
+ */
 @RestController
 class LoginController : ControllerBase() {
     @PostMapping(

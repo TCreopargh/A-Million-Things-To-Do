@@ -13,7 +13,3 @@ data class LocalUser(
     override var email: String,
     val authToken: String?
 ) : IUser, Serializable
-
-/**
- * Any user that is not the currently logged in user
- */

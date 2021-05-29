@@ -11,7 +11,9 @@ import java.net.HttpURLConnection
 
 /**
  * @author TCreopargh
+ *
  * A task designed explicitly for loading user avatars
+ *
  * onSuccess and onFailure callbacks are run at the calling thread.
  */
 abstract class LoadUserAvatarTask(user: IUser, lifecycleOwner: LifecycleOwner) :

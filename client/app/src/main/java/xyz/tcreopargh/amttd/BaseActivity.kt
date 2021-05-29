@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 
 /**
  * @author TCreopargh
+ *
+ * All activities on this app should extend this
  */
 abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

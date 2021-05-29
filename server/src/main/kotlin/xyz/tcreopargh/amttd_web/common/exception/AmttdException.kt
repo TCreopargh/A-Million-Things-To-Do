@@ -14,7 +14,15 @@ import java.sql.SQLException
 
 /**
  * @author TCreopargh
+ *
  * A easily serializable exception class
+ *
+ * Can be localized on the client side.
+ *
+ * You should always convert a regular exception to this class
+ * with [getFromException] method before sending an exception to client.
+ *
+ * ALWAYS CHANGE BOTH THE CLIENT SIDE AND THE SERVER SIDE CLASS WHEN EDITING THIS
  */
 @Suppress("unused")
 class AmttdException(val errorCode: ErrorCode, val nestedException: Exception? = null) :

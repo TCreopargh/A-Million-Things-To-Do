@@ -9,6 +9,20 @@ import xyz.tcreopargh.amttd_web.common.data.action.IAction
 import java.util.*
 import javax.persistence.*
 
+/**
+ * @author TCreopargh
+ *
+ * An action represents an edition to a to-do entry.
+ *
+ * When a to-do list is edited, an action is generated at the same time.
+ *
+ * (Actually the action comes first, the server decides what to do according to the action.)
+ *
+ * A special type of action is comment, which the user can add by themselves.
+ *
+ * This is a generic class containing all possible fields for all actions. You should probably use derived classes
+ * which you can get from [xyz.tcreopargh.amttd_web.common.data.action.ActionGeneric]
+ */
 @Entity
 @Table(name = "action")
 data class EntityAction(

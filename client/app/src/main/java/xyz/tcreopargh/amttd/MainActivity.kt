@@ -262,7 +262,6 @@ class MainActivity : BaseActivity() {
                             .build()
                         val response = AMTTD.okHttpClient.newCall(request).execute()
                         val body = response.body?.string()
-                        // Don't simplify this
                         val result: ActionCrudResponse =
                             gson.fromJson(body, object : TypeToken<ActionCrudResponse>() {}.type)
                         if (result.success != true) {

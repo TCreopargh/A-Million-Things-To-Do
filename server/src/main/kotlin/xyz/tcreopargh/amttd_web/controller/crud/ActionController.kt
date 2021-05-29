@@ -21,6 +21,16 @@ import xyz.tcreopargh.amttd_web.util.logger
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
+/**
+ * @author TCreopargh
+ *
+ * Handle actions.
+ *
+ * Note that when an action is created, its associated operation must be performed.
+ *
+ * Example: client requested to `CREATE` an `ActionTaskCompleted`,
+ * the task associated with this action must be marked as completed in the database.
+ */
 @RestController
 @LoginRequired
 class ActionController : ControllerBase() {

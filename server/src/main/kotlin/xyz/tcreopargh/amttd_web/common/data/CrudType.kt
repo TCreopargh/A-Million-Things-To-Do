@@ -3,7 +3,11 @@ package xyz.tcreopargh.amttd_web.common.data
 import java.io.Serializable
 
 /**
- * Specify the type of an CRUD action (Usually used in request bodies)
+ * @author TCreopargh
+ *
+ * Specify the operation of a CRUD action.
+ *
+ * This is used to generify all kinds of requests to a certain entity.
  */
 @Suppress("unused")
 enum class CrudType : Serializable {

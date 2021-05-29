@@ -16,6 +16,11 @@ import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
 import xyz.tcreopargh.amttd_web.util.logger
 import javax.servlet.http.HttpServletRequest
 
+/**
+ * @author TCreopargh
+ *
+ * To-do entry related stuff
+ */
 @RestController
 @LoginRequired
 class TodoEntryController : ControllerBase() {

@@ -6,6 +6,15 @@ import xyz.tcreopargh.amttd_web.util.generateInvitationCode
 import java.util.*
 import javax.persistence.*
 
+/**
+ * @author TCreopargh
+ *
+ * An invitation code is used to join a workgroup.
+ *
+ * Workgroup members can generate invitation codes to invite other people into the group.
+ *
+ * Like tokens, this also has a lifespan, but can be specified by the client.
+ */
 @Entity
 @Table(name = "invitation_code")
 data class EntityInvitationCode(

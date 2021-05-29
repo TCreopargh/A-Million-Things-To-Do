@@ -16,6 +16,11 @@ import xyz.tcreopargh.amttd_web.entity.EntityWorkGroup
 import xyz.tcreopargh.amttd_web.util.logger
 import javax.servlet.http.HttpServletRequest
 
+/**
+ * @author TCreopargh
+ *
+ * Workgroup related stuff
+ */
 @RestController
 @LoginRequired
 class WorkGroupController : ControllerBase() {

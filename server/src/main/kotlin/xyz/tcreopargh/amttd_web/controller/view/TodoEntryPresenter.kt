@@ -16,6 +16,11 @@ import xyz.tcreopargh.amttd_web.util.logger
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 
+/**
+ * @author TCreopargh
+ *
+ * present a list of to-do entries associated with the workgroup.
+ */
 @RestController
 @LoginRequired
 class TodoEntryPresenter : ControllerBase() {

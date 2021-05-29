@@ -17,6 +17,13 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.jvm.kotlinFunction
 
+/**
+ * @author TCreopargh
+ *
+ * Interceptor class
+ *
+ * Mainly used to prevent actions without logging in
+ */
 @Component
 class AuthenticationInterceptor : HandlerInterceptor {
 
@@ -41,9 +48,9 @@ class AuthenticationInterceptor : HandlerInterceptor {
                     token!!
                     UUID.fromString(uuid)
                 } catch (e: Exception) {
-                    return resetSession(request, response)
+                    return requireLogin(request, response)
                 }
-                findUserByIdAndToken(uuidObject, token) ?: return resetSession(request, response)
+                findUserByIdAndToken(uuidObject, token) ?: return requireLogin(request, response)
             }
         }
         return true
@@ -58,13 +65,20 @@ class AuthenticationInterceptor : HandlerInterceptor {
     }
 
     companion object {
+
+        fun requireLogin(request: HttpServletRequest, response: HttpServletResponse): Boolean {
+            val ret = resetSession(request, response)
+            response.status = HttpStatus.FORBIDDEN.value()
+            response.sendError(HttpStatus.FORBIDDEN.value())
+            return ret
+        }
+
         fun resetSession(request: HttpServletRequest, response: HttpServletResponse): Boolean {
             request.session.apply {
                 setAttribute("uuid", null)
                 setAttribute("token", null)
             }
             request.session.invalidate()
-            response.status = HttpStatus.FORBIDDEN.value()
             return false
         }
     }

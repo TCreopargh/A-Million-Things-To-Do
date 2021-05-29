@@ -8,6 +8,18 @@ import xyz.tcreopargh.amttd_web.common.data.TodoStatus
 import java.util.*
 import javax.persistence.*
 
+/**
+ * @author TCreopargh
+ *
+ * A to-do entry is just like its name.
+ *
+ * It can contain many subitems, tasks.
+ *
+ * A workgroup maintains a list of to-do entries.
+ *
+ * It has a status which can be automatically or manually set.
+ * The automatically set value depends on how many tasks are completed.
+ */
 @Entity
 @Table(name = "todo_entry")
 data class EntityTodoEntry(

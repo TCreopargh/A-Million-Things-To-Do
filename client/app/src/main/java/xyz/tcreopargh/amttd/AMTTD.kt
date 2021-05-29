@@ -10,6 +10,7 @@ import android.app.Application as App
 
 /**
  * @author TCreopargh
+ *
  * Main class of application
  */
 class AMTTD : App() {

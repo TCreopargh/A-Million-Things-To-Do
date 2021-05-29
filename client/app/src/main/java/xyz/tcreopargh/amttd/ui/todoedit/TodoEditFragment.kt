@@ -35,7 +35,11 @@ import xyz.tcreopargh.amttd.util.format
 import xyz.tcreopargh.amttd.util.setColor
 import java.util.*
 
-
+/**
+ * This fragment allows the user to view or edit an to-do entry.
+ *
+ * An action list is displayed to show the history of action performed on this entry.
+ */
 class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
 
     companion object {

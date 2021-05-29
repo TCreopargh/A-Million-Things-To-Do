@@ -128,7 +128,6 @@ class TodoViewFragment : FragmentOnMainActivityBase(R.string.todo_view_title) {
                     .build()
                 val response = AMTTD.okHttpClient.newCall(request).execute()
                 val body = response.body?.string()
-                // Don't simplify this
                 val result: TodoEntryViewResponse =
                     gson.fromJson(body, object : TypeToken<TodoEntryViewResponse>() {}.type)
                 if (result.success != true) {

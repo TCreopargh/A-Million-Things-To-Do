@@ -9,8 +9,11 @@ import javax.servlet.http.HttpServletRequest
 import kotlin.streams.toList
 
 /**
- * Base class for controllers
- * Inject service layer here
+ * @author TCreopargh
+ *
+ * Base class for controllers.
+ *
+ * Inject service layer here.
  */
 abstract class ControllerBase {
     @Autowired

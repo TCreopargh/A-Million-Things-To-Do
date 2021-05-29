@@ -20,6 +20,10 @@ import xyz.tcreopargh.amttd_web.util.logger
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 
+/**
+ * @author TCreopargh
+ * Manage users in a workgroup.
+ */
 @RestController
 @LoginRequired
 @RequestMapping("/workgroup/users")

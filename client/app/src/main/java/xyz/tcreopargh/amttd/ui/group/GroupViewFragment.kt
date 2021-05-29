@@ -322,7 +322,6 @@ class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title)
                     .build()
                 val response = AMTTD.okHttpClient.newCall(request).execute()
                 val body = response.body?.string()
-                // Don't simplify this
                 val result: WorkGroupViewResponse =
                     gson.fromJson(body, object : TypeToken<WorkGroupViewResponse>() {}.type)
                 if (result.success != true) {

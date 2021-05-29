@@ -87,7 +87,6 @@ class GroupViewAdapter(
                             .build()
                         val response = AMTTD.okHttpClient.newCall(request).execute()
                         val body = response.body?.string()
-                        // Don't simplify this
                         val result: WorkGroupCrudResponse =
                             gson.fromJson(
                                 body,
