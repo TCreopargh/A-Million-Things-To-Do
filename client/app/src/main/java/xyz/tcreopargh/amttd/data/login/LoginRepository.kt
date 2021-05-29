@@ -12,11 +12,6 @@ import java.util.*
 
 class LoginRepository(val dataSource: LoginDataSource, var loggedInUser: LocalUser? = null) {
 
-    companion object {
-        // TODO: Remove this, this is a temporary uuid only used for testing
-        val tempUUID: UUID = UUID.fromString("25759392-c457-4af6-b881-530f2fb31b64")
-    }
-
     // in-memory cache of the loggedInUser object
 
     val isLoggedIn: Boolean

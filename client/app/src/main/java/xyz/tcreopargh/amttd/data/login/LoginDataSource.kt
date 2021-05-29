@@ -22,7 +22,6 @@ import java.util.*
 class LoginDataSource {
 
     fun login(email: String, password: String): LoginResult<LocalUser> {
-        // TODO: acquire UUID and authToken from server
         val loginRequest = okHttpRequest("/login")
             .post(
                 LoginRequest(email = email, password = password).toJsonRequest()
