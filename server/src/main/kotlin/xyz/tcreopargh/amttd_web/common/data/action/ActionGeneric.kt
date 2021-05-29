@@ -83,7 +83,9 @@ data class ActionGeneric(
             ActionType.DEADLINE_CHANGED    -> ActionDeadlineChanged(
                 actionId = actionId,
                 user = user,
-                timeCreated = timeCreated
+                timeCreated = timeCreated,
+                oldValue = oldValue,
+                newValue = newValue
             )
             ActionType.TITLE_CHANGED       -> ActionTitleChanged(
                 actionId = actionId,

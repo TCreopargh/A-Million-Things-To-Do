@@ -2,6 +2,8 @@ package xyz.tcreopargh.amttd.ui.todoedit
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.InputType
@@ -23,6 +25,7 @@ import xyz.tcreopargh.amttd.common.bean.request.TodoEntryCrudRequest
 import xyz.tcreopargh.amttd.common.bean.response.ActionCrudResponse
 import xyz.tcreopargh.amttd.common.bean.response.TodoEntryCrudResponse
 import xyz.tcreopargh.amttd.common.data.*
+import xyz.tcreopargh.amttd.common.data.action.ActionDeadlineChanged
 import xyz.tcreopargh.amttd.common.data.action.ActionGeneric
 import xyz.tcreopargh.amttd.common.data.action.ActionType
 import xyz.tcreopargh.amttd.common.exception.AmttdException
@@ -31,6 +34,7 @@ import xyz.tcreopargh.amttd.util.CrudTask
 import xyz.tcreopargh.amttd.util.format
 import xyz.tcreopargh.amttd.util.setColor
 import java.util.*
+
 
 class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
 
@@ -109,7 +113,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
             override fun onFailure(e: Exception) {
                 viewModel.exception.postValue(AmttdException.getFromException(e))
             }
-        }.execute()
+        }.start()
     }
 
     @SuppressLint("InflateParams")
@@ -160,7 +164,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                                         )
                                     )
                                 }
-                            }.execute()
+                            }.start()
 
                             dialog.cancel()
                         }
@@ -213,7 +217,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                                         )
                                     )
                                 }
-                            }.execute()
+                            }.start()
 
                             dialog.cancel()
                         }
@@ -261,7 +265,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                                             )
                                         )
                                     }
-                                }.execute()
+                                }.start()
 
                                 dialog.cancel()
                             }
@@ -272,11 +276,15 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
             }
             findViewById<TextView>(R.id.todoEditStatusText)?.text = entry.status.getDisplayString()
             findViewById<TextView>(R.id.todoEditDeadlineText)?.text =
-                entry.deadline?.format() ?: getString(R.string.deadline_not_set)
+                entry.deadline?.run { format() + " " + format(true) }
+                    ?: getString(R.string.deadline_not_set)
             findViewById<ImageView>(R.id.todoEditIconColor)?.setColorFilter(
                 entry.status.color,
                 PorterDuff.Mode.SRC
             )
+            findViewById<ImageButton>(R.id.todoEditDeadlineEditButton)?.setOnClickListener {
+                setDeadline()
+            }
             val tasks = findViewById<LinearLayout>(R.id.todoTaskItemView)
             val actions = findViewById<LinearLayout>(R.id.actionHistoryLayout)
             findViewById<Button>(R.id.actionExpandButton)?.apply {
@@ -330,7 +338,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                                 override fun onFailure(e: Exception) {
                                     viewModel.exception.postValue(AmttdException.getFromException(e))
                                 }
-                            }.execute()
+                            }.start()
                         }
                     }
                     findViewById<View>(R.id.taskPlaceholderView).apply {
@@ -416,7 +424,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                         override fun onFailure(e: Exception) {
                             viewModel.exception.postValue(AmttdException.getFromException(e))
                         }
-                    }.execute()
+                    }.start()
                 } else {
                     object : CrudTask<ActionGeneric, ActionCrudRequest, ActionCrudResponse>(
                         request = ActionCrudRequest(
@@ -443,7 +451,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                         override fun onFailure(e: Exception) {
                             viewModel.exception.postValue(AmttdException.getFromException(e))
                         }
-                    }.execute()
+                    }.start()
                 }
                 dialog.cancel()
             }
@@ -476,7 +484,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                                 override fun onFailure(e: Exception) {
                                     viewModel.exception.postValue(AmttdException.getFromException(e))
                                 }
-                            }.execute()
+                            }.start()
                             dialog.cancel()
                             dialogInner.cancel()
                         }
@@ -487,5 +495,60 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
             }
             setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
         }.create().show()
+    }
+
+    private fun setDeadline() {
+        val currentDate = Calendar.getInstance()
+        val date: Calendar = Calendar.getInstance()
+        DatePickerDialog(
+            context ?: return, { _, year, monthOfYear, dayOfMonth ->
+                date.set(year, monthOfYear, dayOfMonth)
+                TimePickerDialog(
+                    context, { _, hourOfDay, minute ->
+                        date.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                        date.set(Calendar.MINUTE, minute)
+
+                        object : CrudTask<ActionGeneric, ActionCrudRequest, ActionCrudResponse>(
+                            request = ActionCrudRequest(
+                                operation = CrudType.CREATE,
+                                entity = ActionGeneric(ActionDeadlineChanged(
+                                    actionId = UUID.randomUUID(),
+                                    user = UserImpl(
+                                        loggedInUser
+                                            ?: throw AmttdException(AmttdException.ErrorCode.LOGIN_REQUIRED)
+                                    ),
+                                    timeCreated = Calendar.getInstance(),
+                                    oldValue = null,
+                                    newValue = null
+                                ).apply {
+                                    oldDeadline = viewModel.entry.value?.deadline
+                                    newDeadline = date
+                                }),
+                                userId = loggedInUser?.uuid,
+                                entryId = viewModel.entryId.value
+                            ),
+                            path = "/action",
+                            responseType = object : TypeToken<ActionCrudResponse>() {}.type
+                        ) {
+                            override fun onSuccess(entity: ActionGeneric?) {
+                                viewModel.dirty.postValue(true)
+                            }
+
+                            override fun onFailure(e: Exception) {
+                                viewModel.exception.postValue(AmttdException.getFromException(e))
+                            }
+                        }.start()
+                    },
+                    currentDate[Calendar.HOUR_OF_DAY],
+                    currentDate[Calendar.MINUTE],
+                    true
+                ).show()
+            },
+            currentDate[Calendar.YEAR],
+            currentDate[Calendar.MONTH],
+            currentDate[Calendar.DATE]
+        ).apply {
+            datePicker.minDate = currentDate.timeInMillis
+        }.show()
     }
 }

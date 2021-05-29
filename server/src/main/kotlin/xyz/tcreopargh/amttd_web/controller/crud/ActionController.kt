@@ -9,6 +9,7 @@ import xyz.tcreopargh.amttd_web.annotation.LoginRequired
 import xyz.tcreopargh.amttd_web.common.bean.request.ActionCrudRequest
 import xyz.tcreopargh.amttd_web.common.bean.response.ActionCrudResponse
 import xyz.tcreopargh.amttd_web.common.data.CrudType
+import xyz.tcreopargh.amttd_web.common.data.action.ActionDeadlineChanged
 import xyz.tcreopargh.amttd_web.common.data.action.ActionGeneric
 import xyz.tcreopargh.amttd_web.common.data.action.ActionType
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
@@ -42,9 +43,9 @@ class ActionController : ControllerBase() {
                             body.userId ?: throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
                         )
                     val entity = body.entity
-                    val action: EntityAction = when (body.entity?.actionType) {
+                    val action: EntityAction = when (entity?.actionType) {
                         ActionType.COMMENT             -> {
-                            val comment = entity?.stringExtra
+                            val comment = entity.stringExtra
                             EntityAction(
                                 actionId = UUID.randomUUID(),
                                 user = user,
@@ -125,7 +126,7 @@ class ActionController : ControllerBase() {
                             val task = taskService.findByIdOrNull(taskId)
                                 ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                             task.apply {
-                                name = entity?.task?.name
+                                name = entity.task?.name
                                     ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
                                 completed = entity.task.completed
                             }
@@ -140,7 +141,7 @@ class ActionController : ControllerBase() {
                             )
                         }
                         ActionType.TITLE_CHANGED       -> {
-                            entry.title = entity?.newValue
+                            entry.title = entity.newValue
                                 ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
                             todoEntryService.saveImmediately(entry)
                             EntityAction(
@@ -154,7 +155,7 @@ class ActionController : ControllerBase() {
                             )
                         }
                         ActionType.DESCRIPTION_CHANGED -> {
-                            entry.description = entity?.newValue
+                            entry.description = entity.newValue
                                 ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
                             todoEntryService.saveImmediately(entry)
                             EntityAction(
@@ -168,7 +169,7 @@ class ActionController : ControllerBase() {
                             )
                         }
                         ActionType.STATUS_CHANGED      -> {
-                            entry.status = entity?.toStatus
+                            entry.status = entity.toStatus
                                 ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
                             todoEntryService.saveImmediately(entry)
                             EntityAction(
@@ -178,6 +179,20 @@ class ActionController : ControllerBase() {
                                 actionType = ActionType.STATUS_CHANGED,
                                 fromStatus = entity.fromStatus,
                                 toStatus = entity.toStatus,
+                                parent = entry
+                            )
+                        }
+                        ActionType.DEADLINE_CHANGED    -> {
+                            val entityCasted = entity.action as? ActionDeadlineChanged
+                            entry.deadline = entityCasted?.newDeadline
+                            todoEntryService.saveImmediately(entry)
+                            EntityAction(
+                                actionId = UUID.randomUUID(),
+                                user = user,
+                                timeCreated = Calendar.getInstance(),
+                                actionType = ActionType.DEADLINE_CHANGED,
+                                oldValue = entity.oldValue,
+                                newValue = entity.newValue,
                                 parent = entry
                             )
                         }

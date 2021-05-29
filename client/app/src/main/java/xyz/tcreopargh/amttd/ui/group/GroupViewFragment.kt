@@ -135,7 +135,7 @@ class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title)
                             override fun onFailure(e: Exception) {
                                 viewModel.exception.postValue(AmttdException.getFromException(e))
                             }
-                        }.execute()
+                        }.start()
                         dialog.cancel()
                     }
                     val neutralButtonText =
@@ -177,7 +177,7 @@ class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title)
                                             )
                                         )
                                     }
-                                }.execute()
+                                }.start()
                                 dialog.cancel()
                                 dialogInner.cancel()
                             }
@@ -303,7 +303,7 @@ class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title)
                     override fun onFailure(e: Exception) {
                         viewModel.exception.postValue(AmttdException.getFromException(e))
                     }
-                }.execute()
+                }.start()
                 dialog.cancel()
             }
             setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }

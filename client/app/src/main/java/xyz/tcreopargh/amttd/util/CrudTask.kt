@@ -33,6 +33,9 @@ abstract class CrudTask<Entity, out Request : ICrudRequest<Entity>, in Response 
 
     open fun onResponse(response: Response) {}
 
+    /**
+     * Use [start] if you want to run this in a new thread.
+     */
     override fun run() {
         try {
             val httpRequest =
@@ -71,7 +74,7 @@ abstract class CrudTask<Entity, out Request : ICrudRequest<Entity>, in Response 
         onCompleted()
     }
 
-    open fun execute() {
+    open fun start() {
         Thread(this).start()
     }
 }

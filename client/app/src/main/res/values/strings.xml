@@ -155,7 +155,7 @@
     <string name="change_status_to">to</string>
     <string name="comment">Comment</string>
     <string name="add_comment">Add Comment</string>
-    <string name="unauthorized_operation">Unauthorized Operation</string>
+    <string name="unauthorized_operation">Your login session has expired, please restart the app and try again.</string>
     <string name="action_task_added">Added task:</string>
     <string name="action_task_removed">Removed task:</string>
     <string name="collapse">Collapse</string>
@@ -163,7 +163,7 @@
     <string name="name">Name</string>
     <string name="edit_task">Edit Task</string>
     <string name="action_task_edited">edited task:</string>
-    <string name="change_deadline">changed deadline</string>
+    <string name="change_deadline">changed deadline from %s to %s</string>
     <string name="remove_task">Remove Task</string>
     <string name="remove_task_confirm">Do you really want to remove this task? This cannot be undone.</string>
     <string name="change_title">changed title from</string>
