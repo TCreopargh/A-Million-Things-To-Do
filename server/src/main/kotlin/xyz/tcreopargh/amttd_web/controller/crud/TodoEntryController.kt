@@ -36,10 +36,13 @@ class TodoEntryController : ControllerBase() {
      * If the operation is `VIEW` or `DELETE`, only the id should be used.
      *
      * Otherwise, the id should be ignored because server should decide what ID an entity should have, not the client
+     *
      * In this case, the id should be generated again on the server.
      *
      * @return An response of the operation. [TodoEntryCrudResponse.success] indicates if the operation is successful.
+     *
      * Serialize errors to error codes and pass them via [TodoEntryCrudResponse.error] if the operation failed.
+     *
      * [TodoEntryCrudResponse.entity] indicates the new entity. If not needed, this can be set to null.
      */
     @PostMapping(
