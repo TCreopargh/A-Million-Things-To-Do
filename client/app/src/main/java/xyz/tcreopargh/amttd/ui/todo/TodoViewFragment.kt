@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentTransaction
@@ -48,10 +49,21 @@ class TodoViewFragment : FragmentOnMainActivityBase(R.string.todo_view_title) {
         todoSwipeContainer.setOnRefreshListener { initializeItems() }
         todoRecyclerView.adapter = adapter
         todoRecyclerView.layoutManager = LinearLayoutManager(context)
+
+        val emptyText = view.findViewById<TextView>(R.id.todoListEmptyText)
         viewModel.entries.observe(viewLifecycleOwner) {
-            adapter.todoList = it ?: mutableListOf()
-            adapter.notifyDataSetChanged()
-            todoSwipeContainer.isRefreshing = false
+            if (it != null) {
+                adapter.todoList = it
+                adapter.notifyDataSetChanged()
+                todoSwipeContainer.isRefreshing = false
+                if (it.isEmpty()) {
+                    emptyText.visibility = View.VISIBLE
+                    todoRecyclerView.visibility = View.GONE
+                } else {
+                    emptyText.visibility = View.GONE
+                    todoRecyclerView.visibility = View.VISIBLE
+                }
+            }
         }
 
         viewModel.exception.observe(viewLifecycleOwner) {

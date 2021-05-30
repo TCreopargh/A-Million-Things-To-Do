@@ -11,8 +11,8 @@ import java.util.*
  */
 class GroupViewModel : ViewModelBase() {
 
-    private val _groups = MutableLiveData<List<IWorkGroup>>(listOf())
-    val groups: LiveData<List<IWorkGroup>> = _groups
+    private val _groups = MutableLiveData<List<IWorkGroup>?>(null)
+    val groups: LiveData<List<IWorkGroup>?> = _groups
 
     val groupToEdit = MutableLiveData<IWorkGroup?>(null)
 

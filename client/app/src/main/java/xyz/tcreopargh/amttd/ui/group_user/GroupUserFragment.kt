@@ -54,9 +54,11 @@ class GroupUserFragment : FragmentOnMainActivityBase(R.string.manage_users_title
             adapter.workGroup = it
         }
         viewModel.users.observe(viewLifecycleOwner) {
-            adapter.users = it ?: mutableListOf()
-            adapter.notifyDataSetChanged()
-            swipeContainer.isRefreshing = false
+            if (it != null) {
+                adapter.users = it
+                adapter.notifyDataSetChanged()
+                swipeContainer.isRefreshing = false
+            }
         }
 
         viewModel.exception.observe(viewLifecycleOwner) {

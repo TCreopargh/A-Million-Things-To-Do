@@ -6,6 +6,7 @@ import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.stream.MalformedJsonException
 import xyz.tcreopargh.amttd.R
+import xyz.tcreopargh.amttd.common.exception.AmttdException.Companion.getFromException
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketException

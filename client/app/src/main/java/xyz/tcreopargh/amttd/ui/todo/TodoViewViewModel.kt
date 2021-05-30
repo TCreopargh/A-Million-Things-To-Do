@@ -8,8 +8,8 @@ import xyz.tcreopargh.amttd.ui.ViewModelBase
 import java.util.*
 
 class TodoViewViewModel : ViewModelBase() {
-    private val _entries = MutableLiveData<List<ITodoEntry>>(listOf())
-    val entries: LiveData<List<ITodoEntry>>
+    private val _entries = MutableLiveData<List<ITodoEntry>?>(null)
+    val entries: LiveData<List<ITodoEntry>?>
         get() = _entries
     val workGroup = MutableLiveData<IWorkGroup?>(null)
 

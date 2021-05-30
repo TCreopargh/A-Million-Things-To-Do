@@ -67,10 +67,21 @@ class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title)
         groupRecyclerView.adapter = adapter
         groupRecyclerView.layoutManager = LinearLayoutManager(context)
         groupSwipeContainer.setOnRefreshListener { initializeItems() }
+
+        val emptyText = view.findViewById<TextView>(R.id.workGroupEmptyText)
         viewModel.groups.observe(viewLifecycleOwner) {
-            adapter.workGroups = it ?: mutableListOf()
-            adapter.notifyDataSetChanged()
-            groupSwipeContainer.isRefreshing = false
+            if (it != null) {
+                adapter.workGroups = it
+                adapter.notifyDataSetChanged()
+                groupSwipeContainer.isRefreshing = false
+                if (it.isEmpty()) {
+                    emptyText.visibility = View.VISIBLE
+                    groupRecyclerView.visibility = View.GONE
+                } else {
+                    emptyText.visibility = View.GONE
+                    groupRecyclerView.visibility = View.VISIBLE
+                }
+            }
         }
         viewModel.dirty.observe(viewLifecycleOwner) {
             if (it) {

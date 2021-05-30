@@ -7,6 +7,6 @@ import xyz.tcreopargh.amttd.ui.ViewModelBase
 
 class GroupUserViewModel : ViewModelBase() {
     val dirty = MutableLiveData(false)
-    val users = MutableLiveData(listOf<IUser>())
+    val users = MutableLiveData<List<IUser>?>(null)
     val workGroup = MutableLiveData<IWorkGroup?>(null)
 }
