@@ -17,6 +17,7 @@ import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityAction
 import xyz.tcreopargh.amttd_web.entity.EntityTask
+import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
 import xyz.tcreopargh.amttd_web.util.logger
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -73,15 +74,7 @@ class ActionController : ControllerBase() {
                                 ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                             task.completed = true
                             taskService.saveImmediately(task)
-                            if (entry.tasks.none { !it.completed }) {
-                                entry.status = TodoStatus.COMPLETED
-                                todoEntryService.saveImmediately(entry)
-                            } else if (entry.tasks.size > 1
-                                && entry.tasks.filter { it.completed }.size in 1 until entry.tasks.size
-                            ) {
-                                entry.status = TodoStatus.IN_PROGRESS
-                                todoEntryService.saveImmediately(entry)
-                            }
+                            updateTodoEntryState(entry)
                             EntityAction(
                                 actionId = UUID.randomUUID(),
                                 user = user,
@@ -98,15 +91,7 @@ class ActionController : ControllerBase() {
                                 ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                             task.completed = false
                             taskService.saveImmediately(task)
-                            if (entry.tasks.none { it.completed }) {
-                                entry.status = TodoStatus.NOT_STARTED
-                                todoEntryService.saveImmediately(entry)
-                            } else if (entry.tasks.size > 1
-                                && entry.tasks.filter { it.completed }.size in 1 until entry.tasks.size
-                            ) {
-                                entry.status = TodoStatus.IN_PROGRESS
-                                todoEntryService.saveImmediately(entry)
-                            }
+                            updateTodoEntryState(entry)
                             EntityAction(
                                 actionId = UUID.randomUUID(),
                                 user = user,
@@ -125,6 +110,7 @@ class ActionController : ControllerBase() {
                                 parent = entry
                             )
                             taskService.saveImmediately(task)
+                            updateTodoEntryState(entry)
                             EntityAction(
                                 actionId = UUID.randomUUID(),
                                 user = user,
@@ -140,6 +126,7 @@ class ActionController : ControllerBase() {
                             val task = taskService.findByIdOrNull(taskId)
                                 ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                             taskService.markAsRemoved(taskId)
+                            updateTodoEntryState(entry)
                             EntityAction(
                                 actionId = UUID.randomUUID(),
                                 user = user,
@@ -246,6 +233,21 @@ class ActionController : ControllerBase() {
                 success = false,
                 error = AmttdException.ErrorCode.getFromException(e).value
             )
+        }
+    }
+
+    fun updateTodoEntryState(entry: EntityTodoEntry) {
+        if (entry.tasks.none { !it.completed }) {
+            entry.status = TodoStatus.COMPLETED
+            todoEntryService.saveImmediately(entry)
+        } else if (entry.tasks.size > 1
+            && entry.tasks.filter { it.completed }.size in 1 until entry.tasks.size
+        ) {
+            entry.status = TodoStatus.IN_PROGRESS
+            todoEntryService.saveImmediately(entry)
+        } else if (entry.tasks.none { it.completed }) {
+            entry.status = TodoStatus.NOT_STARTED
+            todoEntryService.saveImmediately(entry)
         }
     }
 }

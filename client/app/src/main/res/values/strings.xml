@@ -214,4 +214,5 @@
     <string name="avatar_changed">Avatar changed, you might need to restart the app to see the changes.</string>
     <string name="workgroup_list_empty">Looks like you don\'t have any work group yet.\nJoin or create one now!</string>
     <string name="todo_list_empty">Looks like this work group does\'t have any todo entry yet.\nCreate one now!</string>
+    <string name="add_task">Add Task</string>
 </resources>

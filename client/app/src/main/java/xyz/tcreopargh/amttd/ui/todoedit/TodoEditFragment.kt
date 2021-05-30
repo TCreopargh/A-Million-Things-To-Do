@@ -400,6 +400,9 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
             val viewRoot = layoutInflater.inflate(R.layout.task_edit_layout, null)
             val titleText = viewRoot.findViewById<EditText>(R.id.taskEditTitleText)
             val oldName = task?.name
+            if (isAdd) {
+                viewRoot.findViewById<TextView>(R.id.taskEditDialogTitle).setText(R.string.add_task)
+            }
             task?.name?.let {
                 titleText.setText(it)
             }
