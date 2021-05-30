@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.os.*
 import android.util.Log
 import android.view.Menu
@@ -19,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.reflect.TypeToken
+import com.makeramen.roundedimageview.RoundedImageView
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.app_bar_main.view.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -62,6 +64,9 @@ class MainActivity : BaseActivity() {
     private lateinit var fabLayout: LinearLayout
     private lateinit var fabMenu: FabMenu
 
+    private lateinit var headerView: View
+    private lateinit var userAvatarView: RoundedImageView
+
     private var invitationCodeExpirationTime = 1
 
     val loggedInUser
@@ -79,10 +84,15 @@ class MainActivity : BaseActivity() {
 
         fab = findViewById(R.id.fab)
         fabLayout = findViewById(R.id.fabMenuLayout)
+
+        navView = findViewById(R.id.nav_view)
+        headerView = navView.getHeaderView(0)
+        userAvatarView = headerView.findViewById(R.id.headerImageView)
+
         fabMenu = FabMenu(this, fab, fabLayout).apply {
             addItem(R.string.create_group, R.drawable.ic_baseline_group_add_24)
             addItem(R.string.join_group, R.drawable.ic_baseline_group_24)
-            setOnItemClickListener { i, fabMenuItem ->
+            setOnItemClickListener { i, _ ->
                 fabMenu.close()
                 when (i) {
                     0 -> {
@@ -95,7 +105,7 @@ class MainActivity : BaseActivity() {
             }
         }
         fabMenu.create()
-        fabMenu.setFabOnClickListener { view ->
+        fabMenu.setFabOnClickListener {
             when (val currentFragment = getCurrentlyDisplayedFragment()) {
                 is SettingsFragment  -> {
                     // Do nothing
@@ -168,7 +178,6 @@ class MainActivity : BaseActivity() {
             }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        navView = findViewById(R.id.nav_view)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
 
@@ -330,6 +339,8 @@ class MainActivity : BaseActivity() {
         outState.putSerializable("User", viewModel.getUser())
     }
 
+    // Can't avoid using this
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
@@ -396,10 +407,12 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onFragmentStart(fragment: Fragment) {
         onFragmentChanged()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onFragmentStop(fragment: Fragment) {
         onFragmentChanged()
     }
@@ -460,7 +473,6 @@ class MainActivity : BaseActivity() {
     }
 
     private fun updateSidebarHeader() {
-        val headerView = findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
         val user = viewModel.getUser()
         if (user != null) {
             headerView.findViewById<TextView>(R.id.headerUsername).apply {
@@ -469,6 +481,20 @@ class MainActivity : BaseActivity() {
             headerView.findViewById<TextView>(R.id.headerSubtitle).apply {
                 text = user.email
             }
+            loadUserAvatar()
+        }
+    }
+
+    fun loadUserAvatar() {
+        loggedInUser?.let {
+            object : LoadUserAvatarTask(it, this) {
+                override fun onSuccess(bitmap: Bitmap) {
+                    userAvatarView.setImageBitmap(bitmap)
+                }
+
+                override fun onFailure(e: Exception) {
+                }
+            }.start()
         }
     }
 
@@ -486,6 +512,7 @@ class MainActivity : BaseActivity() {
                 }
                 LOGIN_FAILED  -> {
                     val loginIntent = Intent(activity, LoginActivity::class.java)
+                    @Suppress("DEPRECATION")
                     activity?.startActivityForResult(loginIntent, ResultCode.CODE_LOGIN.code)
                     if (activity?.exception != null) {
                         Toast.makeText(

@@ -210,4 +210,6 @@
     <string name="todo_edit_title">View Todo Entry</string>
     <string name="todo_view_title">Todo Entries</string>
     <string name="settings_title">Settings</string>
+    <string name="avatar_change_cancelled">Avatar change cancelled</string>
+    <string name="avatar_changed">Avatar changed, you might need to restart the app to see the changes.</string>
 </resources>

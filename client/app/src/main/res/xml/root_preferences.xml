@@ -28,7 +28,7 @@
                 app:summary="@string/change_pfp"
                 app:iconSpaceReserved="false"
                 app:persistent="false"
-                app:key="profilePicture" />
+                app:key="profile_picture" />
 
     </PreferenceCategory>
 

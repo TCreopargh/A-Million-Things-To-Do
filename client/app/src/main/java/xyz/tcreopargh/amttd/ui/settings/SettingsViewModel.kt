@@ -10,4 +10,5 @@ class SettingsViewModel : ViewModelBase() {
     val actualUsername = MutableLiveData("")
     val actualEmail = MutableLiveData("")
     val isPasswordChanged = MutableLiveData(false)
+    val isAvatarChanged = MutableLiveData(false)
 }

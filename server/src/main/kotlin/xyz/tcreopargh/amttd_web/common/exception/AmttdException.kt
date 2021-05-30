@@ -4,6 +4,7 @@ import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.stream.MalformedJsonException
 import org.springframework.web.client.HttpStatusCodeException
+import xyz.tcreopargh.amttd_web.common.exception.AmttdException.Companion.getFromException
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketException

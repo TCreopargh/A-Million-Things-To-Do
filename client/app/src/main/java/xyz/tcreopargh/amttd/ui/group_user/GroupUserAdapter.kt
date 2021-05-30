@@ -1,5 +1,6 @@
 package xyz.tcreopargh.amttd.ui.group_user
 
+import android.graphics.Bitmap
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.reflect.TypeToken
+import com.makeramen.roundedimageview.RoundedImageView
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.common.bean.request.GroupRemoveUserRequest
@@ -20,6 +22,7 @@ import xyz.tcreopargh.amttd.common.bean.response.WorkGroupDataSetChangedResponse
 import xyz.tcreopargh.amttd.common.data.IUser
 import xyz.tcreopargh.amttd.common.data.IWorkGroup
 import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.util.LoadUserAvatarTask
 import xyz.tcreopargh.amttd.util.gson
 import xyz.tcreopargh.amttd.util.okHttpRequest
 import xyz.tcreopargh.amttd.util.toJsonRequest
@@ -45,7 +48,7 @@ class GroupUserAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val rootView: View = view
-        val userAvatarView: ImageView = view.findViewById(R.id.userAvatarView)
+        val userAvatarView: RoundedImageView = view.findViewById(R.id.userAvatarView)
         val usernameView: TextView = view.findViewById(R.id.usernameText)
         val userEmailView: TextView = view.findViewById(R.id.userEmailText)
         val youText: TextView = view.findViewById(R.id.textYou)
@@ -59,6 +62,15 @@ class GroupUserAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user = users[position]
         holder.apply {
+            object: LoadUserAvatarTask(user, fragment.viewLifecycleOwner) {
+                override fun onSuccess(bitmap: Bitmap) {
+                    userAvatarView.setImageBitmap(bitmap)
+                }
+
+                override fun onFailure(e: Exception) {
+                }
+
+            }.start()
             usernameView.text = user.username
             userEmailView.text = user.email
             if (isYou(user.uuid)) {

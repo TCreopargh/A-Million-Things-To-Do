@@ -4,9 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.common.data.IUser
-import java.io.InputStream
-import java.net.HttpURLConnection
 
 
 /**
@@ -38,21 +37,20 @@ abstract class LoadUserAvatarTask(user: IUser, lifecycleOwner: LifecycleOwner) :
     abstract fun onSuccess(bitmap: Bitmap)
     abstract fun onFailure(e: Exception)
 
-    private val url = rootUrl.withPath("/user/avatar?uuid=" + user.uuid.toString())
+    private val url = rootUrl.withPath("/user/avatar/" + user.uuid.toString())
 
     /**
      * Use [start] if you want to run this in a new thread.
      */
     override fun run() {
         try {
-            val connection: HttpURLConnection = url
-                .openConnection() as HttpURLConnection
-            connection.doInput = true
-            connection.connect()
-            val input: InputStream = connection.inputStream
-            bitmap.postValue(BitmapFactory.decodeStream(input))
+            val httpRequest = okHttpRequest(url)
+                .get()
+                .build()
+            val response = AMTTD.okHttpClient.newCall(httpRequest).execute()
+            val stream = response.body?.byteStream()
+            bitmap.postValue(BitmapFactory.decodeStream(stream))
         } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 

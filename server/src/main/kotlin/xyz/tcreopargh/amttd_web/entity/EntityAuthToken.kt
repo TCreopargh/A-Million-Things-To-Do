@@ -17,7 +17,7 @@ import javax.persistence.*
 @Table(name = "auth_token", indexes = [Index(name = "user_index", columnList = "user_uuid")])
 data class EntityAuthToken(
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "user_uuid", columnDefinition = "varchar(64)", updatable = false)
     var user: EntityUser? = null,
 

@@ -1,6 +1,13 @@
 package xyz.tcreopargh.amttd.ui.settings
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +17,21 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.gson.reflect.TypeToken
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
+import xyz.tcreopargh.amttd.common.bean.request.UserChangeAvatarRequest
 import xyz.tcreopargh.amttd.common.bean.request.UserProfileChangeRequest
 import xyz.tcreopargh.amttd.common.bean.response.SimpleResponse
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.ui.login.LoginViewModel
 import xyz.tcreopargh.amttd.util.*
+import java.io.ByteArrayOutputStream
+
 
 class SettingsFragment : PreferenceFragmentCompat() {
     companion object {
@@ -27,10 +39,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         fun newInstance() = SettingsFragment()
     }
 
+    val loggedInUser
+        get() = (activity as? MainActivity)?.loggedInUser
+
     private var usernamePref: EditTextPreference? = null
     private var emailPref: EditTextPreference? = null
     private var passwordPref: EditTextPreference? = null
     private var nightModePref: ListPreference? = null
+    private var changeAvatarPref: Preference? = null
 
     private lateinit var viewModel: SettingsViewModel
 
@@ -42,6 +58,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         emailPref = preferenceScreen.findPreference("email")
         passwordPref = preferenceScreen.findPreference("password")
         nightModePref = preferenceScreen.findPreference("night_mode")
+        changeAvatarPref = preferenceScreen.findPreference("profile_picture")
     }
 
     override fun onCreateView(
@@ -53,7 +70,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         viewModel.actualUsername.observe(viewLifecycleOwner) {
             usernamePref?.text = it
-            if (it != (activity as? MainActivity)?.loggedInUser?.username) {
+            if (it != loggedInUser?.username) {
                 Toast.makeText(
                     context,
                     getString(R.string.username_changed, it),
@@ -63,7 +80,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
         viewModel.actualEmail.observe(viewLifecycleOwner) {
             emailPref?.text = it
-            if (it != (activity as? MainActivity)?.loggedInUser?.email) {
+            if (it != loggedInUser?.email) {
                 Toast.makeText(
                     context,
                     getString(R.string.email_changed, it),
@@ -81,9 +98,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 viewModel.isPasswordChanged.value = false
             }
         }
+        viewModel.isAvatarChanged.observe(viewLifecycleOwner) {
+            if (it) {
+                Toast.makeText(
+                    context,
+                    getString(R.string.avatar_changed),
+                    Toast.LENGTH_LONG
+                ).show()
+                viewModel.isAvatarChanged.value = false
+                (activity as? MainActivity)?.loadUserAvatar()
+            }
+        }
 
-        viewModel.actualUsername.value = (activity as? MainActivity)?.loggedInUser?.username
-        viewModel.actualEmail.value = (activity as? MainActivity)?.loggedInUser?.email
+        viewModel.actualUsername.value = loggedInUser?.username
+        viewModel.actualEmail.value = loggedInUser?.email
 
         passwordPref?.text = ""
         @Suppress("UsePropertyAccessSyntax", "UNUSED_ANONYMOUS_PARAMETER")
@@ -93,7 +121,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 Toast.makeText(context, R.string.invalid_username, Toast.LENGTH_SHORT).show()
                 return@OnPrefChanged false
             }
-            val uuid = (activity as? MainActivity)?.loggedInUser?.uuid ?: return@OnPrefChanged false
+            val uuid = loggedInUser?.uuid ?: return@OnPrefChanged false
             return@OnPrefChanged sendUserProfileChangeRequest(
                 UserProfileChangeRequest(
                     userId = uuid,
@@ -108,7 +136,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 Toast.makeText(context, R.string.invalid_email, Toast.LENGTH_SHORT).show()
                 return@OnPrefChanged false
             }
-            val uuid = (activity as? MainActivity)?.loggedInUser?.uuid ?: return@OnPrefChanged false
+            val uuid = loggedInUser?.uuid ?: return@OnPrefChanged false
             return@OnPrefChanged sendUserProfileChangeRequest(
                 UserProfileChangeRequest(
                     userId = uuid,
@@ -153,7 +181,94 @@ class SettingsFragment : PreferenceFragmentCompat() {
             return@OnPrefChanged true
         }
 
+        @Suppress("UsePropertyAccessSyntax", "UNUSED_ANONYMOUS_PARAMETER")
+        changeAvatarPref?.setOnPreferenceClickListener OnPrefClick@{
+            ImagePicker.with(this)
+                .cropSquare()
+                .compress(512)
+                .maxResultSize(256, 256)
+                .start()
+            return@OnPrefClick true
+        }
+
         return view
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        @Suppress("DEPRECATION")
+        super.onActivityResult(requestCode, resultCode, data)
+        when (resultCode) {
+            Activity.RESULT_OK       -> {
+                //Image Uri will not be null for RESULT_OK
+                val uri: Uri = data?.data!!
+                val bitmap =
+                    try {
+                        uri.let {
+                            if (Build.VERSION.SDK_INT < 28) {
+                                @Suppress("DEPRECATION")
+                                MediaStore.Images.Media.getBitmap(
+                                    context?.contentResolver,
+                                    uri
+                                )
+                            } else {
+                                val source =
+                                    ImageDecoder.createSource(context?.contentResolver!!, uri)
+                                ImageDecoder.decodeBitmap(source)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        @Suppress("ThrowableNotThrown")
+                        Toast.makeText(
+                            context,
+                            AmttdException.getFromException(e).localizedMessage,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        null
+                    }
+
+                val stream = ByteArrayOutputStream()
+                bitmap?.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                val byteArray: ByteArray = stream.toByteArray()
+
+                // Send request
+                Thread {
+                    try {
+                        val httpRequest = okHttpRequest("/user/change-avatar")
+                            .post(
+                                UserChangeAvatarRequest(
+                                    userId = loggedInUser?.uuid,
+                                    img = byteArray
+                                ).toJsonRequest()
+                            )
+                            .build()
+                        val response = AMTTD.okHttpClient.newCall(httpRequest).execute()
+                        val body = response.body?.string() ?: "{}"
+                        if (enableJsonDebugging) {
+                            Log.i(AMTTD.logTag, body)
+                        }
+                        val result: SimpleResponse =
+                            gson.fromJson(
+                                body,
+                                object : TypeToken<SimpleResponse>() {}.type
+                            )
+                        if (result.success != true) {
+                            throw AmttdException.getFromErrorCode(result.error)
+                        }
+                        viewModel.isAvatarChanged.postValue(true)
+                    } catch (e: Exception) {
+                        Log.e(AMTTD.logTag, e.stackTraceToString())
+                        viewModel.exception.postValue(AmttdException.getFromException(e))
+                    }
+                }.start()
+
+            }
+            ImagePicker.RESULT_ERROR -> {
+                Toast.makeText(context, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
+            }
+            else                     -> {
+                Toast.makeText(context, R.string.avatar_change_cancelled, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onStart() {

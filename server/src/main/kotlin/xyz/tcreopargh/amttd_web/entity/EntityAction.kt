@@ -60,11 +60,11 @@ data class EntityAction(
 
     override var newValue: String? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id", nullable = true)
     override var task: EntityTask? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "entry_id", nullable = false)
     @ExcludeToString
     var parent: EntityTodoEntry? = null

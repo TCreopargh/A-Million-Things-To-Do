@@ -32,7 +32,7 @@ data class EntityTask(
     override var name: String = "",
     override var completed: Boolean = false,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "entry_id", nullable = false)
     @ExcludeToString
     var parent: EntityTodoEntry? = null,

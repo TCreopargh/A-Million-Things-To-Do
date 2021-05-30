@@ -45,14 +45,20 @@ data class EntityUser(
     @Temporal(TemporalType.TIMESTAMP)
     val timeCreated: Calendar = Calendar.getInstance(),
 
-    @ManyToMany
+    @ManyToMany(cascade = [CascadeType.ALL])
     @JoinTable(
         name = "user_in_work_group",
         joinColumns = [JoinColumn(name = "user_uuid")],
         inverseJoinColumns = [JoinColumn(name = "groupId")]
     )
     var joinedWorkGroups: MutableSet<EntityWorkGroup> = mutableSetOf()
+
 ) : IEntity, IUser {
+
+    @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "avatar_id")
+    var avatar: EntityUserAvatar? = null
+
     override val username: String
         get() = name.toString()
     override val email: String

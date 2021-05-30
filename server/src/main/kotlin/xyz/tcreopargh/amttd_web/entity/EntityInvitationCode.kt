@@ -23,12 +23,12 @@ data class EntityInvitationCode(
     @Column(name = "token", columnDefinition = "VARCHAR(8)", nullable = false, updatable = false)
     var invitationCode: String = generateInvitationCode(),
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "user_uuid", columnDefinition = "varchar(64)", updatable = false)
     @ExcludeToString
     var user: EntityUser? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id", nullable = false)
     @ExcludeToString
     var workGroup: EntityWorkGroup? = null,

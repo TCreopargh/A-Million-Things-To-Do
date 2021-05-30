@@ -59,7 +59,7 @@ data class EntityTodoEntry(
     @OneToMany(targetEntity = EntityAction::class, mappedBy = "parent")
     var actions: List<EntityAction> = listOf(),
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id", nullable = false)
     @ExcludeToString
     var parent: EntityWorkGroup? = null

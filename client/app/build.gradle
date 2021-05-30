@@ -33,6 +33,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation group: 'com.journeyapps', name: 'zxing-android-embedded', version: '4.2.0'
     implementation 'com.google.zxing:core:3.4.1'

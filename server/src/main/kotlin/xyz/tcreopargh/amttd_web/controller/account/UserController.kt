@@ -1,17 +1,21 @@
 package xyz.tcreopargh.amttd_web.controller.account
 
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 import xyz.tcreopargh.amttd_web.annotation.LoginRequired
+import xyz.tcreopargh.amttd_web.common.bean.request.UserChangeAvatarRequest
 import xyz.tcreopargh.amttd_web.common.bean.request.UserProfileChangeRequest
 import xyz.tcreopargh.amttd_web.common.bean.response.SimpleResponse
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
+import xyz.tcreopargh.amttd_web.entity.EntityUserAvatar
 import xyz.tcreopargh.amttd_web.util.logger
+import java.util.*
 import javax.servlet.http.HttpServletRequest
+
 
 /**
  * @author TCreopargh
@@ -24,6 +28,44 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @LoginRequired
 class UserController : ControllerBase() {
+    @PostMapping(
+        "/user/change-avatar",
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    @ResponseBody
+    fun changeAvatar(request: HttpServletRequest, @RequestBody body: UserChangeAvatarRequest): SimpleResponse {
+        return try {
+            val imgBytes = body.img
+            val user = userService.findByIdOrNull(
+                body.userId ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
+            ) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
+            val avatar = EntityUserAvatar(
+                avatarId = UUID.randomUUID(),
+                user = user,
+                image = imgBytes
+            )
+            user.avatar = avatar
+            userService.saveImmediately(user)
+
+            SimpleResponse(success = true)
+        } catch (e: Exception) {
+            logger.error("Exception in UserController: ", e)
+            SimpleResponse(success = false, error = AmttdException.getFromException(e).errorCodeValue)
+        }
+    }
+
+    @GetMapping(
+        "/user/avatar/{uuid}"
+    )
+    fun getAvatar(request: HttpServletRequest, @PathVariable uuid: UUID): ResponseEntity<ByteArray> {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.IMAGE_PNG
+        val user = userService.findByIdOrNull(uuid)
+            ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
+        return ResponseEntity<ByteArray>(user.avatar?.image, headers, HttpStatus.OK)
+    }
+
     @PostMapping(
         "/user/change-profile",
         consumes = [MediaType.APPLICATION_JSON_VALUE],
