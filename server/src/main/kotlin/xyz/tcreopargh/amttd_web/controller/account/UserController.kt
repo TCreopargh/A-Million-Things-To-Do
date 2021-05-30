@@ -27,9 +27,10 @@ import javax.servlet.http.HttpServletRequest
  */
 @RestController
 @LoginRequired
+@RequestMapping("/user")
 class UserController : ControllerBase() {
     @PostMapping(
-        "/user/change-avatar",
+        "/change-avatar",
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
@@ -56,7 +57,7 @@ class UserController : ControllerBase() {
     }
 
     @GetMapping(
-        "/user/avatar/{uuid}"
+        "/avatar/{uuid}"
     )
     fun getAvatar(request: HttpServletRequest, @PathVariable uuid: UUID): ResponseEntity<ByteArray> {
         val headers = HttpHeaders()
@@ -67,7 +68,7 @@ class UserController : ControllerBase() {
     }
 
     @PostMapping(
-        "/user/change-profile",
+        "/change-profile",
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )

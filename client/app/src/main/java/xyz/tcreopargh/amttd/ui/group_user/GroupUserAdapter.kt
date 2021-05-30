@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -62,7 +61,7 @@ class GroupUserAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user = users[position]
         holder.apply {
-            object: LoadUserAvatarTask(user, fragment.viewLifecycleOwner) {
+            object : LoadUserAvatarTask(user, fragment.viewLifecycleOwner) {
                 override fun onSuccess(bitmap: Bitmap) {
                     userAvatarView.setImageBitmap(bitmap)
                 }
