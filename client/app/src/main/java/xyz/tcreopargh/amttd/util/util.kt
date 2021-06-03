@@ -192,11 +192,12 @@ fun setNightModeAccordingToPref(context: Context) {
     context.getSharedPreferences(SettingsFragment.PREF_FILE_NAME, Application.MODE_PRIVATE)
         .getString(
             "night_mode",
-            "0"
+            "3"
         )?.toIntOrNull().let {
             when (it) {
                 1    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 2    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                3    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 else -> setNightModeAutomatically()
             }
         }

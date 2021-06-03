@@ -217,10 +217,11 @@
     <string name="todo_entry_title">待办事项标题</string>
     <string name="delete_todo_entry">删除待办事项</string>
     <string name="delete_entry_confirm">确定删除该待办事项吗？此操作无法撤销。</string>
-    <string name="always_night_mode">强制夜间模式</string>
-    <string name="disable">禁用</string>
-    <string name="auto">自动</string>
     <string name="language_changed">已修改应用语言，你需要重启应用才能应用更改！</string>
     <string name="password_mismatch">密码不匹配</string>
     <string name="password_confirm">重新输入密码</string>
+    <string name="always_night_mode">保持夜间模式</string>
+    <string name="disable">禁用</string>
+    <string name="auto">自动</string>
+    <string name="follow_system">跟随系统</string>
 </resources>

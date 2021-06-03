@@ -227,6 +227,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             when (newValue.toString().toIntOrNull()) {
                 1    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 2    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                3    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 else -> setNightModeAutomatically()
             }
             return@OnPrefChanged true

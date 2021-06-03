@@ -38,8 +38,8 @@
 
         <ListPreference
                 app:key="night_mode"
-                app:summary="@string/dark_ui"
-                app:defaultValue="0"
+                app:useSimpleSummaryProvider="true"
+                app:defaultValue="3"
                 app:iconSpaceReserved="false"
                 app:entries="@array/night_mode_entries"
                 app:entryValues="@array/night_mode_values"
