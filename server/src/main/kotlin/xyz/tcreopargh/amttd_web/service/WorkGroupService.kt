@@ -13,4 +13,5 @@ class WorkGroupService : RepositoryServiceBase<EntityWorkGroup, UUID>() {
     override lateinit var repository: WorkGroupRepository
 
     fun findAllByUser(user: EntityUser) = repository.findAllByUsers(user)
+    fun findByID(code:UUID) = findByIdOrNull(code)
 }
