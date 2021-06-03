@@ -45,5 +45,6 @@ data class EntityTask(
     override fun toString(): String {
         return ExcludeToStringProcessor.getToString(this)
     }
+
     override fun hashCode(): Int = taskId.hashCode()
 }

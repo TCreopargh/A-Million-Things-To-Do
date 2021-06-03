@@ -45,7 +45,7 @@ abstract class ControllerBase {
     }
 
     fun isUsernameValid(username: String?): Boolean {
-        return username?.matches(Regex("^([\\u4e00-\\u9fa5]{2,3})|([A-Za-z0-9_ ]{3,32})|([a-zA-Z0-9_ \\u4e00-\\u9fa5]{3,32})\$")) == true && username.trim() == username && username.length < 64
+        return username?.matches(Regex("^([a-zA-Z0-9_ ]|[^\\x00-\\xff]){1,32}\$")) == true && username.trim() == username && username.length < 64
     }
 
     fun isPasswordValid(password: String?): Boolean {

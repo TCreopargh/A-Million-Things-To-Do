@@ -58,7 +58,12 @@ data class EntityWorkGroup(
         get() = users.toList()
 
     @Suppress("unused")
-    @OneToMany(targetEntity = EntityInvitationCode::class, mappedBy = "workGroup", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(
+        targetEntity = EntityInvitationCode::class,
+        mappedBy = "workGroup",
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY
+    )
     var invitationCodes: MutableSet<EntityInvitationCode> = mutableSetOf()
 
     override fun toString(): String {

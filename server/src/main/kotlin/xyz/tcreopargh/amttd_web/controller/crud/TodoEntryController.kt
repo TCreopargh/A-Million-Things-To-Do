@@ -89,8 +89,9 @@ class TodoEntryController : ControllerBase() {
                     TodoEntryCrudResponse(operation = CrudType.CREATE, success = true, entity = TodoEntryImpl(entity))
                 }
                 CrudType.DELETE -> {
-                    val entryToDelete = todoEntryService.findByIdOrNull(body.entity?.entryId
-                        ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
+                    val entryToDelete = todoEntryService.findByIdOrNull(
+                        body.entity?.entryId
+                            ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
                     ) ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
                     todoEntryService.delete(entryToDelete)
                     TodoEntryCrudResponse(operation = CrudType.DELETE, success = true, entity = null)

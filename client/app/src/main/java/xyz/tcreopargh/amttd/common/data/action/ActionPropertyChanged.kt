@@ -31,7 +31,7 @@ class ActionTitleChanged(
 
     override val actionType: ActionType = ActionType.TITLE_CHANGED
 
-    override fun getImageRes(): Int = R.drawable.ic_baseline_access_alarm_24
+    override fun getImageRes(): Int = R.drawable.ic_baseline_title_24
 }
 
 class ActionDescriptionChanged(
@@ -53,7 +53,7 @@ class ActionDescriptionChanged(
 
     override val actionType: ActionType = ActionType.DESCRIPTION_CHANGED
 
-    override fun getImageRes(): Int = R.drawable.ic_baseline_access_alarm_24
+    override fun getImageRes(): Int = R.drawable.ic_baseline_description_24
 }
 
 class ActionDeadlineChanged(

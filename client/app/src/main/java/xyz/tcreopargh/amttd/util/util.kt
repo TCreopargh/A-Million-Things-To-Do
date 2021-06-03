@@ -51,7 +51,10 @@ fun getGroupInvitationCode(amttdUri: String): String? {
  */
 fun getLocale(): Locale {
     val language: String =
-        AMTTD.context.getSharedPreferences(SettingsFragment.PREF_FILE_NAME, Application.MODE_PRIVATE)
+        AMTTD.context.getSharedPreferences(
+            SettingsFragment.PREF_FILE_NAME,
+            Application.MODE_PRIVATE
+        )
             ?.getString(
                 "language",
                 "default"

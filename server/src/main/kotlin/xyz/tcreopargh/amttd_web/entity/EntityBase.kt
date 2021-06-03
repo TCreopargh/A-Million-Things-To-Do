@@ -6,7 +6,7 @@ import java.io.Serializable
  * @author TCreopargh
  * A database entity.
  */
-abstract class EntityBase<ID: Any> : Serializable {
+abstract class EntityBase<ID : Any> : Serializable {
     abstract fun getId(): ID
     override fun hashCode(): Int = getId().hashCode()
     override fun equals(other: Any?): Boolean {

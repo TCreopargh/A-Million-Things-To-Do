@@ -21,7 +21,6 @@ import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
 import xyz.tcreopargh.amttd.common.bean.request.TodoEntryCrudRequest
 import xyz.tcreopargh.amttd.common.bean.request.TodoEntryViewRequest
-import xyz.tcreopargh.amttd.common.bean.response.ActionCrudResponse
 import xyz.tcreopargh.amttd.common.bean.response.TodoEntryCrudResponse
 import xyz.tcreopargh.amttd.common.bean.response.TodoEntryViewResponse
 import xyz.tcreopargh.amttd.common.data.*
