@@ -580,6 +580,7 @@ class MainActivity : BaseActivity() {
         return context.createConfigurationContext(configuration)
     }
 
+    @Suppress("unused")
     private fun updateResourcesLocaleLegacy(context: Context, locale: Locale): Context {
         val resources: Resources = context.resources
         val configuration: Configuration = resources.configuration

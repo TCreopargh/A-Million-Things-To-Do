@@ -15,5 +15,6 @@ data class TodoEntryCrudRequest(
      * If the action is *DELETE*, only the UUID will be used.
      */
     override var entity: TodoEntryImpl? = null,
-    var userId: UUID? = null
+    var userId: UUID? = null,
+    var workGroupId: UUID? = null
 ) : ICrudRequest<TodoEntryImpl>

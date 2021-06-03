@@ -186,6 +186,7 @@ class TodoViewFragment : FragmentOnMainActivityBase(R.string.todo_view_title) {
                                         ?: throw AmttdException(AmttdException.ErrorCode.LOGIN_REQUIRED)
                                 )
                             ),
+                            workGroupId = viewModel.workGroup.value?.groupId,
                             userId = loggedInUser?.uuid
                         ),
                         path = "/todo-entry",
