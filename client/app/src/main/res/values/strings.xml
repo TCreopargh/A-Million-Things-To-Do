@@ -215,4 +215,8 @@
     <string name="workgroup_list_empty">Looks like you don\'t have any work group yet.\nJoin or create one now!</string>
     <string name="todo_list_empty">Looks like this work group does\'t have any todo entry yet.\nCreate one now!</string>
     <string name="add_task">Add Task</string>
+    <string name="add_todo">Add Todo Entry</string>
+    <string name="todo_entry_title">Todo Entry Title</string>
+    <string name="delete_todo_entry">Delete Todo Entry</string>
+    <string name="delete_entry_confirm">Do you really want to delete this todo entry? This cannot be undone.</string>
 </resources>

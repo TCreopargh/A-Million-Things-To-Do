@@ -117,6 +117,7 @@ class MainActivity : BaseActivity() {
                     }
                 }
                 is TodoViewFragment  -> {
+                    currentFragment.addTodoEntry()
                 }
                 is GroupViewFragment -> {
                     if (!fabMenu.isShowing) {
@@ -282,7 +283,7 @@ class MainActivity : BaseActivity() {
                         fragment.viewModel.exception.postValue(AmttdException.getFromException(e))
                     }
                 }.start()
-                dialog.cancel()
+                dialog.dismiss()
             }
             setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
         }.create().show()

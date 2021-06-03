@@ -181,7 +181,7 @@ class LoginActivity : BaseActivity() {
                     password.text.toString(),
                     usernameText?.text.toString()
                 )
-                dialog.cancel()
+                dialog.dismiss()
             }
             setOnDismissListener {
                 loginViewModel.loginDataChanged(

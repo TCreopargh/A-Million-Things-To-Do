@@ -1,9 +1,11 @@
 package xyz.tcreopargh.amttd.ui.todo
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
@@ -17,10 +19,12 @@ import kotlinx.android.synthetic.main.activity_work_group_share.*
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
+import xyz.tcreopargh.amttd.common.bean.request.TodoEntryCrudRequest
 import xyz.tcreopargh.amttd.common.bean.request.TodoEntryViewRequest
+import xyz.tcreopargh.amttd.common.bean.response.ActionCrudResponse
+import xyz.tcreopargh.amttd.common.bean.response.TodoEntryCrudResponse
 import xyz.tcreopargh.amttd.common.bean.response.TodoEntryViewResponse
-import xyz.tcreopargh.amttd.common.data.ITodoEntry
-import xyz.tcreopargh.amttd.common.data.IWorkGroup
+import xyz.tcreopargh.amttd.common.data.*
 import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.ui.group_user.GroupUserFragment
@@ -66,6 +70,13 @@ class TodoViewFragment : FragmentOnMainActivityBase(R.string.todo_view_title) {
             }
         }
 
+        viewModel.dirty.observe(viewLifecycleOwner) {
+            if (it) {
+                initializeItems()
+                viewModel.dirty.value = false
+            }
+        }
+
         viewModel.exception.observe(viewLifecycleOwner) {
             it?.run {
                 Toast.makeText(
@@ -96,7 +107,7 @@ class TodoViewFragment : FragmentOnMainActivityBase(R.string.todo_view_title) {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.options_todoentry, menu)
+        inflater.inflate(R.menu.options_todo_entry, menu)
     }
 
     @SuppressLint("InflateParams")
@@ -153,6 +164,49 @@ class TodoViewFragment : FragmentOnMainActivityBase(R.string.todo_view_title) {
             }
             viewModel.postEntry(entries)
         }.start()
+    }
+
+    fun addTodoEntry() {
+        AlertDialog.Builder(context).apply {
+            @SuppressLint("InflateParams")
+            val dialogView =
+                layoutInflater.inflate(R.layout.add_todo_layout, null)
+            val titleText =
+                dialogView.findViewById<EditText>(R.id.addTodoTitleText)
+            setView(dialogView)
+            setPositiveButton(R.string.confirm) { dialog, _ ->
+                object :
+                    CrudTask<TodoEntryImpl, TodoEntryCrudRequest, TodoEntryCrudResponse>(
+                        request = TodoEntryCrudRequest(
+                            operation = CrudType.CREATE,
+                            entity = TodoEntryImpl(
+                                title = titleText.text.toString(),
+                                creator = UserImpl(loggedInUser
+                                    ?: throw AmttdException(AmttdException.ErrorCode.LOGIN_REQUIRED))
+                            ),
+                            userId = loggedInUser?.uuid
+                        ),
+                        path = "/todo-entry",
+                        responseType = object :
+                            TypeToken<ActionCrudResponse>() {}.type
+                    ) {
+                    override fun onSuccess(entity: TodoEntryImpl?) {
+                        viewModel.dirty.postValue(true)
+                    }
+
+                    override fun onFailure(e: Exception) {
+                        viewModel.exception.postValue(
+                            AmttdException.getFromException(
+                                e
+                            )
+                        )
+                    }
+                }.start()
+
+                dialog.dismiss()
+            }
+            setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+        }.create().show()
     }
 
 }

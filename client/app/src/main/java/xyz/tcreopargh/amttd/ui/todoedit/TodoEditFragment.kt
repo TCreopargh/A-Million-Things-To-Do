@@ -10,9 +10,7 @@ import android.text.InputType
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextUtils
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -92,11 +90,67 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
         return view
     }
 
+    private fun deleteEntry() {
+        AlertDialog.Builder(context).apply {
+            setTitle(R.string.delete_todo_entry)
+            setMessage(getString(R.string.delete_entry_confirm))
+            setPositiveButton(R.string.confirm) { dialog, _ ->
+                object :
+                    CrudTask<TodoEntryImpl, TodoEntryCrudRequest, TodoEntryCrudResponse>(
+                        request = TodoEntryCrudRequest(
+                            operation = CrudType.DELETE,
+                            entity = TodoEntryImpl(
+                                viewModel.entry.value ?: throw AmttdException(
+                                    AmttdException.ErrorCode.REQUESTED_ENTITY_INVALID
+                                )
+                            ),
+                            userId = loggedInUser?.uuid
+                        ),
+                        path = "/todo-entry",
+                        responseType = object :
+                            TypeToken<ActionCrudResponse>() {}.type
+                    ) {
+                    override fun onSuccess(entity: TodoEntryImpl?) {
+                        activity?.onBackPressed()
+                    }
+
+                    override fun onFailure(e: Exception) {
+                        viewModel.exception.postValue(
+                            AmttdException.getFromException(
+                                e
+                            )
+                        )
+                    }
+                }.start()
+                dialog.dismiss()
+            }
+            setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+        }.create().show()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(TodoEditViewModel::class.java)
         val args = arguments?.deepCopy()
         viewModel.entryId.value = UUID.fromString(args?.get("entryId").toString())
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.options_todo_edit, menu)
+    }
+
+    @SuppressLint("InflateParams")
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.actionDeleteEntry -> {
+                deleteEntry()
+                return true
+            }
+        }
+
+        return false
     }
 
     private fun initializeItems() {
@@ -170,7 +224,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                                 }
                             }.start()
 
-                            dialog.cancel()
+                            dialog.dismiss()
                         }
                         setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
                     }.create().show()
@@ -223,7 +277,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                                 }
                             }.start()
 
-                            dialog.cancel()
+                            dialog.dismiss()
                         }
                         setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
                     }.create().show()
@@ -271,7 +325,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                                     }
                                 }.start()
 
-                                dialog.cancel()
+                                dialog.dismiss()
                             }
                             setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
                         }.create().show()
@@ -463,7 +517,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                         }
                     }.start()
                 }
-                dialog.cancel()
+                dialog.dismiss()
             }
             if (!isAdd) {
                 setNeutralButton(R.string.remove) { dialog, _ ->
@@ -495,8 +549,8 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                                     viewModel.exception.postValue(AmttdException.getFromException(e))
                                 }
                             }.start()
-                            dialog.cancel()
-                            dialogInner.cancel()
+                            dialog.dismiss()
+                            dialogInner.dismiss()
                         }
                         setNegativeButton(R.string.cancel) { dialogInner, _ -> dialogInner.cancel() }
                     }.create().show()

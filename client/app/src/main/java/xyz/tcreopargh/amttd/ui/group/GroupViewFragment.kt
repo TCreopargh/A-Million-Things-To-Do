@@ -147,7 +147,7 @@ class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title)
                                 viewModel.exception.postValue(AmttdException.getFromException(e))
                             }
                         }.start()
-                        dialog.cancel()
+                        dialog.dismiss()
                     }
                     val neutralButtonText =
                         if (it.leader?.uuid == loggedInUserId) {
@@ -189,8 +189,8 @@ class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title)
                                         )
                                     }
                                 }.start()
-                                dialog.cancel()
-                                dialogInner.cancel()
+                                dialog.dismiss()
+                                dialogInner.dismiss()
                             }
                             setNegativeButton(R.string.cancel) { dialogInner, _ -> dialogInner.cancel() }
                         }.create().show()
@@ -214,7 +214,6 @@ class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title)
         super.onCreate(savedInstanceState)
         viewModel =
             ViewModelProvider(this).get(GroupViewModel::class.java)
-        setHasOptionsMenu(true)
     }
 
     fun joinWorkGroup() {
@@ -257,7 +256,7 @@ class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title)
                         viewModel.exception.postValue(AmttdException.getFromException(e))
                     }
                 }.start()
-                dialog.cancel()
+                dialog.dismiss()
             }
             setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
         }.create()
@@ -315,7 +314,7 @@ class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title)
                         viewModel.exception.postValue(AmttdException.getFromException(e))
                     }
                 }.start()
-                dialog.cancel()
+                dialog.dismiss()
             }
             setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
         }.create().show()

@@ -13,6 +13,8 @@ class TodoViewViewModel : ViewModelBase() {
         get() = _entries
     val workGroup = MutableLiveData<IWorkGroup?>(null)
 
+    val dirty = MutableLiveData(false)
+
     fun findEntryById(uuid: UUID): ITodoEntry? = entries.value?.find { it.entryId == uuid }
 
     fun setEntry(value: List<ITodoEntry>) {
