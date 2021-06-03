@@ -42,22 +42,28 @@ data class EntityWorkGroup(
     @ExcludeToString
     var users: MutableSet<EntityUser> = mutableSetOf(),
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @ExcludeToString
-    var entries: List<EntityTodoEntry> = listOf(),
+    var entries: MutableSet<EntityTodoEntry> = mutableSetOf(),
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_uuid", columnDefinition = "varchar(64)", updatable = true)
     @ExcludeToString
     override var leader: EntityUser? = null
 
-) : IWorkGroup, IEntity {
+) : IWorkGroup, EntityBase<UUID>() {
     override val name: String
         get() = groupName
     override val usersInGroup: List<IUser>
         get() = users.toList()
 
+    @Suppress("unused")
+    @OneToMany(targetEntity = EntityInvitationCode::class, mappedBy = "workGroup", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var invitationCodes: MutableSet<EntityInvitationCode> = mutableSetOf()
+
     override fun toString(): String {
         return ExcludeToStringProcessor.getToString(this)
     }
+
+    override fun getId(): UUID = groupId
 }

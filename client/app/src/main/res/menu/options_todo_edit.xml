@@ -6,6 +6,7 @@
             android:id="@+id/actionDeleteEntry"
             android:title="@string/delete_todo_entry"
             android:orderInCategory="80"
+            android:iconTint="@android:color/white"
             android:icon="@drawable/ic_baseline_delete_outline_24"
             app:showAsAction="ifRoom" />
 </menu>

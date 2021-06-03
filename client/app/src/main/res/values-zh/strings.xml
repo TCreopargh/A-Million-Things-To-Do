@@ -108,7 +108,7 @@
     <string name="title_activity_login">登录</string>
     <string name="todo_action_history_text">操作历史记录</string>
     <string name="todo_deadline_text">最后期限</string>
-    <string name="todo_description">待办</string>
+    <string name="todo_description">待办事项描述</string>
     <string name="todo_description_text">描述</string>
     <string name="todo_status">待办事项状态</string>
     <string name="todo_status_text">状态</string>

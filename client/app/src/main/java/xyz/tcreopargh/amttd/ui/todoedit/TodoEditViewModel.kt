@@ -9,5 +9,7 @@ class TodoEditViewModel : ViewModelBase() {
     val entry = MutableLiveData<ITodoEntry?>(null)
 
     val dirty = MutableLiveData(false)
-    var entryId = MutableLiveData<UUID?>(null)
+    val entryId = MutableLiveData<UUID?>(null)
+
+    val entryDeleted = MutableLiveData(false)
 }

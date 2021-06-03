@@ -32,15 +32,18 @@ data class EntityTask(
     override var name: String = "",
     override var completed: Boolean = false,
 
-    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "entry_id", nullable = false)
     @ExcludeToString
     var parent: EntityTodoEntry? = null,
 
     // If false, mark this task as deleted
     var isPresent: Boolean = true
-) : ITask, IEntity {
+) : ITask, EntityBase<UUID>() {
+    override fun getId(): UUID = taskId
+
     override fun toString(): String {
         return ExcludeToStringProcessor.getToString(this)
     }
+    override fun hashCode(): Int = taskId.hashCode()
 }

@@ -17,7 +17,7 @@ import javax.persistence.*
 @Table(name = "auth_token", indexes = [Index(name = "user_index", columnList = "user_uuid")])
 data class EntityAuthToken(
 
-    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_uuid", columnDefinition = "varchar(64)", updatable = false)
     var user: EntityUser? = null,
 
@@ -29,7 +29,10 @@ data class EntityAuthToken(
     @Temporal(TemporalType.TIMESTAMP)
     var timeCreated: Calendar = Calendar.getInstance()
 
-) : IEntity {
+) : EntityBase<String>() {
+
+    override fun getId(): String = token
+
     companion object {
         const val LIFESPAN: Long = 86400000L * 7
     }

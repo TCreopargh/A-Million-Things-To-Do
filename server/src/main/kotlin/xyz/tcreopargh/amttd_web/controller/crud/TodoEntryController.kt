@@ -10,14 +10,11 @@ import xyz.tcreopargh.amttd_web.common.bean.request.TodoEntryCrudRequest
 import xyz.tcreopargh.amttd_web.common.bean.response.TodoEntryCrudResponse
 import xyz.tcreopargh.amttd_web.common.data.CrudType
 import xyz.tcreopargh.amttd_web.common.data.TodoEntryImpl
-import xyz.tcreopargh.amttd_web.common.data.TodoStatus
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
-import xyz.tcreopargh.amttd_web.entity.*
-import xyz.tcreopargh.amttd_web.service.TodoEntryService
+import xyz.tcreopargh.amttd_web.entity.EntityTask
+import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
 import xyz.tcreopargh.amttd_web.util.logger
-import java.util.*
-import javax.persistence.*
 import javax.servlet.http.HttpServletRequest
 
 /**
@@ -75,32 +72,26 @@ class TodoEntryController : ControllerBase() {
                 }
                 CrudType.CREATE -> {
                     val userId = body.userId ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
-                    val user =
-                        userService.findByIdOrNull(userId)
-                            ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
-                    var entity  = EntityTodoEntry().apply {
-                        creator = user
-                        title = body.entity?.title ?: throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS)
-                        description = body.entity!!.description
-                        deadline = body.entity?.deadline
-                        parent = body.workGroupId?.let { workGroupService.findByID(it) }
-                    }
-                    var task = EntityTask().apply {
-                        name = body.entity?.title ?:throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS)
-                        completed = true
-                        parent = entity
-                    }
-                    taskService.save(task)
-                    entity.allTasks = mutableListOf(task)
+                    val user = userService.findByIdOrNull(userId)
+                        ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
+                    val entity = EntityTodoEntry(
+                        creator = user,
+                        title = body.entity?.title ?: throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS),
+                        parent = body.workGroupId?.let { workGroupService.findByIdOrNull(it) }
+                    )
                     todoEntryService.saveImmediately(entity)
-                    TodoEntryCrudResponse(operation = CrudType.CREATE, success = true, entity = null)
+                    val task = EntityTask(
+                        name = body.entity?.title ?: throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS),
+                        completed = false,
+                        parent = entity
+                    )
+                    taskService.saveImmediately(task)
+                    TodoEntryCrudResponse(operation = CrudType.CREATE, success = true, entity = TodoEntryImpl(entity))
                 }
                 CrudType.DELETE -> {
-                    val userId = body.userId ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
-                    var entryToDelete = todoEntryService.findByIdOrNull(body.entity!!.entryId)?:throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
-                    for(i in entryToDelete.allTasks.indices){
-                        taskService.delete(entryToDelete.allTasks[i])
-                    }
+                    val entryToDelete = todoEntryService.findByIdOrNull(body.entity?.entryId
+                        ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
+                    ) ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
                     todoEntryService.delete(entryToDelete)
                     TodoEntryCrudResponse(operation = CrudType.DELETE, success = true, entity = null)
                 }

@@ -53,21 +53,33 @@ data class EntityTodoEntry(
     @Temporal(TemporalType.TIMESTAMP)
     override var deadline: Calendar? = null,
 
-    @OneToMany(targetEntity = EntityTask::class, mappedBy = "parent")
-    var allTasks: MutableList<EntityTask> = mutableListOf(),
+    @OneToMany(
+        mappedBy = "parent",
+        cascade = [CascadeType.REMOVE],
+        fetch = FetchType.LAZY
+    )
+    var allTasks: MutableSet<EntityTask> = mutableSetOf(),
 
-    @OneToMany(targetEntity = EntityAction::class, mappedBy = "parent")
-    var actions: List<EntityAction> = listOf(),
+    @OneToMany(
+        mappedBy = "parent",
+        cascade = [CascadeType.REMOVE],
+        fetch = FetchType.LAZY
+    )
+    var actions: MutableSet<EntityAction> = mutableSetOf(),
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id", nullable = false)
     @ExcludeToString
     var parent: EntityWorkGroup? = null
 
-) : ITodoEntry, IEntity {
+) : ITodoEntry, EntityBase<UUID>() {
+    override fun getId(): UUID = entryId
+
     override fun toString(): String {
         return ExcludeToStringProcessor.getToString(this)
     }
+
+    override fun hashCode(): Int = entryId.hashCode()
 
     override val tasks: List<EntityTask>
         get() = allTasks.filter { it.isPresent }

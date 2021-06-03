@@ -85,6 +85,12 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                 viewModel.dirty.value = false
             }
         }
+        viewModel.entryDeleted.observe(viewLifecycleOwner) {
+            if (it) {
+                activity?.onBackPressed()
+                viewModel.entryDeleted.value = false
+            }
+        }
         initializeItems()
 
         return view
@@ -108,10 +114,10 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                         ),
                         path = "/todo-entry",
                         responseType = object :
-                            TypeToken<ActionCrudResponse>() {}.type
+                            TypeToken<TodoEntryCrudResponse>() {}.type
                     ) {
                     override fun onSuccess(entity: TodoEntryImpl?) {
-                        activity?.onBackPressed()
+                        viewModel.entryDeleted.postValue(true)
                     }
 
                     override fun onFailure(e: Exception) {

@@ -45,7 +45,7 @@ data class EntityUser(
     @Temporal(TemporalType.TIMESTAMP)
     val timeCreated: Calendar = Calendar.getInstance(),
 
-    @ManyToMany(cascade = [CascadeType.ALL])
+    @ManyToMany
     @JoinTable(
         name = "user_in_work_group",
         joinColumns = [JoinColumn(name = "user_uuid")],
@@ -53,11 +53,20 @@ data class EntityUser(
     )
     var joinedWorkGroups: MutableSet<EntityWorkGroup> = mutableSetOf()
 
-) : IEntity, IUser {
+) : EntityBase<UUID>(), IUser {
 
     @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "avatar_id")
     var avatar: EntityUserAvatar? = null
+
+    @Suppress("unused")
+    @OneToMany(
+        targetEntity = EntityAuthToken::class,
+        mappedBy = "user",
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY
+    )
+    var authTokens: MutableSet<EntityAuthToken> = mutableSetOf()
 
     override val username: String
         get() = name.toString()
@@ -66,4 +75,5 @@ data class EntityUser(
 
     override fun equals(other: Any?): Boolean = this.uuid == (other as? EntityUser)?.uuid
     override fun hashCode(): Int = uuid.hashCode()
+    override fun getId(): UUID = uuid
 }

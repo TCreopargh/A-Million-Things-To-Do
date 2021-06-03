@@ -60,15 +60,17 @@ data class EntityAction(
 
     override var newValue: String? = null,
 
-    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id", nullable = true)
     override var task: EntityTask? = null,
 
-    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entry_id", nullable = false)
     @ExcludeToString
     var parent: EntityTodoEntry? = null
-) : IAction, IEntity {
+) : IAction, EntityBase<UUID>() {
+
+    override fun getId(): UUID = actionId
 
     override fun toString(): String {
         return ExcludeToStringProcessor.getToString(this)

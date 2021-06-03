@@ -38,7 +38,7 @@ class TodoEntryPresenter : ControllerBase() {
             verifyWorkgroup(request, body.groupId)
             var entries: List<EntityTodoEntry> = listOf()
             body.groupId?.let {
-                entries = workGroupService.findByIdOrNull(it)?.entries ?: listOf()
+                entries = workGroupService.findByIdOrNull(it)?.entries?.toList() ?: listOf()
             }
             val list = entries.stream().filter { it != null }.map {
                 TodoEntryImpl(it)

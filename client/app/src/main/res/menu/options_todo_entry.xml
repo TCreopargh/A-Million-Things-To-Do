@@ -5,6 +5,7 @@
             android:id="@+id/actionManageUsers"
             android:title="@string/action_manage_users"
             android:orderInCategory="80"
+            android:iconTint="@android:color/white"
             android:icon="@drawable/ic_baseline_group_24"
             app:showAsAction="ifRoom" />
 </menu>

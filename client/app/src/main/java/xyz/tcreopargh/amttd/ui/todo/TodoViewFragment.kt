@@ -191,7 +191,7 @@ class TodoViewFragment : FragmentOnMainActivityBase(R.string.todo_view_title) {
                         ),
                         path = "/todo-entry",
                         responseType = object :
-                            TypeToken<ActionCrudResponse>() {}.type
+                            TypeToken<TodoEntryCrudResponse>() {}.type
                     ) {
                     override fun onSuccess(entity: TodoEntryImpl?) {
                         viewModel.dirty.postValue(true)

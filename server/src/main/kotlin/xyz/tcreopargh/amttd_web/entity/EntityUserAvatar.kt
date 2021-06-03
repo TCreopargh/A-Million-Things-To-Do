@@ -26,4 +26,6 @@ data class EntityUserAvatar(
     @Lob
     @Basic(fetch = FetchType.LAZY)
     var image: ByteArray? = null
-) : IEntity
+) : EntityBase<UUID>() {
+    override fun getId(): UUID = avatarId
+}

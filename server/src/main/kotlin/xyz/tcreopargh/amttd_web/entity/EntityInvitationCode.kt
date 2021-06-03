@@ -23,12 +23,12 @@ data class EntityInvitationCode(
     @Column(name = "token", columnDefinition = "VARCHAR(8)", nullable = false, updatable = false)
     var invitationCode: String = generateInvitationCode(),
 
-    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_uuid", columnDefinition = "varchar(64)", updatable = false)
     @ExcludeToString
     var user: EntityUser? = null,
 
-    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id", nullable = false)
     @ExcludeToString
     var workGroup: EntityWorkGroup? = null,
@@ -38,7 +38,7 @@ data class EntityInvitationCode(
     var timeCreated: Calendar = Calendar.getInstance(),
 
     var expirationTimeInDays: Int = 7
-) : IEntity {
+) : EntityBase<String>() {
 
     val expirationTimeInMillis
         get() = expirationTimeInDays * 86400000
@@ -53,4 +53,6 @@ data class EntityInvitationCode(
     override fun toString(): String {
         return ExcludeToStringProcessor.getToString(this)
     }
+
+    override fun getId(): String = invitationCode
 }
