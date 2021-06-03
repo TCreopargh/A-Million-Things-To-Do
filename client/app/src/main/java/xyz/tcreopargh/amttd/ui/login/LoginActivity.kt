@@ -164,17 +164,41 @@ class LoginActivity : BaseActivity() {
                         LinearLayoutCompat.LayoutParams.MATCH_PARENT,
                         LinearLayoutCompat.LayoutParams.WRAP_CONTENT
                     )
-                    params.setMargins(32, 8, 32, 8)
+                    params.setMargins(64, 8, 64, 8)
                     layoutParams = params
                 }
+
+            val confirmPasswordText =
+                EditText(this@LoginActivity, null, 0, R.style.Widget_AppCompat_EditText).apply {
+                    afterTextChanged {
+                        if (password.text.toString() != it) {
+                            error = context.getString(R.string.password_mismatch)
+                        }
+                    }
+                    hint = getString(R.string.password_confirm)
+                    setAutofillHints(getString(R.string.password_confirm))
+                    inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    val params = LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                    )
+                    params.setMargins(64, 8, 64, 8)
+                    layoutParams = params
+                }
+
             val layout = LinearLayoutCompat(this@LoginActivity).apply {
                 orientation = LinearLayoutCompat.VERTICAL
                 addView(usernameText)
+                addView(confirmPasswordText)
             }
             setView(layout)
             setTitle(R.string.set_username)
             setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
             setPositiveButton(R.string.action_register) { dialog, _ ->
+                if (password.text.toString() != confirmPasswordText.text.toString()) {
+                    Toast.makeText(context, R.string.password_mismatch, Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
                 loading.visibility = View.VISIBLE
                 loginViewModel.register(
                     email.text.toString(),

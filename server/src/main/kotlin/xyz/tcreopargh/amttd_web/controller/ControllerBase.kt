@@ -49,7 +49,7 @@ abstract class ControllerBase {
     }
 
     fun isPasswordValid(password: String?): Boolean {
-        return password?.length in 6..128
+        return password?.length in 6..128 && password?.matches(Regex("^[\\x00-\\xff]{6,128}\$")) == true
     }
 
 

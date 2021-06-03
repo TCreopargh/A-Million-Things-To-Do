@@ -1,6 +1,7 @@
 package xyz.tcreopargh.amttd.ui.settings
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -8,12 +9,15 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
@@ -149,18 +153,56 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
         @Suppress("UsePropertyAccessSyntax", "UNUSED_ANONYMOUS_PARAMETER")
         passwordPref?.setOnPreferenceChangeListener OnPrefChanged@{ preference, newValue ->
-            val newPassword = newValue.toString()
-            if (!LoginViewModel.isPasswordValid(newPassword)) {
-                Toast.makeText(context, R.string.invalid_password, Toast.LENGTH_SHORT).show()
-                return@OnPrefChanged false
-            }
-            val uuid = (activity as? MainActivity)?.loggedInUser?.uuid ?: return@OnPrefChanged false
-            return@OnPrefChanged sendUserProfileChangeRequest(
-                UserProfileChangeRequest(
-                    userId = uuid,
-                    newPassword = newPassword
-                )
-            )
+
+            AlertDialog.Builder(context).apply {
+                val confirmPasswordText =
+                    EditText(context, null, 0, R.style.Widget_AppCompat_EditText).apply {
+                        afterTextChanged {
+                            if (newValue.toString() != it) {
+                                error = context.getString(R.string.password_mismatch)
+                            }
+                        }
+                        hint = getString(R.string.password_confirm)
+                        setAutofillHints(getString(R.string.password_confirm))
+                        inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                        val params = LinearLayoutCompat.LayoutParams(
+                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                        )
+                        params.setMargins(64, 8, 64, 8)
+                        layoutParams = params
+                    }
+
+                val layout = LinearLayoutCompat(context).apply {
+                    orientation = LinearLayoutCompat.VERTICAL
+                    addView(confirmPasswordText)
+                }
+                setView(layout)
+                setTitle(R.string.password_confirm)
+                setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+                setPositiveButton(R.string.confirm) { dialog, _ ->
+                    if (newValue.toString() != confirmPasswordText.text.toString()) {
+                        Toast.makeText(context, R.string.password_mismatch, Toast.LENGTH_SHORT)
+                            .show()
+                        return@setPositiveButton
+                    }
+                    val newPassword = newValue.toString()
+                    if (!LoginViewModel.isPasswordValid(newPassword)) {
+                        Toast.makeText(context, R.string.invalid_password, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    val uuid = (activity as? MainActivity)?.loggedInUser?.uuid
+                    sendUserProfileChangeRequest(
+                        UserProfileChangeRequest(
+                            userId = uuid,
+                            newPassword = newPassword
+                        )
+                    )
+                    dialog.dismiss()
+                }
+            }.create().show()
+            return@OnPrefChanged false
         }
 
         viewModel.exception.observe(viewLifecycleOwner) {

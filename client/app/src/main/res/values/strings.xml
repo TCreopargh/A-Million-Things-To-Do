@@ -218,4 +218,6 @@
     <string name="delete_todo_entry">Delete Todo Entry</string>
     <string name="delete_entry_confirm">Do you really want to delete this todo entry? This cannot be undone.</string>
     <string name="language_changed">Language changed, you must restart the app to see the changes!</string>
+    <string name="password_mismatch">Password Mismatch</string>
+    <string name="password_confirm">Confirm Password</string>
 </resources>

@@ -12,7 +12,7 @@ class TokenService : RepositoryServiceBase<EntityAuthToken, String>() {
     @Autowired
     override lateinit var repository: TokenRepository
 
-    fun findByUsername(user: EntityUser) = repository.findByUser(user)
+    fun findByUser(user: EntityUser) = repository.findByUser(user)
 
     fun findByToken(token: String) = findByIdOrNull(token)
 

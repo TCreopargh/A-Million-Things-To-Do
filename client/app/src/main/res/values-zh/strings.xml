@@ -221,4 +221,6 @@
     <string name="disable">禁用</string>
     <string name="auto">自动</string>
     <string name="language_changed">已修改应用语言，你需要重启应用才能应用更改！</string>
+    <string name="password_mismatch">密码不匹配</string>
+    <string name="password_confirm">重新输入密码</string>
 </resources>

@@ -94,6 +94,12 @@ class UserController : ControllerBase() {
             if (newEmail != null && userService.findByEmail(newEmail).isNotEmpty()) {
                 throw AmttdException(AmttdException.ErrorCode.USER_ALREADY_EXISTS)
             }
+            // Invalidate tokens
+            if (newEmail != null || newPassword != null) {
+                tokenService.findByUser(user).forEach {
+                    tokenService.remove(it)
+                }
+            }
             newUsername?.let { user.name = it }
             newEmail?.let { user.emailAddress = it }
             newPassword?.let { user.password = it }
