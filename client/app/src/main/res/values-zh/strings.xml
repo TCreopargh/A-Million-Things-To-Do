@@ -52,7 +52,7 @@
     <string name="internal_server_error">内部服务器错误</string>
     <string name="invalid_email">邮箱格式错误</string>
     <string name="invalid_json">JSON无效</string>
-    <string name="invalid_password">密码必须多于5个字符</string>
+    <string name="invalid_password">密码长度必须大于等于6，并且仅由大小写英文字母、数字和半角字符组成</string>
     <string name="invalid_token">登陆令牌无效，请尝试重启应用</string>
     <string name="invalid_username">用户名格式错误</string>
     <string name="io_exception">输入输出错误</string>

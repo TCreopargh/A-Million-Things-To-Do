@@ -154,6 +154,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         @Suppress("UsePropertyAccessSyntax", "UNUSED_ANONYMOUS_PARAMETER")
         passwordPref?.setOnPreferenceChangeListener OnPrefChanged@{ preference, newValue ->
 
+            if (!LoginViewModel.isPasswordValid(newValue.toString())) {
+                Toast.makeText(context, R.string.invalid_password, Toast.LENGTH_SHORT)
+                    .show()
+                return@OnPrefChanged false
+            }
+
             AlertDialog.Builder(context).apply {
                 val confirmPasswordText =
                     EditText(context, null, 0, R.style.Widget_AppCompat_EditText).apply {
