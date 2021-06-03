@@ -1,28 +1,18 @@
 package xyz.tcreopargh.amttd_web.service
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import xyz.tcreopargh.amttd_web.entity.EntityInvitationCode
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.repository.InvitationCodeRepository
 
 @Service
-class InvitationCodeService {
+class InvitationCodeService : RepositoryServiceBase<EntityInvitationCode, String>() {
     @Autowired
-    private lateinit var repository: InvitationCodeRepository
-
-    fun getAll() = repository.findAll()
-
-    fun save(code: EntityInvitationCode) = repository.save(code)
-
-    fun saveImmediately(code: EntityInvitationCode) = repository.saveAndFlush(code)
-
-    fun saveAll(codes: List<EntityInvitationCode>) = repository.saveAll(codes)
-
+    override lateinit var repository: InvitationCodeRepository
     fun findByUser(user: EntityUser) = repository.findByUser(user)
 
-    fun findByCode(code: String) = repository.findByIdOrNull(code)
+    fun findByCode(code: String) = findByIdOrNull(code)
 
     fun remove(code: EntityInvitationCode) = repository.delete(code)
 

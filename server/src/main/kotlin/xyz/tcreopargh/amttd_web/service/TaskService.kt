@@ -8,16 +8,16 @@ import xyz.tcreopargh.amttd_web.repository.TaskRepository
 import java.util.*
 
 @Service
-class TaskService {
+class TaskService : RepositoryServiceBase<EntityTask, UUID>() {
     @Autowired
-    private lateinit var repository: TaskRepository
-    fun getAll() = repository.findAll()
+    override lateinit var repository: TaskRepository
     fun getAllPresent() = repository.findAll().filter { it.isPresent }
-    fun save(entry: EntityTask) = repository.save(entry)
-    fun saveImmediately(entry: EntityTask) = repository.saveAndFlush(entry)
-    fun findByIdOrNull(uuid: UUID) = repository.findByIdOrNull(uuid)?.takeIf { it.isPresent }
 
-    @Deprecated("Use markAsRemoved", level = DeprecationLevel.WARNING)
+    @Deprecated(
+        "Use markAsRemoved",
+        level = DeprecationLevel.WARNING,
+        replaceWith = ReplaceWith("markAsRemoved")
+    )
     fun delete(uuid: UUID) = repository.deleteById(uuid)
 
     fun markAsRemoved(uuid: UUID) {

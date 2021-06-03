@@ -1,7 +1,6 @@
 package xyz.tcreopargh.amttd_web.service
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
@@ -9,27 +8,19 @@ import xyz.tcreopargh.amttd_web.repository.TokenRepository
 import java.util.*
 
 @Service
-class TokenService {
+class TokenService : RepositoryServiceBase<EntityAuthToken, String>() {
     @Autowired
-    private lateinit var tokenRepository: TokenRepository
+    override lateinit var repository: TokenRepository
 
-    fun getAll() = tokenRepository.findAll()
+    fun findByUsername(user: EntityUser) = repository.findByUser(user)
 
-    fun save(token: EntityAuthToken) = tokenRepository.save(token)
+    fun findByToken(token: String) = findByIdOrNull(token)
 
-    fun saveImmediately(token: EntityAuthToken) = tokenRepository.saveAndFlush(token)
-
-    fun saveAll(tokens: List<EntityAuthToken>) = tokenRepository.saveAll(tokens)
-
-    fun findByUsername(user: EntityUser) = tokenRepository.findByUser(user)
-
-    fun findByToken(token: String) = tokenRepository.findByIdOrNull(token)
-
-    fun remove(token: EntityAuthToken) = tokenRepository.delete(token)
+    fun remove(token: EntityAuthToken) = delete(token)
     fun removeExpired() {
-        for (token in tokenRepository.findAll()) {
+        for (token in repository.findAll()) {
             if (token.isExpired()) {
-                tokenRepository.delete(token)
+                repository.delete(token)
             }
         }
     }

@@ -101,7 +101,7 @@ class WorkGroupController : ControllerBase() {
                             success = true
                         )
                     } else {
-                        workGroupService.delete(id)
+                        workGroupService.deleteById(id)
                         WorkGroupCrudResponse(
                             operation = body.operation,
                             success = true
