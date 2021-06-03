@@ -54,12 +54,12 @@ data class EntityTodoEntry(
     override var deadline: Calendar? = null,
 
     @OneToMany(targetEntity = EntityTask::class, mappedBy = "parent")
-    var allTasks: List<EntityTask> = listOf(),
+    var allTasks: MutableList<EntityTask> = mutableListOf(),
 
     @OneToMany(targetEntity = EntityAction::class, mappedBy = "parent")
     var actions: List<EntityAction> = listOf(),
 
-    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id", nullable = false)
     @ExcludeToString
     var parent: EntityWorkGroup? = null
