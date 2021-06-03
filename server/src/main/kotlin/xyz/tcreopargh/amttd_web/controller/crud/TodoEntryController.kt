@@ -10,10 +10,14 @@ import xyz.tcreopargh.amttd_web.common.bean.request.TodoEntryCrudRequest
 import xyz.tcreopargh.amttd_web.common.bean.response.TodoEntryCrudResponse
 import xyz.tcreopargh.amttd_web.common.data.CrudType
 import xyz.tcreopargh.amttd_web.common.data.TodoEntryImpl
+import xyz.tcreopargh.amttd_web.common.data.TodoStatus
 import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
-import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
+import xyz.tcreopargh.amttd_web.entity.*
+import xyz.tcreopargh.amttd_web.service.TodoEntryService
 import xyz.tcreopargh.amttd_web.util.logger
+import java.util.*
+import javax.persistence.*
 import javax.servlet.http.HttpServletRequest
 
 /**
@@ -59,8 +63,8 @@ class TodoEntryController : ControllerBase() {
             if (body.operation != CrudType.CREATE) {
                 verifyTodoEntry(request, body.entity?.entryId)
             }
-            when (body.operation) {
-                CrudType.READ   -> {
+            val todoEntryCrudResponse = when (body.operation) {
+                CrudType.READ -> {
                     var entry: EntityTodoEntry? = null
                     body.entity?.entryId?.let {
                         entry = todoEntryService.findByIdOrNull(it)
@@ -70,16 +74,42 @@ class TodoEntryController : ControllerBase() {
                     TodoEntryCrudResponse(operation = CrudType.READ, success = true, entity = ret)
                 }
                 CrudType.CREATE -> {
-                    TODO("Add new to-do entry")
+                    val userId = body.userId ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
+                    val user =
+                        userService.findByIdOrNull(userId)
+                            ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
+                    var entity  = EntityTodoEntry().apply {
+                        creator = user
+                        title = body.entity?.title ?: throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS)
+                        description = body.entity!!.description
+                        deadline = body.entity?.deadline
+                        parent = body.workGroupId?.let { workGroupService.findByID(it) }
+                    }
+                    var task = EntityTask().apply {
+                        name = body.entity?.title ?:throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS)
+                        completed = true
+                        parent = entity
+                    }
+                    taskService.save(task)
+                    entity.allTasks = mutableListOf(task)
+                    todoEntryService.saveImmediately(entity)
+                    TodoEntryCrudResponse(operation = CrudType.CREATE, success = true, entity = null)
                 }
                 CrudType.DELETE -> {
-                    TODO("Remove to-do entry")
+                    val userId = body.userId ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
+                    var entryToDelete = todoEntryService.findByIdOrNull(body.entity!!.entryId)?:throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
+                    for(i in entryToDelete.allTasks.indices){
+                        taskService.delete(entryToDelete.allTasks[i])
+                    }
+                    todoEntryService.delete(entryToDelete)
+                    TodoEntryCrudResponse(operation = CrudType.DELETE, success = true, entity = null)
                 }
-                else            -> TodoEntryCrudResponse(
+                else -> TodoEntryCrudResponse(
                     success = false,
                     error = AmttdException.ErrorCode.ACTION_NOT_SUPPORTED.value
                 )
             }
+            todoEntryCrudResponse
         } catch (e: Exception) {
             logger.error("Error in todo entry crud: ", e)
             TodoEntryCrudResponse(
