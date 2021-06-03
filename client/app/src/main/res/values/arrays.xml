@@ -8,8 +8,8 @@
 
     <string-array name="language_values">
         <item>default</item>
-        <item>en_us</item>
-        <item>zh_cn</item>
+        <item>en</item>
+        <item>zh</item>
     </string-array>
 
     <string-array name="night_mode_entries">

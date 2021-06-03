@@ -181,8 +181,10 @@ class TodoViewFragment : FragmentOnMainActivityBase(R.string.todo_view_title) {
                             operation = CrudType.CREATE,
                             entity = TodoEntryImpl(
                                 title = titleText.text.toString(),
-                                creator = UserImpl(loggedInUser
-                                    ?: throw AmttdException(AmttdException.ErrorCode.LOGIN_REQUIRED))
+                                creator = UserImpl(
+                                    loggedInUser
+                                        ?: throw AmttdException(AmttdException.ErrorCode.LOGIN_REQUIRED)
+                                )
                             ),
                             userId = loggedInUser?.uuid
                         ),

@@ -10,6 +10,8 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.text.*
 import android.text.style.ForegroundColorSpan
 import android.widget.EditText
@@ -47,15 +49,28 @@ fun getGroupInvitationCode(amttdUri: String): String? {
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.
  */
+fun getLocale(): Locale {
+    val language: String =
+        AMTTD.context.getSharedPreferences(SettingsFragment.PREF_FILE_NAME, Application.MODE_PRIVATE)
+            ?.getString(
+                "language",
+                "default"
+            ) ?: "default"
+    if (language == "default") {
+        return AMTTD.context.resources.configuration.locales.get(0)
+    }
+    return Locale(language)
+}
+
 fun Calendar.format(isTimeInDay: Boolean = false): String = if (isTimeInDay) {
     DateFormat.getTimeInstance(
         DateFormat.MEDIUM,
-        AMTTD.context.resources.configuration.locales.get(0)
+        getLocale()
     ).format(this.time)
 } else {
     DateFormat.getDateInstance(
         DateFormat.MEDIUM,
-        AMTTD.context.resources.configuration.locales.get(0)
+        getLocale()
     ).format(this.time)
 }
 
@@ -182,4 +197,12 @@ fun setNightModeAccordingToPref(context: Context) {
                 else -> setNightModeAutomatically()
             }
         }
+}
+
+fun getLocalizedResources(context: Context, desiredLocale: Locale?): Resources {
+    var conf = context.resources.configuration
+    conf = Configuration(conf)
+    conf.setLocale(desiredLocale)
+    val localizedContext = context.createConfigurationContext(conf)
+    return localizedContext.resources
 }

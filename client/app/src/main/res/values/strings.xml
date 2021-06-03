@@ -53,7 +53,7 @@
     <string name="invalid_email">Not a valid email address</string>
     <string name="invalid_json">Invalid Json</string>
     <string name="invalid_password">Password must be >5 characters</string>
-    <string name="invalid_token">Invalid Token</string>
+    <string name="invalid_token">Invalid Login Token, try restarting the app</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="io_exception">IO Error</string>
     <string name="json_missing_field">Json Missing Field</string>
@@ -62,14 +62,12 @@
     <string name="log_in">Log In</string>
     <string name="login_failed">"Login failed"</string>
     <string name="login_failed_unknown_error">"Unknown Error"</string>
-    <string name="login_token_failed">Failed to login with token, please log in manually.</string>
+    <string name="login_token_failed">Login token is invalid, please log in manually.</string>
     <string name="logout">Log Out</string>
     <string name="loop_detected">Loop Detected</string>
     <string name="malformed_json">Malformed Json</string>
     <string name="math_error">Math Error</string>
-    <string name="menu_gallery">Gallery</string>
     <string name="menu_group_view">Todo</string>
-    <string name="menu_slideshow">Slideshow</string>
     <string name="method_not_allowed">Method Not Allowed</string>
     <string name="moved_permanently">Moved Permanently</string>
     <string name="multiple_choices">Multiple Choices</string>
@@ -107,7 +105,7 @@
     <string name="status_not_started">Not Started</string>
     <string name="status_on_hold">On Hold</string>
     <string name="timed_out">Timed Out</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">Log In</string>
     <string name="todo_action_history_text">Action History</string>
     <string name="todo_deadline_text">Deadline</string>
     <string name="todo_description">Todo Description</string>
@@ -118,7 +116,7 @@
     <string name="todo_title">Title</string>
     <string name="todo_title_text">Title</string>
     <string name="token_expired">Login token expired. Please log in manually.</string>
-    <string name="unauthorized">Unauthorized</string>
+    <string name="unauthorized">Unauthorized operation. Please restart the app and try again.</string>
     <string name="unknown_action">Unknown Action</string>
     <string name="unknown_error">Unknown Error</string>
     <string name="unknown_host">Unknown Host</string>
@@ -126,7 +124,7 @@
     <string name="user_already_exists">User Already Exists</string>
     <string name="user_count">User Count</string>
     <string name="user_not_found">User Not Found</string>
-    <string name="welcome">"Welcome !"</string>
+    <string name="welcome">Welcome!</string>
     <string name="edit_work_group">Edit Work Group</string>
     <string name="illegal_arguments">Illegal Arguments</string>
     <string name="delete">Delete</string>
@@ -136,7 +134,7 @@
     <string name="general_settings">General</string>
     <string name="night_mode">Night Mode</string>
     <string name="change_pfp">Change your user avatar</string>
-    <string name="dark_ui">Use darker UI background</string>
+    <string name="dark_ui">Use darker UI theme</string>
     <string name="app_lang_desc">Change the application language</string>
     <string name="language">Language</string>
     <string name="language_default">System Default</string>
@@ -147,7 +145,7 @@
     <string name="change_password">Change Password</string>
     <string name="change_password_summary">Change your password</string>
     <string name="password_changed">Password changed, please log in again.</string>
-    <string name="add_work_group">Add Work Group</string>
+    <string name="add_work_group">Create Work Group</string>
     <string name="remove_work_group_confirm">Do you really want to remove this work group? This cannot be undone.</string>
     <string name="remove_work_group">Remove Work Group</string>
     <string name="action_type">Action Type</string>
@@ -219,4 +217,5 @@
     <string name="todo_entry_title">Todo Entry Title</string>
     <string name="delete_todo_entry">Delete Todo Entry</string>
     <string name="delete_entry_confirm">Do you really want to delete this todo entry? This cannot be undone.</string>
+    <string name="language_changed">Language changed, you must restart the app to see the changes!</string>
 </resources>

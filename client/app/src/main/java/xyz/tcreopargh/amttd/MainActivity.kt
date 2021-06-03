@@ -1,9 +1,14 @@
 package xyz.tcreopargh.amttd
 
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.app.AlertDialog
+import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.os.*
 import android.util.Log
@@ -547,5 +552,39 @@ class MainActivity : BaseActivity() {
     companion object {
         const val LOGIN_SUCCESS = 0
         const val LOGIN_FAILED = 1
+    }
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(updateBaseContextLocale(base))
+    }
+
+    private fun updateBaseContextLocale(context: Context): Context? {
+        var language: String =
+            context.getSharedPreferences(SettingsFragment.PREF_FILE_NAME, Application.MODE_PRIVATE)
+                ?.getString(
+                    "language",
+                    "default"
+                ) ?: "default"
+        if (language == "default") {
+            language = Locale.getDefault().language
+        }
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        return updateResourcesLocale(context, locale)
+    }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    private fun updateResourcesLocale(context: Context, locale: Locale): Context? {
+        val configuration: Configuration = context.resources.configuration
+        configuration.setLocale(locale)
+        return context.createConfigurationContext(configuration)
+    }
+
+    private fun updateResourcesLocaleLegacy(context: Context, locale: Locale): Context {
+        val resources: Resources = context.resources
+        val configuration: Configuration = resources.configuration
+        configuration.setLocale(locale)
+        context.createConfigurationContext(configuration)
+        return context
     }
 }

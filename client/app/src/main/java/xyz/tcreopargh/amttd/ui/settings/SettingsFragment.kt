@@ -31,6 +31,7 @@ import xyz.tcreopargh.amttd.common.exception.AmttdException
 import xyz.tcreopargh.amttd.ui.login.LoginViewModel
 import xyz.tcreopargh.amttd.util.*
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -46,6 +47,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private var emailPref: EditTextPreference? = null
     private var passwordPref: EditTextPreference? = null
     private var nightModePref: ListPreference? = null
+    private var languagePref: ListPreference? = null
     private var changeAvatarPref: Preference? = null
 
     private lateinit var viewModel: SettingsViewModel
@@ -58,6 +60,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         emailPref = preferenceScreen.findPreference("email")
         passwordPref = preferenceScreen.findPreference("password")
         nightModePref = preferenceScreen.findPreference("night_mode")
+        languagePref = preferenceScreen.findPreference("language")
         changeAvatarPref = preferenceScreen.findPreference("profile_picture")
     }
 
@@ -178,6 +181,25 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 2    -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 else -> setNightModeAutomatically()
             }
+            return@OnPrefChanged true
+        }
+
+        @Suppress("UsePropertyAccessSyntax", "UNUSED_ANONYMOUS_PARAMETER")
+        languagePref?.setOnPreferenceChangeListener OnPrefChanged@{ preference, newValue ->
+            var language = newValue.toString()
+            if (language == "default") {
+                language = Locale.getDefault().language
+            }
+            Toast.makeText(
+                context,
+                context?.let {
+                    getLocalizedResources(
+                        it,
+                        Locale(language)
+                    ).getString(R.string.language_changed)
+                },
+                Toast.LENGTH_LONG
+            ).show()
             return@OnPrefChanged true
         }
 
