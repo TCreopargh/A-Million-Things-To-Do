@@ -99,6 +99,7 @@ class LoginController : ControllerBase() {
                     throw AmttdException(ErrorCode.INCORRECT_PASSWORD)
                 }
             }
+            tokenService.removeExpired()
             if (response.success == true) {
                 request.session.setAttribute("uuid", response.uuid.toString())
                 request.session.setAttribute("token", response.token)
