@@ -12,9 +12,13 @@ import java.net.URL
 
 const val enableJsonDebugging = true
 
-// TODO: Change this to the website URL when the back end is deployed
+const val runOnLocal = false
 
-val rootUrl = URL("http://10.0.2.2:8080")
+val rootUrl = if (runOnLocal) {
+    URL("http://10.0.2.2:8080")
+} else {
+    URL("http://amttd.tcreopargh.xyz:8080")
+}
 
 val mediaTypeJson: MediaType? = "application/json; charset=utf-8".toMediaTypeOrNull()
 

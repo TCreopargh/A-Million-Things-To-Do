@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
+    application
     id("org.springframework.boot") version "2.4.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.5.10"
@@ -61,10 +62,19 @@ compileKotlin.kotlinOptions {
     languageVersion = "1.5"
 }
 
+sourceSets {
+    main.configure {
+        java.srcDirs("src/main/kotlin")
+    }
+    test.configure {
+        java.srcDirs("src/test/kotlin")
+    }
+}
+
 tasks.withType<Jar> {
-    // Otherwise you'll get a "No main manifest attribute" error
+    archiveBaseName.set("amttd_server")
     manifest {
-        attributes["Main-Class"] = "xyz.tcreopargh.amttd_web.MainKt"
+        attributes("Main-Class" to "xyz.tcreopargh.amttd_web.MainKt")
     }
 
     // To add all of the dependencies
