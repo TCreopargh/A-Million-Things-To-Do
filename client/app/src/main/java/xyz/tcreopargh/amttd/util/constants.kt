@@ -12,12 +12,12 @@ import java.net.URL
 
 const val enableJsonDebugging = true
 
-const val runOnLocal = true
+const val runOnLocal = false
 
 val rootUrl = if (runOnLocal) {
     URL("http://10.0.2.2:8080")
 } else {
-    URL("http://amttd.tcreopargh.xyz:8080")
+    URL("http://8.141.52.59:8080")
 }
 
 val mediaTypeJson: MediaType? = "application/json; charset=utf-8".toMediaTypeOrNull()

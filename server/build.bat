@@ -1,2 +1,2 @@
-gradlew build
+gradle bootjar
 pause

@@ -2,8 +2,10 @@ package xyz.tcreopargh.amttd
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.annotation.StringRes
 import okhttp3.OkHttpClient
+import xyz.tcreopargh.amttd.util.runOnLocal
 import xyz.tcreopargh.amttd.util.setNightModeAccordingToPref
 import java.util.concurrent.TimeUnit
 import android.app.Application as App
@@ -38,5 +40,16 @@ class AMTTD : App() {
             .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
             .build()
         setNightModeAccordingToPref(context)
+        if (runOnLocal) {
+            Log.i(
+                logTag,
+                "A Million Things To Do is connecting to local server. Remote changes will not take effect."
+            )
+        } else {
+            Log.i(
+                logTag,
+                "A Million Things To Do is connecting to remote server. Local changes will not take effect."
+            )
+        }
     }
 }

@@ -1,5 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val projectVersion: String by project
+val groupId: String by project
+val projectBaseName: String by project
+val projectMainClassName: String by project
+
 plugins {
     java
     application
@@ -9,8 +14,8 @@ plugins {
     kotlin("plugin.spring") version "1.5.10"
 }
 
-group = "xyz.tcreopargh"
-version = "1.0.0"
+group = groupId
+version = projectVersion
 java.sourceCompatibility = JavaVersion.VERSION_15
 
 configurations {
@@ -70,18 +75,21 @@ sourceSets {
         java.srcDirs("src/test/kotlin")
     }
 }
+tasks {
+    jar {
+        archiveBaseName.set(projectBaseName)
+        manifest {
+            attributes("Main-Class" to projectMainClassName)
+        }
 
-tasks.withType<Jar> {
-    archiveBaseName.set("amttd_server")
-    manifest {
-        attributes("Main-Class" to "xyz.tcreopargh.amttd_web.MainKt")
+        // To add all of the dependencies
+        from(sourceSets.main.get().output)
+
+        dependsOn(configurations.runtimeClasspath)
+        from({
+            configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+        })
     }
-
-    // To add all of the dependencies
-    from(sourceSets.main.get().output)
-
-    dependsOn(configurations.runtimeClasspath)
-    from({
-        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
-    })
+    bootJar {
+    }
 }
