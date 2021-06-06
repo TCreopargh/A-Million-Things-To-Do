@@ -5,8 +5,11 @@ import android.content.Context
 import android.util.Log
 import androidx.annotation.StringRes
 import okhttp3.OkHttpClient
+import xyz.tcreopargh.amttd.ui.settings.SettingsFragment
+import xyz.tcreopargh.amttd.util.getLocalizedResources
 import xyz.tcreopargh.amttd.util.runOnLocal
 import xyz.tcreopargh.amttd.util.setNightModeAccordingToPref
+import java.util.*
 import java.util.concurrent.TimeUnit
 import android.app.Application as App
 
@@ -24,12 +27,15 @@ class AMTTD : App() {
         lateinit var okHttpClient: OkHttpClient
             private set
         const val logTag = "AMTTD"
-        fun i18n(@StringRes stringId: Int) = context.getString(stringId)
+        fun i18n(@StringRes stringId: Int) =
+            getLocalizedResources(context, Locale(language)).getString(stringId)
+
         fun i18n(@StringRes stringId: Int, vararg objects: Any?) =
-            context.getString(stringId, *objects)
+            getLocalizedResources(context, Locale(language)).getString(stringId, *objects)
 
         //seconds
         const val TIMEOUT = 10L
+        var language: String = "en"
     }
 
     override fun onCreate() {
@@ -50,6 +56,16 @@ class AMTTD : App() {
                 logTag,
                 "A Million Things To Do is connecting to remote server. Local changes will not take effect."
             )
+        }
+        language = context.getSharedPreferences(
+            SettingsFragment.PREF_FILE_NAME,
+            MODE_PRIVATE
+        )?.getString(
+            "language",
+            "default"
+        ) ?: "default"
+        if (language == "default") {
+            language = Locale.getDefault().language
         }
     }
 }
