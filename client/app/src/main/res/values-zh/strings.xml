@@ -6,8 +6,8 @@
     <string name="action_settings">设置</string>
     <string name="action_sign_in">登录或注册</string>
     <string name="action_sign_in_short">登录</string>
-    <string name="action_task_completed">完成了任务：&#160;</string>
-    <string name="action_task_uncompleted">取消完成了任务：&#160;</string>
+    <string name="action_task_completed">完成了任务：</string>
+    <string name="action_task_uncompleted">取消完成了任务：</string>
     <string name="add_entry">添加待办事项</string>
     <string name="app_name">万事</string>
     <string name="authentication_error">认证错误</string>
