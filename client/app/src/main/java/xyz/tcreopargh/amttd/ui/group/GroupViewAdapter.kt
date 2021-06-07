@@ -13,12 +13,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.reflect.TypeToken
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.common.bean.request.WorkGroupCrudRequest
-import xyz.tcreopargh.amttd.common.bean.response.WorkGroupCrudResponse
-import xyz.tcreopargh.amttd.common.data.CrudType
-import xyz.tcreopargh.amttd.common.data.IWorkGroup
-import xyz.tcreopargh.amttd.common.data.WorkGroupImpl
-import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.api.data.CrudType
+import xyz.tcreopargh.amttd.api.data.IWorkGroup
+import xyz.tcreopargh.amttd.api.data.WorkGroupImpl
+import xyz.tcreopargh.amttd.api.exception.AmttdException
+import xyz.tcreopargh.amttd.api.json.request.WorkGroupCrudRequest
+import xyz.tcreopargh.amttd.api.json.response.WorkGroupCrudResponse
 import xyz.tcreopargh.amttd.ui.todo.TodoViewFragment
 import xyz.tcreopargh.amttd.util.format
 import xyz.tcreopargh.amttd.util.gson
@@ -80,8 +80,9 @@ class GroupViewAdapter(
                         val request = okHttpRequest("/workgroup")
                             .post(
                                 WorkGroupCrudRequest(
-                                    CrudType.READ,
-                                    WorkGroupImpl(groupId = uuid)
+                                    operation = CrudType.READ,
+                                    entity = WorkGroupImpl(groupId = uuid),
+                                    userId = fragment.loggedInUser?.uuid
                                 ).toJsonRequest()
                             )
                             .build()

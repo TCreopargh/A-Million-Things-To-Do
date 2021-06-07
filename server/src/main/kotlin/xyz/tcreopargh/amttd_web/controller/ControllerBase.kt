@@ -1,11 +1,12 @@
 package xyz.tcreopargh.amttd_web.controller
 
 import org.springframework.beans.factory.annotation.Autowired
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException
+import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
 import xyz.tcreopargh.amttd_web.entity.EntityUser
+import xyz.tcreopargh.amttd_web.entity.EntityWorkGroup
 import xyz.tcreopargh.amttd_web.service.*
 import java.util.*
-import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 
 /**
@@ -58,39 +59,87 @@ abstract class ControllerBase {
      * If no parameter is passed, only checks if the user has logged in
      */
     @Throws(AmttdException::class)
-    protected fun verifyUser(request: HttpServletRequest, userId: UUID? = null) {
+    protected fun verifyUser(request: HttpServletRequest, userId: UUID? = null): EntityUser {
+        val requestUser = getUserFromSession(request)
         if (userId == null) {
-            if (getUserFromSession(request) == null) throw AmttdException(AmttdException.ErrorCode.LOGIN_REQUIRED)
+            if (requestUser == null) throw AmttdException(AmttdException.ErrorCode.LOGIN_REQUIRED)
         } else {
-            if (getUserFromSession(request)?.uuid != userId) throw AmttdException(AmttdException.ErrorCode.UNAUTHORIZED_OPERATION)
+            if (requestUser?.uuid != userId) throw AmttdException(AmttdException.ErrorCode.UNAUTHORIZED_OPERATION)
         }
+        return requestUser
     }
 
     @Throws(AmttdException::class)
-    protected fun verifyWorkgroup(request: HttpServletRequest, groupId: UUID?) {
+    protected fun verifyWorkgroup(request: HttpServletRequest, groupId: UUID?): Pair<EntityWorkGroup, EntityUser> {
         if (groupId == null) {
             throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
         }
-        val userId = getUserFromSession(request)?.uuid
-        if (workGroupService.findByIdOrNull(groupId)?.users?.stream()?.filter {
-                it.uuid == userId
-            }?.collect(Collectors.toList())
-                ?.isNotEmpty() != true
-        ) throw AmttdException(AmttdException.ErrorCode.UNAUTHORIZED_OPERATION)
+        val user = getUserFromSession(request) ?: throw AmttdException(AmttdException.ErrorCode.AUTHENTICATION_ERROR)
+        val group = workGroupService.findByIdOrNull(groupId)
+        if (group?.users?.contains(user) != true) throw AmttdException(AmttdException.ErrorCode.UNAUTHORIZED_OPERATION)
+        return Pair(group, user)
+    }
+
+
+    @Throws(AmttdException::class)
+    protected fun verifyWorkgroup(
+        request: HttpServletRequest,
+        groupId: UUID?,
+        userId: UUID?,
+        assertLeader: Boolean = false
+    ): Pair<EntityWorkGroup, EntityUser> {
+        if (groupId == null || userId == null) {
+            throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
+        }
+        val user = verifyUser(request, userId)
+        val group = workGroupService.findByIdOrNull(groupId)
+        if (assertLeader && group?.leader?.getId() != user.getId()) {
+            throw AmttdException(AmttdException.ErrorCode.INSUFFICIENT_PERMISSION)
+        }
+        if (group?.users?.contains(user) != true) throw AmttdException(AmttdException.ErrorCode.UNAUTHORIZED_OPERATION)
+        return Pair(group, user)
     }
 
     @Throws(AmttdException::class)
-    protected fun verifyTodoEntry(request: HttpServletRequest, entryId: UUID?) {
+    protected fun verifyTodoEntry(
+        request: HttpServletRequest,
+        entryId: UUID?
+    ): Triple<EntityTodoEntry, EntityWorkGroup, EntityUser> {
         if (entryId == null) {
             throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
         }
-        verifyWorkgroup(request, todoEntryService.findByIdOrNull(entryId)?.parent?.groupId)
+        val entry = todoEntryService.findByIdOrNull(entryId)
+        val pair = verifyWorkgroup(
+            request,
+            entry?.parent?.groupId ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
+        )
+        return Triple(entry, pair.first, pair.second)
+    }
+
+    @Throws(AmttdException::class)
+    protected fun verifyTodoEntry(
+        request: HttpServletRequest,
+        entryId: UUID?,
+        userId: UUID?,
+        assertLeader: Boolean = false
+    ): Triple<EntityTodoEntry, EntityWorkGroup, EntityUser> {
+        if (entryId == null || userId == null) {
+            throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
+        }
+        val entry = todoEntryService.findByIdOrNull(entryId)
+        val pair = verifyWorkgroup(
+            request,
+            entry?.parent?.groupId ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND),
+            userId,
+            assertLeader
+        )
+        return Triple(entry, pair.first, pair.second)
     }
 
     protected fun getUserFromSession(request: HttpServletRequest): EntityUser? {
-
-        val uuid = request.session.getAttribute("uuid")?.toString()
-        val token = request.session.getAttribute("token")?.toString()
+        val session = request.session
+        val uuid = session.getAttribute("uuid")?.toString()
+        val token = session.getAttribute("token")?.toString()
         val uuidObject = try {
             token!!
             UUID.fromString(uuid)

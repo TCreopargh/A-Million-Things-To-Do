@@ -2,7 +2,7 @@ package xyz.tcreopargh.amttd.ui.group
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import xyz.tcreopargh.amttd.common.data.IWorkGroup
+import xyz.tcreopargh.amttd.api.data.IWorkGroup
 import xyz.tcreopargh.amttd.ui.ViewModelBase
 import java.util.*
 

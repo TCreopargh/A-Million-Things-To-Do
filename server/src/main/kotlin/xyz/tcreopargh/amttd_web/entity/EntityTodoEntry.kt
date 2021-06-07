@@ -2,9 +2,8 @@ package xyz.tcreopargh.amttd_web.entity
 
 import org.hibernate.annotations.Type
 import xyz.tcreopargh.amttd_web.annotation.ExcludeToString
-import xyz.tcreopargh.amttd_web.annotation.ExcludeToStringProcessor
-import xyz.tcreopargh.amttd_web.common.data.ITodoEntry
-import xyz.tcreopargh.amttd_web.common.data.TodoStatus
+import xyz.tcreopargh.amttd_web.api.data.ITodoEntry
+import xyz.tcreopargh.amttd_web.api.data.TodoStatus
 import java.util.*
 import javax.persistence.*
 
@@ -74,12 +73,6 @@ data class EntityTodoEntry(
 
 ) : ITodoEntry, EntityBase<UUID>() {
     override fun getId(): UUID = entryId
-
-    override fun toString(): String {
-        return ExcludeToStringProcessor.getToString(this)
-    }
-
-    override fun hashCode(): Int = entryId.hashCode()
 
     override val tasks: List<EntityTask>
         get() = allTasks.filter { it.isPresent }

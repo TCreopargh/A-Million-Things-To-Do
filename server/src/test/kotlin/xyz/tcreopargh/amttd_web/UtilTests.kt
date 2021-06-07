@@ -25,7 +25,7 @@ class UtilTests {
         )
     }
 
-    data class TestObject (
+    data class TestObject(
         var a: Int = 2,
         var b: String = "abc"
     )

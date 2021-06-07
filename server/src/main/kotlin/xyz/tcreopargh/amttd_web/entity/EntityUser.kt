@@ -1,7 +1,7 @@
 package xyz.tcreopargh.amttd_web.entity
 
 import org.hibernate.annotations.Type
-import xyz.tcreopargh.amttd_web.common.data.IUser
+import xyz.tcreopargh.amttd_web.api.data.IUser
 import java.util.*
 import javax.persistence.*
 
@@ -73,7 +73,5 @@ data class EntityUser(
     override val email: String
         get() = emailAddress.toString()
 
-    override fun equals(other: Any?): Boolean = this.uuid == (other as? EntityUser)?.uuid
-    override fun hashCode(): Int = uuid.hashCode()
     override fun getId(): UUID = uuid
 }

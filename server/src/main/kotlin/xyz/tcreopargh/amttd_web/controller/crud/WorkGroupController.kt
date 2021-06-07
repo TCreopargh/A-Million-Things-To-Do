@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.annotation.LoginRequired
-import xyz.tcreopargh.amttd_web.common.bean.request.WorkGroupCrudRequest
-import xyz.tcreopargh.amttd_web.common.bean.response.WorkGroupCrudResponse
-import xyz.tcreopargh.amttd_web.common.data.CrudType
-import xyz.tcreopargh.amttd_web.common.data.WorkGroupImpl
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.data.CrudType
+import xyz.tcreopargh.amttd_web.api.data.WorkGroupImpl
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.json.request.WorkGroupCrudRequest
+import xyz.tcreopargh.amttd_web.api.json.response.WorkGroupCrudResponse
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityWorkGroup
 import xyz.tcreopargh.amttd_web.util.logger
@@ -36,17 +36,14 @@ class WorkGroupController : ControllerBase() {
         body: WorkGroupCrudRequest
     ): WorkGroupCrudResponse {
         return try {
-            if (body.operation != CrudType.CREATE) {
-                verifyWorkgroup(request, body.entity?.groupId)
+            val (workGroup: EntityWorkGroup?, user) = if (body.operation != CrudType.CREATE) {
+                verifyWorkgroup(request, body.entity?.groupId, body.userId)
+            } else {
+                Pair(null, verifyUser(request, body.userId))
             }
-            val id =
-                body.entity?.groupId ?: throw AmttdException(AmttdException.ErrorCode.JSON_MISSING_FIELD)
-            val workGroup = if (body.operation != CrudType.CREATE) {
-                workGroupService.findByIdOrNull(id)
-                    ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
-            } else EntityWorkGroup()
             when (body.operation) {
                 CrudType.READ -> {
+                    workGroup ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                     WorkGroupCrudResponse(
                         operation = body.operation,
                         success = true,
@@ -54,7 +51,8 @@ class WorkGroupController : ControllerBase() {
                     )
                 }
                 CrudType.UPDATE -> {
-                    if (workGroup.leader?.uuid != body.userId) {
+                    workGroup ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
+                    if (workGroup.leader?.uuid != user.uuid) {
                         throw AmttdException(AmttdException.ErrorCode.INSUFFICIENT_PERMISSION)
                     }
                     WorkGroupCrudResponse(
@@ -62,16 +60,13 @@ class WorkGroupController : ControllerBase() {
                         success = true,
                         entity = WorkGroupImpl(workGroupService.saveImmediately(
                             workGroup.apply {
-                                groupName = body.entity?.name ?: groupName
+                                groupName = body.entity?.name?.replace("\n", " ")?.trim() ?: groupName
                             }
                         ))
                     )
                 }
                 CrudType.CREATE -> {
-                    val userId = body.userId ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
-                    val user =
-                        userService.findByIdOrNull(userId)
-                            ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
+
                     val entity = workGroupService.saveImmediately(EntityWorkGroup().apply {
                         groupName = body.entity?.name
                             ?: throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS)
@@ -87,11 +82,9 @@ class WorkGroupController : ControllerBase() {
                     )
                 }
                 CrudType.DELETE -> {
+                    workGroup ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                     val userId = body.userId ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
                     if (workGroup.leader?.uuid != userId) {
-                        val user =
-                            userService.findByIdOrNull(userId)
-                                ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
                         user.joinedWorkGroups.removeIf { it.groupId == workGroup.groupId }
                         workGroup.users.removeIf { it.uuid == user.uuid }
                         workGroupService.saveImmediately(workGroup)
@@ -101,7 +94,7 @@ class WorkGroupController : ControllerBase() {
                             success = true
                         )
                     } else {
-                        workGroupService.deleteById(id)
+                        workGroupService.deleteById(workGroup.groupId)
                         WorkGroupCrudResponse(
                             operation = body.operation,
                             success = true

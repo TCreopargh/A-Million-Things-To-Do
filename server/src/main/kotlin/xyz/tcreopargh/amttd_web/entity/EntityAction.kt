@@ -2,10 +2,9 @@ package xyz.tcreopargh.amttd_web.entity
 
 import org.hibernate.annotations.Type
 import xyz.tcreopargh.amttd_web.annotation.ExcludeToString
-import xyz.tcreopargh.amttd_web.annotation.ExcludeToStringProcessor
-import xyz.tcreopargh.amttd_web.common.data.TodoStatus
-import xyz.tcreopargh.amttd_web.common.data.action.ActionType
-import xyz.tcreopargh.amttd_web.common.data.action.IAction
+import xyz.tcreopargh.amttd_web.api.data.TodoStatus
+import xyz.tcreopargh.amttd_web.api.data.action.ActionType
+import xyz.tcreopargh.amttd_web.api.data.action.IAction
 import java.util.*
 import javax.persistence.*
 
@@ -21,7 +20,7 @@ import javax.persistence.*
  * A special type of action is comment, which the user can add by themselves.
  *
  * This is a generic class containing all possible fields for all actions. You should probably use derived classes
- * which you can get from [xyz.tcreopargh.amttd_web.common.data.action.ActionGeneric]
+ * which you can get from [xyz.tcreopargh.amttd_web.api.data.action.ActionGeneric]
  */
 @Entity
 @Table(name = "action")
@@ -72,7 +71,4 @@ data class EntityAction(
 
     override fun getId(): UUID = actionId
 
-    override fun toString(): String {
-        return ExcludeToStringProcessor.getToString(this)
-    }
 }

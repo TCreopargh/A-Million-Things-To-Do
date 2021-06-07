@@ -1,6 +1,6 @@
 package xyz.tcreopargh.amttd.data.user
 
-import xyz.tcreopargh.amttd.common.data.IUser
+import xyz.tcreopargh.amttd.api.data.IUser
 import java.io.Serializable
 import java.util.*
 

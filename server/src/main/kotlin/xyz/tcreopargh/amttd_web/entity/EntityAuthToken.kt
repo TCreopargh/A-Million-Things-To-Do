@@ -43,8 +43,4 @@ data class EntityAuthToken(
     }
 
     fun isValid() = !isExpired()
-
-    override fun equals(other: Any?): Boolean = this.token == (other as? EntityAuthToken)?.token
-
-    override fun hashCode(): Int = token.hashCode()
 }

@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.annotation.LoginRequired
-import xyz.tcreopargh.amttd_web.common.bean.request.TodoEntryCrudRequest
-import xyz.tcreopargh.amttd_web.common.bean.response.TodoEntryCrudResponse
-import xyz.tcreopargh.amttd_web.common.data.CrudType
-import xyz.tcreopargh.amttd_web.common.data.TodoEntryImpl
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.data.CrudType
+import xyz.tcreopargh.amttd_web.api.data.TodoEntryImpl
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.json.request.TodoEntryCrudRequest
+import xyz.tcreopargh.amttd_web.api.json.response.TodoEntryCrudResponse
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityTask
 import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
@@ -57,49 +57,37 @@ class TodoEntryController : ControllerBase() {
         @RequestBody body: TodoEntryCrudRequest
     ): TodoEntryCrudResponse {
         return try {
-            if (body.operation != CrudType.CREATE) {
-                verifyTodoEntry(request, body.entity?.entryId)
-            }
-            val todoEntryCrudResponse = when (body.operation) {
-                CrudType.READ -> {
-                    var entry: EntityTodoEntry? = null
-                    body.entity?.entryId?.let {
-                        entry = todoEntryService.findByIdOrNull(it)
-                    } ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
-                    val ret = entry?.let { TodoEntryImpl(it) }
-                        ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
-                    TodoEntryCrudResponse(operation = CrudType.READ, success = true, entity = ret)
-                }
-                CrudType.CREATE -> {
-                    val userId = body.userId ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
-                    val user = userService.findByIdOrNull(userId)
-                        ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
-                    val entity = EntityTodoEntry(
-                        creator = user,
-                        title = body.entity?.title ?: throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS),
-                        parent = body.workGroupId?.let { workGroupService.findByIdOrNull(it) }
-                    )
-                    todoEntryService.saveImmediately(entity)
-                    val task = EntityTask(
-                        name = body.entity?.title ?: throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS),
-                        completed = false,
-                        parent = entity
-                    )
-                    taskService.saveImmediately(task)
-                    TodoEntryCrudResponse(operation = CrudType.CREATE, success = true, entity = TodoEntryImpl(entity))
-                }
-                CrudType.DELETE -> {
-                    val entryToDelete = todoEntryService.findByIdOrNull(
-                        body.entity?.entryId
-                            ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
-                    ) ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
-                    todoEntryService.delete(entryToDelete)
-                    TodoEntryCrudResponse(operation = CrudType.DELETE, success = true, entity = null)
-                }
-                else -> TodoEntryCrudResponse(
-                    success = false,
-                    error = AmttdException.ErrorCode.ACTION_NOT_SUPPORTED.value
+            val todoEntryCrudResponse = if (body.operation == CrudType.CREATE) {
+                val (workGroup, user) = verifyWorkgroup(request, body.workGroupId, body.userId)
+                val entity = EntityTodoEntry(
+                    creator = user,
+                    title = body.entity?.title ?: throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS),
+                    parent = workGroup
                 )
+                todoEntryService.saveImmediately(entity)
+                val task = EntityTask(
+                    name = body.entity?.title ?: throw AmttdException(AmttdException.ErrorCode.ILLEGAL_ARGUMENTS),
+                    completed = false,
+                    parent = entity
+                )
+                taskService.saveImmediately(task)
+                TodoEntryCrudResponse(operation = CrudType.CREATE, success = true, entity = TodoEntryImpl(entity))
+            } else {
+                val (entry, _, _) = verifyTodoEntry(request, body.entity?.entryId, body.userId)
+                when (body.operation) {
+                    CrudType.READ   -> {
+                        val ret = TodoEntryImpl(entry)
+                        TodoEntryCrudResponse(operation = CrudType.READ, success = true, entity = ret)
+                    }
+                    CrudType.DELETE -> {
+                        todoEntryService.delete(entry)
+                        TodoEntryCrudResponse(operation = CrudType.DELETE, success = true, entity = null)
+                    }
+                    else            -> TodoEntryCrudResponse(
+                        success = false,
+                        error = AmttdException.ErrorCode.ACTION_NOT_SUPPORTED.value
+                    )
+                }
             }
             todoEntryCrudResponse
         } catch (e: Exception) {

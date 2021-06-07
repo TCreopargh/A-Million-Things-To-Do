@@ -1,7 +1,6 @@
 package xyz.tcreopargh.amttd_web.entity
 
 import xyz.tcreopargh.amttd_web.annotation.ExcludeToString
-import xyz.tcreopargh.amttd_web.annotation.ExcludeToStringProcessor
 import xyz.tcreopargh.amttd_web.util.generateInvitationCode
 import java.util.*
 import javax.persistence.*
@@ -48,10 +47,6 @@ data class EntityInvitationCode(
     fun isExpired(): Boolean {
         val period = Calendar.getInstance().timeInMillis - timeCreated.timeInMillis
         return period > expirationTimeInMillis
-    }
-
-    override fun toString(): String {
-        return ExcludeToStringProcessor.getToString(this)
     }
 
     override fun getId(): String = invitationCode

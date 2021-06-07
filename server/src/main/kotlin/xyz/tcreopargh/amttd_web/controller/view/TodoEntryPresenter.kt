@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.annotation.LoginRequired
-import xyz.tcreopargh.amttd_web.common.bean.request.TodoEntryViewRequest
-import xyz.tcreopargh.amttd_web.common.bean.response.TodoEntryViewResponse
-import xyz.tcreopargh.amttd_web.common.data.TodoEntryImpl
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.data.TodoEntryImpl
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.json.request.TodoEntryViewRequest
+import xyz.tcreopargh.amttd_web.api.json.response.TodoEntryViewResponse
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityTodoEntry
 import xyz.tcreopargh.amttd_web.util.logger
@@ -35,10 +35,10 @@ class TodoEntryPresenter : ControllerBase() {
         @RequestBody body: TodoEntryViewRequest
     ): TodoEntryViewResponse {
         return try {
-            verifyWorkgroup(request, body.groupId)
+            val (workGroup, _) = verifyWorkgroup(request, body.groupId, body.userId)
             var entries: List<EntityTodoEntry> = listOf()
             body.groupId?.let {
-                entries = workGroupService.findByIdOrNull(it)?.entries?.toList() ?: listOf()
+                entries = workGroup.entries.toList()
             }
             val list = entries.stream().filter { it != null }.map {
                 TodoEntryImpl(it)

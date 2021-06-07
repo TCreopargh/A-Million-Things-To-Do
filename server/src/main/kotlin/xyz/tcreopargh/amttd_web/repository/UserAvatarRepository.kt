@@ -6,5 +6,4 @@ import xyz.tcreopargh.amttd_web.entity.EntityUserAvatar
 import java.util.*
 
 @Repository
-interface UserAvatarRepository : JpaRepository<EntityUserAvatar, UUID> {
-}
+interface UserAvatarRepository : JpaRepository<EntityUserAvatar, UUID>

@@ -24,19 +24,20 @@ import kotlinx.android.synthetic.main.group_view_fragment.*
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.common.bean.request.JoinWorkGroupRequest
-import xyz.tcreopargh.amttd.common.bean.request.WorkGroupCrudRequest
-import xyz.tcreopargh.amttd.common.bean.request.WorkGroupViewRequest
-import xyz.tcreopargh.amttd.common.bean.response.JoinWorkGroupResponse
-import xyz.tcreopargh.amttd.common.bean.response.WorkGroupCrudResponse
-import xyz.tcreopargh.amttd.common.bean.response.WorkGroupViewResponse
-import xyz.tcreopargh.amttd.common.data.CrudType
-import xyz.tcreopargh.amttd.common.data.IWorkGroup
-import xyz.tcreopargh.amttd.common.data.WorkGroupImpl
-import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.api.data.CrudType
+import xyz.tcreopargh.amttd.api.data.IWorkGroup
+import xyz.tcreopargh.amttd.api.data.WorkGroupImpl
+import xyz.tcreopargh.amttd.api.exception.AmttdException
+import xyz.tcreopargh.amttd.api.json.request.JoinWorkGroupRequest
+import xyz.tcreopargh.amttd.api.json.request.WorkGroupCrudRequest
+import xyz.tcreopargh.amttd.api.json.request.WorkGroupViewRequest
+import xyz.tcreopargh.amttd.api.json.response.JoinWorkGroupResponse
+import xyz.tcreopargh.amttd.api.json.response.WorkGroupCrudResponse
+import xyz.tcreopargh.amttd.api.json.response.WorkGroupViewResponse
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.*
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 
 /**
@@ -54,6 +55,9 @@ class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title)
 
     private var joinWorkGroupDialog: AlertDialog? = null
     private var joinWorkGroupDialogView: View? = null
+
+    // Make sure the list is initialized only once
+    private val isInitialized = AtomicBoolean(false)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -204,7 +208,13 @@ class GroupViewFragment : FragmentOnMainActivityBase(R.string.work_groups_title)
 
         val mainActivity = activity as? MainActivity
         mainActivity?.viewModel?.loginRepository?.observe(mainActivity) {
-            initializeItems()
+            if (it != null) {
+                if (isInitialized.get()) {
+                    initializeItems()
+                } else {
+                    isInitialized.set(true)
+                }
+            }
         }
         initializeItems()
         return view

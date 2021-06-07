@@ -19,12 +19,12 @@ import kotlinx.android.synthetic.main.activity_work_group_share.*
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.common.bean.request.TodoEntryCrudRequest
-import xyz.tcreopargh.amttd.common.bean.request.TodoEntryViewRequest
-import xyz.tcreopargh.amttd.common.bean.response.TodoEntryCrudResponse
-import xyz.tcreopargh.amttd.common.bean.response.TodoEntryViewResponse
-import xyz.tcreopargh.amttd.common.data.*
-import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.api.data.*
+import xyz.tcreopargh.amttd.api.exception.AmttdException
+import xyz.tcreopargh.amttd.api.json.request.TodoEntryCrudRequest
+import xyz.tcreopargh.amttd.api.json.request.TodoEntryViewRequest
+import xyz.tcreopargh.amttd.api.json.response.TodoEntryCrudResponse
+import xyz.tcreopargh.amttd.api.json.response.TodoEntryViewResponse
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.ui.group_user.GroupUserFragment
 import xyz.tcreopargh.amttd.util.*
@@ -49,7 +49,9 @@ class TodoViewFragment : FragmentOnMainActivityBase(R.string.todo_view_title) {
 
         todoSwipeContainer = view.findViewById(R.id.todoSwipeContainer)
         val adapter = TodoViewAdapter(viewModel.entries.value ?: listOf(), this)
-        todoSwipeContainer.setOnRefreshListener { initializeItems() }
+        todoSwipeContainer.setOnRefreshListener {
+            initializeItems()
+        }
         todoRecyclerView.adapter = adapter
         todoRecyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -90,7 +92,9 @@ class TodoViewFragment : FragmentOnMainActivityBase(R.string.todo_view_title) {
 
         val mainActivity = activity as? MainActivity
         mainActivity?.viewModel?.loginRepository?.observe(mainActivity) {
-            initializeItems()
+            if (it != null) {
+                initializeItems()
+            }
         }
         initializeItems()
         return view
@@ -145,7 +149,10 @@ class TodoViewFragment : FragmentOnMainActivityBase(R.string.todo_view_title) {
                 val uuid = viewModel.workGroup.value?.groupId ?: return@Thread
                 val request = okHttpRequest("/todo")
                     .post(
-                        TodoEntryViewRequest(groupId = uuid).toJsonRequest()
+                        TodoEntryViewRequest(
+                            groupId = uuid,
+                            userId = loggedInUser?.uuid
+                        ).toJsonRequest()
                     )
                     .build()
                 val response = AMTTD.okHttpClient.newCall(request).execute()

@@ -30,12 +30,12 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.app_bar_main.view.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
-import xyz.tcreopargh.amttd.common.bean.request.ActionCrudRequest
-import xyz.tcreopargh.amttd.common.bean.response.ActionCrudResponse
-import xyz.tcreopargh.amttd.common.data.CrudType
-import xyz.tcreopargh.amttd.common.data.action.ActionGeneric
-import xyz.tcreopargh.amttd.common.data.action.ActionType
-import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.api.data.CrudType
+import xyz.tcreopargh.amttd.api.data.action.ActionGeneric
+import xyz.tcreopargh.amttd.api.data.action.ActionType
+import xyz.tcreopargh.amttd.api.exception.AmttdException
+import xyz.tcreopargh.amttd.api.json.request.ActionCrudRequest
+import xyz.tcreopargh.amttd.api.json.response.ActionCrudResponse
 import xyz.tcreopargh.amttd.data.login.LoginResult
 import xyz.tcreopargh.amttd.data.user.LocalUser
 import xyz.tcreopargh.amttd.ui.group.GroupViewFragment
@@ -327,7 +327,7 @@ class MainActivity : BaseActivity() {
     }
 
     @SuppressLint("ApplySharedPref")
-    private fun logoutAndRestart() {
+    fun logoutAndRestart() {
         Log.i(AMTTD.logTag, "Restarting!")
         val prefs: SharedPreferences =
             getSharedPreferences("user_data", MODE_PRIVATE)

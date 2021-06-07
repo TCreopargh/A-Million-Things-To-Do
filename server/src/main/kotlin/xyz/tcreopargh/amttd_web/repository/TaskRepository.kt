@@ -6,5 +6,4 @@ import xyz.tcreopargh.amttd_web.entity.EntityTask
 import java.util.*
 
 @Repository
-interface TaskRepository : JpaRepository<EntityTask, UUID> {
-}
+interface TaskRepository : JpaRepository<EntityTask, UUID>

@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.annotation.LoginRequired
-import xyz.tcreopargh.amttd_web.common.bean.request.WorkGroupViewRequest
-import xyz.tcreopargh.amttd_web.common.bean.response.WorkGroupViewResponse
-import xyz.tcreopargh.amttd_web.common.data.WorkGroupImpl
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.data.WorkGroupImpl
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.json.request.WorkGroupViewRequest
+import xyz.tcreopargh.amttd_web.api.json.response.WorkGroupViewResponse
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityWorkGroup
 import xyz.tcreopargh.amttd_web.util.logger
@@ -33,13 +33,11 @@ class WorkGroupPresenter : ControllerBase() {
     @ResponseBody
     fun resolveWorkGroups(request: HttpServletRequest, @RequestBody body: WorkGroupViewRequest): WorkGroupViewResponse {
         return try {
-            verifyUser(request, body.uuid)
+            val user = verifyUser(request, body.uuid)
             var workGroups: Set<EntityWorkGroup> = setOf()
 
             body.uuid?.let {
-                val user = userService.findByIdOrNull(it)
-                workGroups =
-                    user?.joinedWorkGroups ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
+                workGroups = user.joinedWorkGroups
             }
             val list = workGroups.stream().map {
                 WorkGroupImpl(it)

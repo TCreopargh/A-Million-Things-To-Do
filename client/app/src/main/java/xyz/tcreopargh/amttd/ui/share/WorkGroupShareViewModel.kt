@@ -1,7 +1,7 @@
 package xyz.tcreopargh.amttd.ui.share
 
 import androidx.lifecycle.MutableLiveData
-import xyz.tcreopargh.amttd.common.data.IWorkGroup
+import xyz.tcreopargh.amttd.api.data.IWorkGroup
 import xyz.tcreopargh.amttd.data.user.LocalUser
 import xyz.tcreopargh.amttd.ui.ViewModelBase
 

@@ -5,14 +5,15 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import xyz.tcreopargh.amttd_web.common.bean.request.LoginRequest
-import xyz.tcreopargh.amttd_web.common.bean.response.LoginResponse
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException.ErrorCode
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException.ErrorCode
+import xyz.tcreopargh.amttd_web.api.json.request.LoginRequest
+import xyz.tcreopargh.amttd_web.api.json.response.LoginResponse
 import xyz.tcreopargh.amttd_web.component.AuthenticationInterceptor
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
+import xyz.tcreopargh.amttd_web.util.MIN_CLIENT_VERSION
 import xyz.tcreopargh.amttd_web.util.logger
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -44,6 +45,12 @@ class LoginController : ControllerBase() {
             val email = loginBody.email?.lowercase()
             val token = loginBody.token
             val uuid = loginBody.uuid
+            val clientVersion =
+                loginBody.clientVersion ?: throw AmttdException(ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
+
+            if (clientVersion < MIN_CLIENT_VERSION) {
+                throw AmttdException(ErrorCode.CLIENT_NEEDS_UPDATE)
+            }
 
             if (!((password != null && email != null) || (token != null && uuid != null))) {
                 throw AmttdException(ErrorCode.FIELD_MISSING)
@@ -85,6 +92,7 @@ class LoginController : ControllerBase() {
                 }
                 val users: List<EntityUser> = userService.findByEmail(email ?: "")
                 val user = users.getOrNull(0) ?: throw AmttdException(ErrorCode.USER_NOT_FOUND)
+                tokenService.deleteByUser(user)
                 var generatedToken = EntityAuthToken(user)
                 generatedToken = tokenService.saveImmediately(generatedToken)
                 if (user.password == password && user.email == email) {

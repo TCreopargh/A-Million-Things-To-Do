@@ -6,10 +6,10 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import xyz.tcreopargh.amttd_web.annotation.LoginRequired
-import xyz.tcreopargh.amttd_web.common.bean.request.UserChangeAvatarRequest
-import xyz.tcreopargh.amttd_web.common.bean.request.UserProfileChangeRequest
-import xyz.tcreopargh.amttd_web.common.bean.response.SimpleResponse
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.json.request.UserChangeAvatarRequest
+import xyz.tcreopargh.amttd_web.api.json.request.UserProfileChangeRequest
+import xyz.tcreopargh.amttd_web.api.json.response.SimpleResponse
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityUserAvatar
 import xyz.tcreopargh.amttd_web.util.logger
@@ -38,9 +38,7 @@ class UserController : ControllerBase() {
     fun changeAvatar(request: HttpServletRequest, @RequestBody body: UserChangeAvatarRequest): SimpleResponse {
         return try {
             val imgBytes = body.img
-            val user = userService.findByIdOrNull(
-                body.userId ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
-            ) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
+            val user = verifyUser(request, body.userId)
             val avatar = EntityUserAvatar(
                 avatarId = UUID.randomUUID(),
                 user = user,
@@ -79,7 +77,7 @@ class UserController : ControllerBase() {
         val newPassword = body.newPassword
         val uuid = body.userId
         return try {
-            verifyUser(request, uuid)
+            val user = verifyUser(request, uuid)
             if (newUsername != null && !isUsernameValid(newUsername)) {
                 throw AmttdException(AmttdException.ErrorCode.ILLEGAL_USERNAME)
             }
@@ -89,8 +87,6 @@ class UserController : ControllerBase() {
             if (newPassword != null && !isPasswordValid(newPassword)) {
                 throw AmttdException(AmttdException.ErrorCode.ILLEGAL_PASSWORD)
             }
-            val user = userService.findByIdOrNull(uuid ?: throw AmttdException(AmttdException.ErrorCode.INVALID_JSON))
-                ?: throw AmttdException(AmttdException.ErrorCode.USER_NOT_FOUND)
             if (newEmail != null && userService.findByEmail(newEmail).isNotEmpty()) {
                 throw AmttdException(AmttdException.ErrorCode.USER_ALREADY_EXISTS)
             }

@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import xyz.tcreopargh.amttd.AMTTD
-import xyz.tcreopargh.amttd.common.data.IUser
+import xyz.tcreopargh.amttd.api.data.IUser
 
 
 /**

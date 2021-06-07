@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.annotation.LoginRequired
-import xyz.tcreopargh.amttd_web.common.bean.request.GroupRemoveUserRequest
-import xyz.tcreopargh.amttd_web.common.bean.request.GroupTransferLeaderRequest
-import xyz.tcreopargh.amttd_web.common.bean.request.GroupUserViewRequest
-import xyz.tcreopargh.amttd_web.common.bean.response.GroupUserViewResponse
-import xyz.tcreopargh.amttd_web.common.bean.response.WorkGroupDataSetChangedResponse
-import xyz.tcreopargh.amttd_web.common.data.UserImpl
-import xyz.tcreopargh.amttd_web.common.data.WorkGroupImpl
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.data.UserImpl
+import xyz.tcreopargh.amttd_web.api.data.WorkGroupImpl
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.json.request.GroupRemoveUserRequest
+import xyz.tcreopargh.amttd_web.api.json.request.GroupTransferLeaderRequest
+import xyz.tcreopargh.amttd_web.api.json.request.GroupUserViewRequest
+import xyz.tcreopargh.amttd_web.api.json.response.GroupUserViewResponse
+import xyz.tcreopargh.amttd_web.api.json.response.WorkGroupDataSetChangedResponse
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.util.logger
@@ -36,12 +36,10 @@ class WorkGroupUserController : ControllerBase() {
     )
     fun getUserList(request: HttpServletRequest, @RequestBody body: GroupUserViewRequest): GroupUserViewResponse {
         return try {
-            verifyWorkgroup(request, body.groupId)
+            val (workGroup, _) = verifyWorkgroup(request, body.groupId, body.userId)
             var users: Set<EntityUser> = setOf()
 
             body.groupId?.let {
-                val workGroup = workGroupService.findByIdOrNull(it)
-                    ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
                 users = workGroup.users
             }
             val list = users.stream().map {
@@ -55,6 +53,7 @@ class WorkGroupUserController : ControllerBase() {
         }
     }
 
+    @Suppress("DuplicatedCode")
     @PostMapping(
         "/kick",
         consumes = [MediaType.APPLICATION_JSON_VALUE],
@@ -65,18 +64,12 @@ class WorkGroupUserController : ControllerBase() {
         @RequestBody body: GroupRemoveUserRequest
     ): WorkGroupDataSetChangedResponse {
         return try {
-            verifyWorkgroup(request, body.groupId)
-            val workGroup = workGroupService.findByIdOrNull(
-                body.groupId ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
-            ) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
+            val (workGroup, _) = verifyWorkgroup(request, body.groupId, body.actionPerformerId, true)
             val targetUser = userService.findByIdOrNull(
                 body.targetUserId ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
             ) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
             if (!workGroup.users.contains(targetUser)) {
                 throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
-            }
-            if (workGroup.leader?.uuid != body.actionPerformerId) {
-                throw AmttdException(AmttdException.ErrorCode.INSUFFICIENT_PERMISSION)
             }
             targetUser.joinedWorkGroups.removeIf { it.groupId == workGroup.groupId }
             workGroup.users.removeIf { it.uuid == targetUser.uuid }
@@ -89,6 +82,7 @@ class WorkGroupUserController : ControllerBase() {
         }
     }
 
+    @Suppress("DuplicatedCode")
     @PostMapping(
         "/transfer",
         consumes = [MediaType.APPLICATION_JSON_VALUE],
@@ -99,13 +93,7 @@ class WorkGroupUserController : ControllerBase() {
         @RequestBody body: GroupTransferLeaderRequest
     ): WorkGroupDataSetChangedResponse {
         return try {
-            verifyWorkgroup(request, body.groupId)
-            val workGroup = workGroupService.findByIdOrNull(
-                body.groupId ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
-            ) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
-            if (workGroup.leader?.uuid != body.actionPerformerId) {
-                throw AmttdException(AmttdException.ErrorCode.INSUFFICIENT_PERMISSION)
-            }
+            val (workGroup, _) = verifyWorkgroup(request, body.groupId, body.actionPerformerId, true)
             val targetUser = userService.findByIdOrNull(
                 body.targetUserId ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
             ) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)

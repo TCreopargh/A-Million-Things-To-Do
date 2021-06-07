@@ -6,5 +6,4 @@ import xyz.tcreopargh.amttd_web.entity.EntityAction
 import java.util.*
 
 @Repository
-interface ActionRepository : JpaRepository<EntityAction, UUID> {
-}
+interface ActionRepository : JpaRepository<EntityAction, UUID>

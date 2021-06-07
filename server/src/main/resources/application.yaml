@@ -1,4 +1,8 @@
 spring:
+  data:
+    redis:
+      repositories:
+        enabled: false
   datasource:
     hikari:
       connection-timeout: 60000

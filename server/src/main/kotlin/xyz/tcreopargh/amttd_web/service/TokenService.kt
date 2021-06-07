@@ -13,6 +13,7 @@ class TokenService : RepositoryServiceBase<EntityAuthToken, String>() {
     override lateinit var repository: TokenRepository
 
     fun findByUser(user: EntityUser) = repository.findByUser(user)
+    fun deleteByUser(user: EntityUser) = repository.deleteByUser(user)
 
     fun findByToken(token: String) = findByIdOrNull(token)
 

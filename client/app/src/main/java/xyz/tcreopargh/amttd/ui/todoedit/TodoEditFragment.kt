@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.InputType
@@ -19,15 +18,15 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.todo_view_fragment.*
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.common.bean.request.ActionCrudRequest
-import xyz.tcreopargh.amttd.common.bean.request.TodoEntryCrudRequest
-import xyz.tcreopargh.amttd.common.bean.response.ActionCrudResponse
-import xyz.tcreopargh.amttd.common.bean.response.TodoEntryCrudResponse
-import xyz.tcreopargh.amttd.common.data.*
-import xyz.tcreopargh.amttd.common.data.action.ActionDeadlineChanged
-import xyz.tcreopargh.amttd.common.data.action.ActionGeneric
-import xyz.tcreopargh.amttd.common.data.action.ActionType
-import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.api.data.*
+import xyz.tcreopargh.amttd.api.data.action.ActionDeadlineChanged
+import xyz.tcreopargh.amttd.api.data.action.ActionGeneric
+import xyz.tcreopargh.amttd.api.data.action.ActionType
+import xyz.tcreopargh.amttd.api.exception.AmttdException
+import xyz.tcreopargh.amttd.api.json.request.ActionCrudRequest
+import xyz.tcreopargh.amttd.api.json.request.TodoEntryCrudRequest
+import xyz.tcreopargh.amttd.api.json.response.ActionCrudResponse
+import xyz.tcreopargh.amttd.api.json.response.TodoEntryCrudResponse
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.CrudTask
 import xyz.tcreopargh.amttd.util.format
@@ -166,7 +165,8 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
         object : CrudTask<TodoEntryImpl, TodoEntryCrudRequest, TodoEntryCrudResponse>(
             request = TodoEntryCrudRequest(
                 CrudType.READ,
-                TodoEntryImpl(entryId = uuid)
+                TodoEntryImpl(entryId = uuid),
+                userId = loggedInUser?.uuid
             ),
             path = "/todo-entry",
             responseType = object : TypeToken<TodoEntryCrudResponse>() {}.type
@@ -243,6 +243,7 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
                     TextView.BufferType.NORMAL
                 )
                 inputType = InputType.TYPE_NULL
+                isSingleLine = false
                 setOnClickListener {
                     AlertDialog.Builder(context).apply {
                         @SuppressLint("InflateParams")

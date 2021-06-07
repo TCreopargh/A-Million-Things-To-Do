@@ -4,10 +4,10 @@ import android.util.Log
 import com.google.gson.reflect.TypeToken
 import okhttp3.Request
 import xyz.tcreopargh.amttd.AMTTD
-import xyz.tcreopargh.amttd.common.bean.request.LoginRequest
-import xyz.tcreopargh.amttd.common.bean.request.RegisterRequest
-import xyz.tcreopargh.amttd.common.bean.response.LoginResponse
-import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.api.exception.AmttdException
+import xyz.tcreopargh.amttd.api.json.request.LoginRequest
+import xyz.tcreopargh.amttd.api.json.request.RegisterRequest
+import xyz.tcreopargh.amttd.api.json.response.LoginResponse
 import xyz.tcreopargh.amttd.data.user.LocalUser
 import xyz.tcreopargh.amttd.util.gson
 import xyz.tcreopargh.amttd.util.okHttpRequest
@@ -24,7 +24,11 @@ class LoginDataSource {
     fun login(email: String, password: String): LoginResult<LocalUser> {
         val loginRequest = okHttpRequest("/login")
             .post(
-                LoginRequest(email = email, password = password).toJsonRequest()
+                LoginRequest(
+                    email = email,
+                    password = password,
+                    clientVersion = AMTTD.versionCode
+                ).toJsonRequest()
             )
             .build()
         return sendRequest(loginRequest)
@@ -36,7 +40,8 @@ class LoginDataSource {
                 RegisterRequest(
                     email = email,
                     password = password,
-                    username = username
+                    username = username,
+                    clientVersion = AMTTD.versionCode
                 ).toJsonRequest()
             ).build()
         return sendRequest(registerRequest)
@@ -46,7 +51,11 @@ class LoginDataSource {
     fun loginWithAuthToken(uuid: UUID, authToken: String): LoginResult<LocalUser> {
         val loginRequest = okHttpRequest("/login")
             .post(
-                LoginRequest(uuid = uuid, token = authToken).toJsonRequest()
+                LoginRequest(
+                    uuid = uuid,
+                    token = authToken,
+                    clientVersion = AMTTD.versionCode
+                ).toJsonRequest()
             ).build()
         return sendRequest(loginRequest)
     }

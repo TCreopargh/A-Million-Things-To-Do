@@ -2,6 +2,8 @@ package xyz.tcreopargh.amttd
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
 import androidx.annotation.StringRes
 import okhttp3.OkHttpClient
@@ -12,6 +14,7 @@ import xyz.tcreopargh.amttd.util.setNightModeAccordingToPref
 import java.util.*
 import java.util.concurrent.TimeUnit
 import android.app.Application as App
+
 
 /**
  * @author TCreopargh
@@ -36,6 +39,9 @@ class AMTTD : App() {
         //seconds
         const val TIMEOUT = 30L
         var language: String = "en"
+
+        lateinit var versionName: String
+        var versionCode: Long = 0
     }
 
     override fun onCreate() {
@@ -66,6 +72,19 @@ class AMTTD : App() {
         ) ?: "default"
         if (language == "default") {
             language = Locale.getDefault().language
+        }
+
+        try {
+            val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            versionName = pInfo.versionName
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                versionCode = pInfo.longVersionCode
+            } else {
+                @Suppress("DEPRECATION")
+                versionCode = pInfo.versionCode.toLong()
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            Log.e(logTag, e.stackTraceToString())
         }
     }
 }

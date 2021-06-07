@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import xyz.tcreopargh.amttd_web.annotation.LoginRequired
-import xyz.tcreopargh.amttd_web.common.bean.request.ActionCrudRequest
-import xyz.tcreopargh.amttd_web.common.bean.response.ActionCrudResponse
-import xyz.tcreopargh.amttd_web.common.data.CrudType
-import xyz.tcreopargh.amttd_web.common.data.TodoStatus
-import xyz.tcreopargh.amttd_web.common.data.action.ActionDeadlineChanged
-import xyz.tcreopargh.amttd_web.common.data.action.ActionGeneric
-import xyz.tcreopargh.amttd_web.common.data.action.ActionType
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.data.CrudType
+import xyz.tcreopargh.amttd_web.api.data.TodoStatus
+import xyz.tcreopargh.amttd_web.api.data.action.ActionDeadlineChanged
+import xyz.tcreopargh.amttd_web.api.data.action.ActionGeneric
+import xyz.tcreopargh.amttd_web.api.data.action.ActionType
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.json.request.ActionCrudRequest
+import xyz.tcreopargh.amttd_web.api.json.response.ActionCrudResponse
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityAction
 import xyz.tcreopargh.amttd_web.entity.EntityTask
@@ -43,17 +43,9 @@ class ActionController : ControllerBase() {
     @ResponseBody
     fun handleAction(request: HttpServletRequest, @RequestBody body: ActionCrudRequest): ActionCrudResponse {
         return try {
-            verifyTodoEntry(request, body.entryId)
-            verifyUser(request, body.userId)
+            val (entry, _, user) = verifyTodoEntry(request, body.entryId, body.userId)
             when (body.operation) {
                 CrudType.CREATE -> {
-                    val entry = todoEntryService.findByIdOrNull(
-                        body.entryId ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
-                    ) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
-                    val user =
-                        userService.findByIdOrNull(
-                            body.userId ?: throw AmttdException(AmttdException.ErrorCode.INVALID_JSON)
-                        )
                     val entity = body.entity
                     val action: EntityAction = when (entity?.actionType) {
                         ActionType.COMMENT             -> {
@@ -160,7 +152,7 @@ class ActionController : ControllerBase() {
                             )
                         }
                         ActionType.TITLE_CHANGED       -> {
-                            entry.title = entity.newValue
+                            entry.title = entity.newValue?.replace("\n", " ")?.trim()
                                 ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
                             todoEntryService.saveImmediately(entry)
                             EntityAction(

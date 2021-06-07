@@ -8,10 +8,15 @@ import java.io.Serializable
  */
 abstract class EntityBase<ID : Any> : Serializable {
     abstract fun getId(): ID
-    override fun hashCode(): Int = getId().hashCode()
-    override fun equals(other: Any?): Boolean {
+
+    // Final makes subclasses marked with data class not generate their own implementations of these methods
+    final override fun hashCode(): Int = getId().hashCode()
+
+    final override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
         return this.getId() == (other as? EntityBase<*>)?.getId()
     }
+
+    final override fun toString(): String = javaClass.name + " id: " + getId()
 }

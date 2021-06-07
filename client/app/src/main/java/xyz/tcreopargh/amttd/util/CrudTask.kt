@@ -2,10 +2,10 @@ package xyz.tcreopargh.amttd.util
 
 import android.util.Log
 import xyz.tcreopargh.amttd.AMTTD
-import xyz.tcreopargh.amttd.common.bean.request.ICrudRequest
-import xyz.tcreopargh.amttd.common.bean.response.ICrudResponse
-import xyz.tcreopargh.amttd.common.data.CrudType
-import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.api.data.CrudType
+import xyz.tcreopargh.amttd.api.exception.AmttdException
+import xyz.tcreopargh.amttd.api.json.request.ICrudRequest
+import xyz.tcreopargh.amttd.api.json.response.ICrudResponse
 import java.lang.reflect.Type
 import java.net.URL
 

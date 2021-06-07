@@ -3,11 +3,11 @@ package xyz.tcreopargh.amttd_web.controller.invitation
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import xyz.tcreopargh.amttd_web.annotation.LoginRequired
-import xyz.tcreopargh.amttd_web.common.bean.request.JoinWorkGroupRequest
-import xyz.tcreopargh.amttd_web.common.bean.request.ShareWorkGroupRequest
-import xyz.tcreopargh.amttd_web.common.bean.response.JoinWorkGroupResponse
-import xyz.tcreopargh.amttd_web.common.bean.response.ShareWorkGroupResponse
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.json.request.JoinWorkGroupRequest
+import xyz.tcreopargh.amttd_web.api.json.request.ShareWorkGroupRequest
+import xyz.tcreopargh.amttd_web.api.json.response.JoinWorkGroupResponse
+import xyz.tcreopargh.amttd_web.api.json.response.ShareWorkGroupResponse
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityInvitationCode
 import xyz.tcreopargh.amttd_web.util.generateInvitationCode
@@ -30,7 +30,7 @@ class InvitationCodeController : ControllerBase() {
     @ResponseBody
     fun shareWorkGroup(request: HttpServletRequest, @RequestBody body: ShareWorkGroupRequest): ShareWorkGroupResponse {
         return try {
-            verifyWorkgroup(request, body.groupId)
+            val (workGroup, user) = verifyWorkgroup(request, body.groupId, body.userId)
             val invitationCode = generateInvitationCode()
             if (invitationCodeService.findByCode(invitationCode) != null) {
                 throw AmttdException(AmttdException.ErrorCode.UNIQUE_ID_CONFLICT)
@@ -38,14 +38,8 @@ class InvitationCodeController : ControllerBase() {
             invitationCodeService.saveImmediately(
                 EntityInvitationCode(
                     invitationCode = invitationCode,
-                    user = userService.findByIdOrNull(
-                        body.userId
-                            ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
-                    ),
-                    workGroup = workGroupService.findByIdOrNull(
-                        body.groupId
-                            ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
-                    ),
+                    user = user,
+                    workGroup = workGroup,
                     expirationTimeInDays = body.expirationTimeInDays ?: 7
                 )
             )
@@ -66,7 +60,7 @@ class InvitationCodeController : ControllerBase() {
     @ResponseBody
     fun joinWorkGroup(request: HttpServletRequest, @RequestBody body: JoinWorkGroupRequest): JoinWorkGroupResponse {
         return try {
-            verifyUser(request, body.userId)
+            val user = verifyUser(request, body.userId)
             val invitationCode = invitationCodeService.findByCode(
                 body.invitationCode ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
             ) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
@@ -76,9 +70,6 @@ class InvitationCodeController : ControllerBase() {
             }
             val workGroup =
                 invitationCode.workGroup ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
-            val user = userService.findByIdOrNull(
-                body.userId ?: throw AmttdException(AmttdException.ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
-            ) ?: throw AmttdException(AmttdException.ErrorCode.REQUESTED_ENTITY_NOT_FOUND)
             if (workGroup.users.contains(user)) {
                 throw AmttdException(AmttdException.ErrorCode.ALREADY_IN_WORKGROUP)
             }

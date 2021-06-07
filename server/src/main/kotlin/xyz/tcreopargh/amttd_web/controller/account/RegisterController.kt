@@ -5,14 +5,15 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import xyz.tcreopargh.amttd_web.common.bean.request.RegisterRequest
-import xyz.tcreopargh.amttd_web.common.bean.response.LoginResponse
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException
-import xyz.tcreopargh.amttd_web.common.exception.AmttdException.ErrorCode
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException
+import xyz.tcreopargh.amttd_web.api.exception.AmttdException.ErrorCode
+import xyz.tcreopargh.amttd_web.api.json.request.RegisterRequest
+import xyz.tcreopargh.amttd_web.api.json.response.LoginResponse
 import xyz.tcreopargh.amttd_web.component.AuthenticationInterceptor
 import xyz.tcreopargh.amttd_web.controller.ControllerBase
 import xyz.tcreopargh.amttd_web.entity.EntityAuthToken
 import xyz.tcreopargh.amttd_web.entity.EntityUser
+import xyz.tcreopargh.amttd_web.util.MIN_CLIENT_VERSION
 import xyz.tcreopargh.amttd_web.util.logger
 import xyz.tcreopargh.amttd_web.util.nextString
 import xyz.tcreopargh.amttd_web.util.random
@@ -42,6 +43,12 @@ class RegisterController : ControllerBase() {
             val password = registerBody.password
             val email = registerBody.email?.lowercase()
             var username = registerBody.username
+            val clientVersion =
+                registerBody.clientVersion ?: throw AmttdException(ErrorCode.JSON_NON_NULLABLE_VALUE_IS_NULL)
+
+            if (clientVersion < MIN_CLIENT_VERSION) {
+                throw AmttdException(ErrorCode.CLIENT_NEEDS_UPDATE)
+            }
 
             if (!isEmailValid(email)) {
                 throw AmttdException(ErrorCode.ILLEGAL_EMAIL)

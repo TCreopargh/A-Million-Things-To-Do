@@ -2,7 +2,7 @@ package xyz.tcreopargh.amttd.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.api.exception.AmttdException
 
 /**
  * @author TCreopargh

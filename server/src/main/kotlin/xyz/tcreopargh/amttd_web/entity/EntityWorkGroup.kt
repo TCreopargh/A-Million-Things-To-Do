@@ -2,9 +2,8 @@ package xyz.tcreopargh.amttd_web.entity
 
 import org.hibernate.annotations.Type
 import xyz.tcreopargh.amttd_web.annotation.ExcludeToString
-import xyz.tcreopargh.amttd_web.annotation.ExcludeToStringProcessor
-import xyz.tcreopargh.amttd_web.common.data.IUser
-import xyz.tcreopargh.amttd_web.common.data.IWorkGroup
+import xyz.tcreopargh.amttd_web.api.data.IUser
+import xyz.tcreopargh.amttd_web.api.data.IWorkGroup
 import java.util.*
 import javax.persistence.*
 
@@ -65,10 +64,6 @@ data class EntityWorkGroup(
         fetch = FetchType.LAZY
     )
     var invitationCodes: MutableSet<EntityInvitationCode> = mutableSetOf()
-
-    override fun toString(): String {
-        return ExcludeToStringProcessor.getToString(this)
-    }
 
     override fun getId(): UUID = groupId
 }

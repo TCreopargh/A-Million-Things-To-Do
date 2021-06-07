@@ -17,10 +17,10 @@ import com.google.zxing.common.BitMatrix
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.BaseActivity
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.common.bean.request.ShareWorkGroupRequest
-import xyz.tcreopargh.amttd.common.bean.response.ShareWorkGroupResponse
-import xyz.tcreopargh.amttd.common.data.IWorkGroup
-import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.api.data.IWorkGroup
+import xyz.tcreopargh.amttd.api.exception.AmttdException
+import xyz.tcreopargh.amttd.api.json.request.ShareWorkGroupRequest
+import xyz.tcreopargh.amttd.api.json.response.ShareWorkGroupResponse
 import xyz.tcreopargh.amttd.data.user.LocalUser
 import xyz.tcreopargh.amttd.util.getGroupUri
 import xyz.tcreopargh.amttd.util.gson

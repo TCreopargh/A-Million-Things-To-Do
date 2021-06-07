@@ -13,11 +13,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.reflect.TypeToken
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.common.bean.request.GroupUserViewRequest
-import xyz.tcreopargh.amttd.common.bean.response.GroupUserViewResponse
-import xyz.tcreopargh.amttd.common.data.IUser
-import xyz.tcreopargh.amttd.common.data.IWorkGroup
-import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.api.data.IUser
+import xyz.tcreopargh.amttd.api.data.IWorkGroup
+import xyz.tcreopargh.amttd.api.exception.AmttdException
+import xyz.tcreopargh.amttd.api.json.request.GroupUserViewRequest
+import xyz.tcreopargh.amttd.api.json.response.GroupUserViewResponse
 import xyz.tcreopargh.amttd.ui.FragmentOnMainActivityBase
 import xyz.tcreopargh.amttd.util.gson
 import xyz.tcreopargh.amttd.util.okHttpRequest

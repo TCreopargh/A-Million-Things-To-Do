@@ -139,8 +139,8 @@
     <string name="language">语言</string>
     <string name="language_default">系统默认</string>
     <string name="login_required">需要登录</string>
-    <string name="username_changed">已将用户名更改为 %s，请重启应用以应用更改</string>
-    <string name="email_changed">邮箱已更改为 %s，请重启应用以应用更改</string>
+    <string name="username_changed">已将用户名更改为 %s，请重启应用以应用更改。</string>
+    <string name="email_changed">邮箱已更改为 %s，请重启应用以应用更改。</string>
     <string name="change_email">修改邮箱</string>
     <string name="change_password">修改密码</string>
     <string name="change_password_summary">修改你的登录密码</string>
@@ -225,4 +225,5 @@
     <string name="auto">自动</string>
     <string name="follow_system">跟随系统</string>
     <string name="profile_picture">用户头像</string>
+    <string name="client_needs_update">您的客户端已过时！请更新应用以继续。</string>
 </resources>

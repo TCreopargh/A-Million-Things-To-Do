@@ -28,10 +28,10 @@ import com.google.gson.reflect.TypeToken
 import xyz.tcreopargh.amttd.AMTTD
 import xyz.tcreopargh.amttd.MainActivity
 import xyz.tcreopargh.amttd.R
-import xyz.tcreopargh.amttd.common.bean.request.UserChangeAvatarRequest
-import xyz.tcreopargh.amttd.common.bean.request.UserProfileChangeRequest
-import xyz.tcreopargh.amttd.common.bean.response.SimpleResponse
-import xyz.tcreopargh.amttd.common.exception.AmttdException
+import xyz.tcreopargh.amttd.api.exception.AmttdException
+import xyz.tcreopargh.amttd.api.json.request.UserChangeAvatarRequest
+import xyz.tcreopargh.amttd.api.json.request.UserProfileChangeRequest
+import xyz.tcreopargh.amttd.api.json.response.SimpleResponse
 import xyz.tcreopargh.amttd.ui.login.LoginViewModel
 import xyz.tcreopargh.amttd.util.*
 import java.io.ByteArrayOutputStream
@@ -93,6 +93,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     getString(R.string.email_changed, it),
                     Toast.LENGTH_LONG
                 ).show()
+                (activity as? MainActivity)?.logoutAndRestart()
             }
         }
         viewModel.isPasswordChanged.observe(viewLifecycleOwner) {
@@ -103,6 +104,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     Toast.LENGTH_LONG
                 ).show()
                 viewModel.isPasswordChanged.value = false
+                (activity as? MainActivity)?.logoutAndRestart()
             }
         }
         viewModel.isAvatarChanged.observe(viewLifecycleOwner) {
