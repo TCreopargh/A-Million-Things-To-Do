@@ -34,7 +34,7 @@ class AMTTD : App() {
             getLocalizedResources(context, Locale(language)).getString(stringId, *objects)
 
         //seconds
-        const val TIMEOUT = 10L
+        const val TIMEOUT = 30L
         var language: String = "en"
     }
 

@@ -24,7 +24,7 @@
                 app:summary="@string/change_password_summary" />
 
         <Preference
-                app:title="Profile Picture"
+                app:title="@string/profile_picture"
                 app:summary="@string/change_pfp"
                 app:iconSpaceReserved="false"
                 app:persistent="false"
