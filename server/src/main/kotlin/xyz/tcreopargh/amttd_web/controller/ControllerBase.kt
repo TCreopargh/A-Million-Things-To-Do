@@ -5,8 +5,8 @@ import xyz.tcreopargh.amttd_web.common.exception.AmttdException
 import xyz.tcreopargh.amttd_web.entity.EntityUser
 import xyz.tcreopargh.amttd_web.service.*
 import java.util.*
+import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
-import kotlin.streams.toList
 
 /**
  * @author TCreopargh
@@ -74,7 +74,7 @@ abstract class ControllerBase {
         val userId = getUserFromSession(request)?.uuid
         if (workGroupService.findByIdOrNull(groupId)?.users?.stream()?.filter {
                 it.uuid == userId
-            }?.toList()
+            }?.collect(Collectors.toList())
                 ?.isNotEmpty() != true
         ) throw AmttdException(AmttdException.ErrorCode.UNAUTHORIZED_OPERATION)
     }
