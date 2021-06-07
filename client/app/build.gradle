@@ -6,6 +6,7 @@ plugins {
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
+    archivesBaseName = "amttd-$appVersionName"
 
     lintOptions {
         checkReleaseBuilds false
@@ -15,8 +16,8 @@ android {
         applicationId "xyz.tcreopargh.amttd"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 6
-        versionName "1.0.4"
+        versionCode = appVersionCode
+        versionName = appVersionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
