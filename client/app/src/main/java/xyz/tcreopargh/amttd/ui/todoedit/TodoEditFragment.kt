@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.InputType
@@ -145,6 +146,10 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.options_todo_edit, menu)
+        menu.findItem(R.id.actionDeleteEntry)?.apply {
+            icon?.setTintMode(PorterDuff.Mode.DST)
+            icon?.setTint(Color.WHITE)
+        }
     }
 
     @SuppressLint("InflateParams")
