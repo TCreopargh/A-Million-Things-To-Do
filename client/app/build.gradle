@@ -16,6 +16,7 @@ android {
         applicationId "xyz.tcreopargh.amttd"
         minSdkVersion 26
         targetSdkVersion 30
+        // If you want to change app version go to gradle.properties
         versionCode = appVersionCode
         versionName = appVersionName
 
