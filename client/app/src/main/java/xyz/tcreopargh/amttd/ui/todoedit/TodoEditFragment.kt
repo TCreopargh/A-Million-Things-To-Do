@@ -146,10 +146,6 @@ class TodoEditFragment : FragmentOnMainActivityBase(R.string.todo_edit_title) {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.options_todo_edit, menu)
-        menu.findItem(R.id.actionDeleteEntry)?.apply {
-            icon?.setTintMode(PorterDuff.Mode.DST)
-            icon?.setTint(Color.WHITE)
-        }
     }
 
     @SuppressLint("InflateParams")
