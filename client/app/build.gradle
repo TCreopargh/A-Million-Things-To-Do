@@ -17,7 +17,7 @@ android {
         minSdkVersion 26
         targetSdkVersion 30
         // If you want to change app version go to gradle.properties
-        versionCode = appVersionCode
+        versionCode = Integer.parseInt(appVersionCode)
         versionName = appVersionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

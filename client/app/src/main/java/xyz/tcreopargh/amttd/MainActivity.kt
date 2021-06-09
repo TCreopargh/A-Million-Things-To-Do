@@ -72,6 +72,8 @@ class MainActivity : BaseActivity() {
     private lateinit var headerView: View
     private lateinit var userAvatarView: RoundedImageView
 
+    lateinit var mainProgressBar: ProgressBar
+
     private var invitationCodeExpirationTime = 1
 
     val loggedInUser
@@ -81,11 +83,14 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.i(AMTTD.logTag, "Version: " + AMTTD.versionCode.toString())
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        mainProgressBar = findViewById(R.id.mainProgressBar)
 
         fab = findViewById(R.id.fab)
         fabLayout = findViewById(R.id.fabMenuLayout)
@@ -457,7 +462,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun loginWithToken(uuid: UUID, authToken: String) {
-        mainProgressBar?.visibility = View.VISIBLE
+        mainProgressBar.visibility = View.VISIBLE
         Thread {
             when (val result =
                 viewModel.loginRepository.value?.loginWithAuthToken(uuid, authToken)) {

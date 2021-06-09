@@ -10,9 +10,9 @@
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 57,
-      "versionName": "1.1.0",
-      "outputFile": "amttd-1.1.0-release.apk"
+      "versionCode": 10,
+      "versionName": "1.1.1",
+      "outputFile": "amttd-1.1.1-release.apk"
     }
   ]
 }

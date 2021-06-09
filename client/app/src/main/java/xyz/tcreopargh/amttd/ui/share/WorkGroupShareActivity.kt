@@ -22,10 +22,7 @@ import xyz.tcreopargh.amttd.api.exception.AmttdException
 import xyz.tcreopargh.amttd.api.json.request.ShareWorkGroupRequest
 import xyz.tcreopargh.amttd.api.json.response.ShareWorkGroupResponse
 import xyz.tcreopargh.amttd.data.user.LocalUser
-import xyz.tcreopargh.amttd.util.getGroupUri
-import xyz.tcreopargh.amttd.util.gson
-import xyz.tcreopargh.amttd.util.okHttpRequest
-import xyz.tcreopargh.amttd.util.toJsonRequest
+import xyz.tcreopargh.amttd.util.*
 import java.util.*
 
 
@@ -37,6 +34,8 @@ class WorkGroupShareActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_work_group_share)
         viewModel = ViewModelProvider(this).get(WorkGroupShareViewModel::class.java)
+
+        title = i18n(R.string.action_share_workgroup)
 
         val invitationCodeText = findViewById<TextView>(R.id.textInvitationCode)
         val qrCodeImage = findViewById<ImageView>(R.id.invitationQrCode)
