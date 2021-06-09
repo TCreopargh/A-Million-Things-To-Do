@@ -87,7 +87,7 @@ class RegisterController : ControllerBase() {
 
             return LoginResponse(
                 success = true,
-                email = "user.email",
+                email = user.email,
                 username = user.name,
                 uuid = user.uuid,
                 token = generatedToken.token
