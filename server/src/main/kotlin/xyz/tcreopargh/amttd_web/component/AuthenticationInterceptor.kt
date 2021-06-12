@@ -67,13 +67,13 @@ class AuthenticationInterceptor : HandlerInterceptor {
     companion object {
 
         fun requireLogin(request: HttpServletRequest, response: HttpServletResponse): Boolean {
-            val ret = resetSession(request, response)
+            val ret = resetSession(request)
             response.status = HttpStatus.FORBIDDEN.value()
             response.sendError(HttpStatus.FORBIDDEN.value())
             return ret
         }
 
-        fun resetSession(request: HttpServletRequest, response: HttpServletResponse): Boolean {
+        fun resetSession(request: HttpServletRequest): Boolean {
             request.session.apply {
                 setAttribute("uuid", null)
                 setAttribute("token", null)

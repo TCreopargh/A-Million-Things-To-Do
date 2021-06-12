@@ -40,7 +40,7 @@ class LoginController : ControllerBase() {
     ): LoginResponse {
         val response: LoginResponse
         try {
-            AuthenticationInterceptor.resetSession(request, httpResponse)
+            AuthenticationInterceptor.resetSession(request)
             val password = loginBody.password
             val email = loginBody.email?.lowercase()
             val token = loginBody.token

@@ -39,7 +39,7 @@ class RegisterController : ControllerBase() {
         @RequestBody registerBody: RegisterRequest
     ): LoginResponse {
         try {
-            AuthenticationInterceptor.resetSession(request, httpResponse)
+            AuthenticationInterceptor.resetSession(request)
             val password = registerBody.password
             val email = registerBody.email?.lowercase()
             var username = registerBody.username
